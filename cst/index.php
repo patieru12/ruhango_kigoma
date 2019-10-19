@@ -1,0 +1,9 @@
+<?php
+session_start();
+if(!isset($_SESSION['user']['ServiceID'])){
+	header("location:./se_select.php");
+	return;
+}
+header("location:./patient.php");
+exit();
+?>

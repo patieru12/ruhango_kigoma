@@ -1,0 +1,23 @@
+
+#table{
+	border-collapse:collapse;
+}
+.empty_field{
+	background-image: url("../images/empty_bg.png");
+}
+.tb_title{
+	text-align: center;
+}
+#number{ text-align:right; }
+
+#table tr td{
+	font-size:10px;
+}
+
+.main_title{
+	position: absolute;
+	top: 33%;
+	left: 23%;
+	font-size: 40px;
+	opacity: 0.9;
+}

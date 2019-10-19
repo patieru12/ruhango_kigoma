@@ -1,0 +1,9 @@
+
+#table{
+	border-collapse:collapse;
+	font-size:10px;
+}
+.empty_field{
+	background-image: url("../../images/empty_bg.png");
+}
+#number{ text-align:right; }

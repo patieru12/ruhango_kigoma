@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title><?= $project_title; ?></title>
+  <link rel="shortcut icon" href="../images/footer_care.png">
+  <link rel="icon" href="../images/footer_care.png">
+  <link rel="stylesheet" type="text/css" media="all" href="../style.css">
+  <!--<link rel="stylesheet" type="text/css" media="all" href="../style_menu.css">-->
+  <link rel="stylesheet" type="text/css" media="all" href="../lib2/cssmenu/styles_menu.css">
+  <link rel="stylesheet" type="text/css" media="all" href="../calendarcss.css">
+  <link rel="stylesheet" type="text/css" href="../lib2/autocomplete/jquery.autocomplete.css" />
+  <link rel="stylesheet" type="text/css" media="all" href="../apple_css.css"><!--
+  <script type="text/javascript" src="../js/jquery-1.9.1.min.js"></script>-->
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.full.js"></script>
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.form.js"></script>
+  <script type="text/javascript" src="../lib2/autocomplete/jquery.autocomplete.js"></script>
+  <script type="text/javascript" charset="utf-8" src="../js/calendarfile.js"></script>
+  <script type="text/javascript" charset="utf-8" src="../js/js_function.js"></script>
+  <!-- jQuery plugin leanModal under MIT License http://leanmodal.finelysliced.com.au/ -->
+  
+</head>
+
+<body>
+  <div id="topbar">
+<div id='cssmenu'>
+<ul>
+   <li class="<?php echo @$active=='index'?'active':'' ?> has-sub"><a href="#">
+    <span>Consulation Register</span></a>
+    <ul>
+      <li class='has-sub'><a href='../dm/'><span>Active Register</span></a></li>
+      <li class='has-sub'><a href='../dm/register-archive.php'><span>Archived Register</span></a></li>
+    </ul>
+   </li>
+   <li class="<?php echo @$active == 'report'?'active':'' ?> has-sub"><a href='#'><span>Reports</span></a>
+      <ul>
+          <li><a href='../dm/sis.php'><span>HMIS Report</span></a></li>
+          <li><a href='../dm/dignostic.php'><span>Diagnostic Report</span></a></li>
+          <li class='last'><a href='../dm/malaria_summary.php'><span>Malaria Summary</span></a></li>
+      </ul>
+   </li>
+   <li class="<?php echo @$active=='profile'?"active":"" ?>"><a href='../dm/profile.php'><span>Profile</span></a></li>
+   <li class='last'><a href='../logout.php'><span>Logout</span></a></li>
+</ul>
+</div>
+  </div>

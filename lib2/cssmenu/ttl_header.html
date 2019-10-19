@@ -1,0 +1,53 @@
+
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+  <title>Care Mini Version 1</title>
+  <link rel="shortcut icon" href="../images/footer_care.png">
+  <link rel="icon" href="../images/footer_care.png">
+  <link rel="stylesheet" type="text/css" media="all" href="../style.css">
+  <!--<link rel="stylesheet" type="text/css" media="all" href="../style_menu.css">-->
+  <link rel="stylesheet" type="text/css" media="all" href="../lib2/cssmenu/styles_menu.css">
+  <link rel="stylesheet" type="text/css" media="all" href="../calendarcss.css">
+  <link rel="stylesheet" type="text/css" media="all" href="../apple_css.css"><!--
+  <script type="text/javascript" src="../js/jquery-1.9.1.min.js"></script>-->
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.full.js"></script>
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.form.js"></script>
+  <script type="text/javascript" charset="utf-8" src="../js/calendarfile.js"></script>
+  <!-- jQuery plugin leanModal under MIT License http://leanmodal.finelysliced.com.au/ -->
+  
+</head>
+
+<body>
+  <div id="topbar">
+<div id='cssmenu'>
+<ul><!--
+   <li class="active has-sub"><a href='../rcp/'><span>PATIENT</span></a>
+	
+   </li>-->
+   <li class="active has-sub"><a href='../ttl/users.php'><span>USERS</span></a>
+		<ul>
+		   <li><a href='../ttl/index.php' onclick='alert("Sory Not Available Now!"); return false'><span>Consultant (Print)</span></a></li>
+		   <li class=last><a href='../ttl/index.php' onclick='alert("Sory Not Available Now!"); return false'><span>Other Users</span></a></li>
+		   
+		</ul>
+	</li>
+	<li><a href='../ttl/branch.php' onclick='alert("Sory Not Available Now!"); return false'><span>BRANCHES</span></a></li>
+	<li class='has-sub'><a href='#'><span>SERVICES</span></a>
+		<ul>
+			<?php
+			$office = returnAllDataInTable($tbl="sy_center",$con);
+				if($office){
+					foreach($office as $of){
+						echo "<li><a href='../ttl/service.php?service={$of['CenterID']}'><span>{$of['CenterName']}</span></a></li>";
+					}
+				}
+			?>
+		</ul>
+	</li>
+   <li><a href='../ttl/profile.php' onclick='alert("Sory Not Available Now!"); return false'><span>PROFILE</span></a></li>
+   <li class='last'><a href='../logout.php'><span>Logout</span></a></li>
+</ul>
+</div>
+  </div>

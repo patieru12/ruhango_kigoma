@@ -1,0 +1,20 @@
+@charset "utf-8";
+/* CSS Document */
+body { background:none; }
+#left { display:none; }
+#main img { display:none; }
+#banner
+{
+display:none;
+margin-top:0px;
+padding:0px;
+}
+#main 
+{
+margin-top:0px;
+padding:0px;
+}
+#print_iframe 
+{
+display:none;
+}

@@ -1,0 +1,27 @@
+{
+	"name": "care/kigomahc",
+	"description": "Care Software for health facility data recording and manupulation | designed for KIGOMA HC",
+	"keywords": ["Care Software", "Health", "Medical Document"],
+	"authors": [
+        {
+            "name": "Nshimiyima Emmanuel",
+            "email": "nshimema@gmail.com",
+            "role": "Designer"
+        },
+        {
+            "name": "Bikorimana David",
+            "email": "bikorimanadavid.rw@gmail.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Ruberandinda Patience",
+            "email": "ruberandindap@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "phpoffice/phpword": "0.17.*",
+        "mpdf/mpdf": "5.7.*",
+        "phpoffice/phpexcel": "1.7.*"
+    }
+}

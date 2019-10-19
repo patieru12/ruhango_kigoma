@@ -1,0 +1,89 @@
+<?php
+$myService = returnAllData("SELECT * FROM se_name WHERE DirectorID='{$_SESSION['user']['UserID']}'",$con);
+$service = returnAllData("SELECT * FROM se_name WHERE ServiceNameID='{$_SESSION['user']['ServiceID']}'",$con)[0];
+?>
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+  <title><?= $project_title ?></title>
+  <link rel="shortcut icon" href="../images/footer_care.png">
+  <link rel="icon" href="../images/footer_care.png">
+  <link rel="stylesheet" type="text/css" media="all" href="../style.css">
+  <!--<link rel="stylesheet" type="text/css" media="all" href="../style_menu.css">-->
+  <link rel="stylesheet" type="text/css" media="all" href="../lib2/cssmenu/styles_menu.css">
+  <link rel="stylesheet" type="text/css" media="all" href="../calendarcss.css">
+  <link rel="stylesheet" type="text/css" href="../lib2/autocomplete/jquery.autocomplete.css" />
+  <link rel="stylesheet" type="text/css" media="all" href="../apple_css.css"><!--
+  <script type="text/javascript" src="../js/jquery-1.9.1.min.js"></script>-->
+
+  <!-- <link rel="stylesheet" type="text/css" href="../lib2/PHPWord/samples/bootstrap/css/bootstrap.min.css"> -->
+  <link rel="stylesheet" type="text/css" href="../lib2/PHPWord/samples/bootstrap/css/font-awesome.min.css" />
+  <link rel="stylesheet" type="text/css" href="../stk/assets/plugins/bootstrap-editable/bootstrap-editable.css" />
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.full.js"></script>
+  <!-- <script type="text/javascript" charset="utf-8" src="../lib2/autocomplete/jquery.js"></script> -->
+  <!-- <script type="text/javascript" charset="utf-8" src="../stk/assets/plugins/bootstrap/js/bootstrap.min.js"></script> -->
+  <!-- <script type="text/javascript" charset="utf-8" src="../stk/assets/plugins/bootstrap-editable/bootstrap-editable.min.js"></script> -->
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.form.js"></script>
+  <script type="text/javascript" src="../lib2/autocomplete/jquery.autocomplete.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/calendarfile.js"></script>
+  <!-- jQuery plugin leanModal under MIT License http://leanmodal.finelysliced.com.au/ -->
+  
+</head>
+
+<body>
+  <div id="topbar">
+<div id='cssmenu'>
+<ul>
+    <?php
+    // var_dump($service);
+    if(@$_SESSION['mode'] == 'night'){
+    ?>
+    <li><a href='../cst/'><span>New Patient</span></a></li>
+    <?php
+  }
+    ?>
+    <li class="<?php echo @$active == 'patient'?'active':'' ?>"><a href='../cst/patient.php'><span>Patients</span></a></li>
+    <?php
+    if(@$_SESSION['user']['special'] == "PF"){
+      ?>
+      <li><a href='../cst/pf/'><span>PF Custom Data</span></a></li>
+      <?php
+    }
+    if(@$_SESSION['user']['special'] == "MAT"){
+      ?>
+      <li><a href='../cst/mat/'><span>MAT Custom Data</span></a></li>
+      <?php
+    }
+    ?>
+   <!-- <li class="<?php echo @$active == 'create'?'active':'' ?>"><a href='../cst/create_cbhi.php'><span>New Patient</span></a> </li>
+   <li class="<?php echo @$active == 'receipt'?'active':'' ?>"><a href='../cst/receipt.php'><span>Receipt</span></a> </li> -->
+   <li class="<?php echo @$active == 'cpc_report'?'active':'' ?>"><a href='../cst/cpc.php'><span>Prescription Summary</span></a></li>
+   <!-- <li class="active"><a href='../cst/'><span>Diagnostic</span></a> </li> -->
+   <!--<li><a href='../rcp/create.php'><span>Create Document</span></a></li>-->
+   <li class='has-sub'><a href='#'><span>Reports</span></a>
+		<ul>
+      <li><a href='../cst/tb-report.php'><span>TB Screening</span></a></li>
+		  <li><a href='../cst/hosp-report-<?= strtolower($service["ServiceCode"]); ?>.php'><span>Hospitalization</span></a></li>
+
+		</ul>
+   </li>
+    <?php 
+    //check if the user has a given service
+    if($myService){
+	   echo "<li class='has-sub'>";
+  	   echo "<a href='#'><span>{$myService[0]['ServiceName']}</span></a>";
+  	   echo "<ul>
+  		  <li class=last><a href='../cst/consultion_services.php'><span>Consultations</span></a></li>
+  	   </ul>";
+	   echo "</li>";
+   }
+   ?>
+   <li class="<?php echo @$active=='profile'?"active":"" ?>"><a href='../cst/profile.php'><span>Profile</span></a></li>
+   <li class='last'><a href='../logout.php'><span>Logout</span></a></li>
+</ul>
+</div>
+  </div>

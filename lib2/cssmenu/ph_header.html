@@ -1,0 +1,50 @@
+
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+  <title><?= $project_title ?></title>
+  <link rel="shortcut icon" href="../images/footer_care.png">
+  <link rel="icon" href="../images/footer_care.png">
+  <link rel="stylesheet" type="text/css" media="all" href="../style.css">
+  <!--<link rel="stylesheet" type="text/css" media="all" href="../style_menu.css">-->
+  <link rel="stylesheet" type="text/css" media="all" href="../lib2/cssmenu/styles_menu.css">
+  <link rel="stylesheet" type="text/css" media="all" href="../calendarcss.css">
+  <link rel="stylesheet" type="text/css" media="all" href="../apple_css.css">
+
+  <link rel="stylesheet" type="text/css" href="../lib2/PHPWord/samples/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="../lib2/PHPWord/samples/bootstrap/css/font-awesome.min.css">
+  
+  <!--
+  <script type="text/javascript" src="../js/jquery-1.9.1.min.js"></script>-->
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.full.js"></script>
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.form.js"></script>
+  <script type="text/javascript" charset="utf-8" src="../js/calendarfile.js"></script>
+  <!-- jQuery plugin leanModal under MIT License http://leanmodal.finelysliced.com.au/ -->
+  
+</head>
+
+<body>
+  <div id="topbar">
+<div id='cssmenu'>
+<ul>
+   <li class='<?php echo @$active=='distribute'?"active":"" ?>'><a href='../ph/distribute.php'><span>Distribute</span></a></li>
+   <li class='<?php echo @$active=='request'?"active":"" ?>'><a href='../ph/prepare-request.php'><span>Prepare Request</span></a></li>
+   <li class='has-sub <?php echo @$active=='report'?"active":"" ?>'><a href='../ph/stock-records.php'><span>Stock Report</span></a>
+		<ul>
+			<li><a href='../ph/'>Request</a></li>
+			<li><a href='../ph/regule-report.php'>Regule</a></li>
+      <!-- <li><a href='../ph/distribution-report.php'>Distribution</a></li> -->
+      <!-- <li><a href='../ph/daily_medicines_consumption.php'><span>Monthly </span></a></li> -->
+      <li><a href='../ph/medicines.php'><span>Daily Distribution</span></a></li>
+      <li><a href='../ph/coartem.php'><span>Anti Malaria Consumption</span></a></li>
+      <li><a href='../ph/coartem_unpaid.php'><span>Unpaid Coartem</span></a></li>
+      <li><a href='../ph/coartem_unpaid_monthly.php'><span>Unpaid Coartem monthly</span></a></li>
+			<!-- <li><a href='../ph/medicines.php'>Daily Report</a></li> -->
+		</ul>
+   </li>
+   <li class="<?php echo @$active=='profile'?"active":"" ?>"><a href='../ph/profile.php'><span>Profile</span></a></li>
+   <li class='last'><a href='../logout.php'><span>Logout</span></a></li>
+</ul>
+</div>
+  </div>

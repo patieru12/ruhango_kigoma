@@ -1,0 +1,378 @@
+<?php
+session_start();
+//var_dump($_SESSION);
+require_once "../lib/db_function.php";
+if("cs" !== returnSingleField($sql="SELECT PostCode from sy_post WHERE PostID='{$_SESSION['user']['PostID']}'",$field="PostCode",$data=true, $con)){
+	echo "<script>window.location='../logout.php';</script>";
+	return;
+}
+
+	
+	//var_dump($_POST); //die;
+	$error = "";
+	
+	if(@$_GET['pwd']){
+		$pwd = sha1("123");
+		if(saveData("UPDATE sy_users SET password='{$pwd}' WHERE UserID='{$_GET['user']}'",$con))
+			$error = "<span class=succees>The Password Reseted Successfuly</span>";
+	}
+	
+	if(@$_GET['delete']){
+		if(saveData("UPDATE sy_users SET Status=0 WHERE UserID='{$_GET['user']}'",$con))
+			$error = "<span class=error>User Deactivated Successfuly</span>";
+	}
+	
+	if (isset($_POST['save'])) {
+		
+		//var_dump($_POST); die;
+		$name = mysql_real_escape_string(trim($_POST['name']));
+		$phone  = mysql_real_escape_string(trim($_POST['phone']));
+		$password  = sha1(mysql_real_escape_string(trim($_POST['password'])));
+		$office  = mysql_real_escape_string(trim($_POST['office']));
+		$center  = mysql_real_escape_string(trim($_POST['center']));
+		//var_dump($name); die;
+		if(returnSingleField($sql="SELECT UserID FROM sy_users WHERE Phone='{$phone}'",$field="UserID",$data=true, $con)){
+			$error = "<span class=error-text>The Username In Use!</span>";
+		} else{
+			//update the existing status
+			//saveData("UPDATE md_price SET Status=0 WHERE MedecineNameID='{$name}' && Status=1",$con);
+			//save new data
+			if(saveData($sql="INSERT INTO sy_users SET  Name='{$name}', Phone='{$phone}', Password='{$password}', PostID='{$office}', CenterID={$center}, Status=1",$con)){
+				$error = "<span class=succees>New User Saved Now</span>";
+			}
+		}
+	}
+	$data_to_update = null;
+	if(@$_GET['update'] && is_numeric($_GET['user'])){
+		$data_to_update = formatResultSet($rslt=returnResultSet($sql="SELECT * FROM sy_users WHERE UserID='".(PDB($_GET['user'],true,$con))."'",$con),$multirows=false,$con);
+		//var_dump($data);
+	}
+	
+	//
+	if(@$_POST['update'] && is_numeric($_POST['id'])){
+		//var_dump($_POST); die;
+		$id = mysql_real_escape_string(trim($_POST['id']));
+		$name = mysql_real_escape_string(trim($_POST['name']));
+		$phone  = mysql_real_escape_string(trim($_POST['phone']));
+		$password  = sha1(mysql_real_escape_string(trim($_POST['password'])));
+		$office  = mysql_real_escape_string(trim($_POST['office']));
+		$center  = mysql_real_escape_string(trim($_POST['center']));
+		//var_dump($name); die;
+		if(returnSingleField($sql="SELECT UserID FROM sy_users WHERE Phone='{$phone}' && UserID != '{$id}'",$field="UserID",$data=true, $con)){
+			$error = "<span class=error-text>The Username In Use!</span>";
+		} else{
+			//update the existing status
+			//saveData("UPDATE md_price SET Status=0 WHERE MedecineNameID='{$name}' && Status=1",$con);
+			//save new data
+			if(saveData($sql="UPDATE sy_users SET  Name='{$name}', Phone='{$phone}', PostID='{$office}', CenterID={$center}, Status=1 WHERE UserID='{$id}'",$con)){
+				$error = "<span class=success>User Updated Now</span>";
+			}
+		}
+	}
+
+	// var_dump($_POST, $_FILES);
+	$errorUpload = "";
+	if(@$_POST['addSignature'] && is_numeric($_POST['userId'])){
+		$fileinfo = explode(".", $_FILES['sign']['name']);
+		$extension = strtolower($fileinfo[(count($fileinfo) - 1)]);
+		$allowedExtensions = array("png", "jpeg", "jpg");
+
+		if(in_array($extension, $allowedExtensions)){
+			$filename = $_POST['userId'].".".$extension;
+			if(move_uploaded_file($_FILES['sign']['tmp_name'], "../images/signatures/".$filename)){
+				saveData("UPDATE sy_users SET signature='{$filename}' WHERE userId='{$_POST['userId']}'", $con);
+			} else{
+				$errorUpload = "<span class=error-text>Unable to uplaod the signature</span>";
+			}
+		} else{
+			$errorUpload = "<span class=error-text>Found file is {$extension} while allowed files are ".implode(", ", $allowedExtensions)."</span>";
+		}
+	}
+//die;
+$insurance = formatResultSet($rslt=returnResultSet($sql="SELECT DISTINCT in_name.* from in_name, in_category WHERE in_name.CategoryID=in_category.InsuranceCategoryID ORDER BY InsuranceCode ASC, InsuranceName DESC",$con),$multirows=true,$con);
+$active = "users";
+
+require_once "../lib2/cssmenu/cs_header.html";
+?>
+  <div id="w">
+    <div id="content">
+      <h1 style='margin-top:-55px'>USER CONFIGURATION</h1>
+      <b>
+	  <?= $error ?>
+	  <form action="./users.php" method=post />
+	  <?= @$data_to_update['UserID']?"<input type='hidden' name=id value='{$data_to_update['UserID']}' />":"" ?>
+	  <table class=frm>
+		<tr>
+			<td>Name</td>
+			<td>Username</td>
+			<td>Password</td>
+			<td>Office</td>
+			<td>Post</td>
+		<tr>
+		<tr>
+			<td><input type=text name=name value="<?= @$data_to_update['Name'] ?>" class=txtfield1 style='width:150px; font-size:16px;' /></td>
+			<td><input type=text name=phone value="<?= @$data_to_update['Phone'] ?>" class=txtfield1 style='width:150px; font-size:16px;' /></td>
+			<td><input type=password name=password class=txtfield1 style='width:150px; font-size:16px;' /></td>
+			<td>
+				<?php
+				$office = returnAllDataInTable($tbl="sy_post",$con);
+				if($office){
+					//var_dump($office);
+					echo "<select name='office' class=txtfield1 style='width:150px; font-size:16px;'>";
+					
+					foreach($office as $of){
+						echo "<option ".(@$data_to_update['PostID'] == $of['PostID']?"selected":"")." value={$of['PostID']}>{$of['PostName']}</option>";
+					}
+					echo "</select>";
+				}
+				?>
+			</td>
+			<td>
+				<?php
+				$office = returnAllDataInTable($tbl="sy_center",$con);
+				if($office){
+					//var_dump($office);
+					echo "<select name='center' class=txtfield1 style='width:150px; font-size:16px;'>";
+					
+					foreach($office as $of){
+						echo "<option ".($data_to_update['CenterID'] == $of['CenterID']?"selected":"")." value='{$of['CenterID']}'>{$of['CenterName']}</option>";
+					}
+					echo "</select>";
+				}
+				?>
+				</td>
+		<tr>
+		<tr>
+			<td><input type=submit name='<?= @$data_to_update['UserID']?"update":"save" ?>' value='Save' class=flatbtn-blu style='font-size:16px;' /></td>
+		</tr>
+	  </table>
+	  </form>
+	  	<div style="float: right; border:0px solid #000; min-width: 40%; font-size:14px;">
+	  		<?php
+	  		if(@$_GET['signature'] && is_numeric($_GET['user'])){
+	  			$userID = PDB($_GET['user'], true, $con);
+	  			$sql = "SELECT 	a.*,
+	  					b.PostName AS PostName,
+	  					c.CenterName AS CenterName
+	  					FROM sy_users AS a
+	  					INNER JOIN sy_post AS b
+	  					ON a.PostID = b.PostID
+	  					INNER JOIN sy_center AS c
+	  					ON a.CenterID = c.CenterID
+	  					WHERE Status = 1 && a.UserID = '{$userID}'
+	  					ORDER BY a.Name ASC
+	  					";
+	  			// echo $sql;
+				$data = formatResultSet($rslt=returnResultSet($sql,$con),$multirows=false,$con);
+		  		?>
+			  	<img src='../images/users/photo.png' style='padding:10px; float:left;width:100px; border-radius:20px;' />
+				Full Name: <?= $data['Name'] ?><br />
+				Username: <?= $data['Phone'] ?><br />
+				Service: <?= returnSingleField("SELECT PostName FROM sy_post WHERE PostID='".$data['PostID']."'", "PostName",true,$con); ?></br />
+				Post: <?= returnSingleField("SELECT CenterName FROM sy_center WHERE CenterID='".$data['CenterID']."'", "CenterName",true,$con); ?><br />
+				Status: <?= $data['Status']?"Active":"Blocked" ?><br />&nbsp;<br />&nbsp;<br />&nbsp;
+				<div style="width: 100%;">
+					Signature:<br />
+					<?php
+					if($data['signature']){
+						echo "<img src='../images/signatures/{$data['signature']}' />";
+					} else{
+						echo "None";
+					}
+					?>
+				</div>
+				<h1>Add Signature</h1>
+				<?= $error ?>
+				<form action="users.php?signature=signature&user=<?= $_GET['user'] ?>" method="POST" enctype="multipart/form-data">
+					<input type="file" name="sign" />
+					<input type="hidden" name="userId" value="<?= $data['UserID'] ?>" />
+					<input type="submit" name="addSignature" value="Upload" class="flatbtn-blu" />
+				</form>
+			  	<?php
+			}
+			?>
+		</div>
+	  <?php
+	  	$sql = "SELECT 	a.*,
+	  					b.PostName AS PostName,
+	  					c.CenterName AS CenterName
+	  					FROM sy_users AS a
+	  					INNER JOIN sy_post AS b
+	  					ON a.PostID = b.PostID
+	  					INNER JOIN sy_center AS c
+	  					ON a.CenterID = c.CenterID
+	  					WHERE Status = 1
+	  					ORDER BY a.Name ASC
+	  					";
+	  	// echo $sql;
+		$office = formatResultSet($rslt=returnResultSet($sql,$con),$multirows=true,$con);
+		if($office){
+			//var_dump($office);
+			echo "<div style='max-width:60%; max-height: 400px; overflow: auto;'>
+			<table class=list>
+				<tr>
+					<th>#</th>
+					<th>Name</th>
+					<th>User name</th>
+					<th>Post</th>
+					<th>Branch</th>
+					<th>Signature</th>
+					<th colspan='2'>&nbsp;</th>
+				</tr>";
+			$i=1;
+			foreach($office as $of){
+				echo "<tr>";
+				echo "<td>".($i++)."</td>";
+				echo "<td>{$of['Name']}</td>";
+				echo "<td>{$of['Phone']}</td>";
+				echo "<td>{$of['PostName']}</td>";
+				echo "<td>{$of['CenterName']}</td>";
+				echo "<td>";
+				if($of['signature']){
+					echo "<img src='../images/signatures/{$of['signature']}' />";
+				} else{
+					echo "<a href='./users.php?signature=signature&user={$of['UserID']}' style='color:blue; text-decoration:none;' />Signature</a>";
+				}
+				echo "</td>";
+				echo "<td><a href='./users.php?update=update&user={$of['UserID']}' style='color:blue; text-decoration:none;' />Update</a></td>";
+				echo "<td><a href='./users.php?delete=delete&user={$of['UserID']}' style='color:blue; text-decoration:none;' onclick='return confirm(\"Delete {$of['Name']} From Autholized Users\")' />Delete</a></td>";
+				echo "<td><a href='./users.php?pwd=reset&user={$of['UserID']}' style='color:blue; text-decoration:none;' onclick='return confirm(\"Reset password for {$of['Name']} to 123\")' />Reset</a></td>";
+				echo "</tr>";
+			}
+			echo "</table></div>";
+		}
+		?>
+
+		  
+	  </b>
+    </div>
+  </div>
+ <?php
+  include_once "../footer.html";
+  ?> 
+	<div class="apple_overlay" id="overlay">
+	  <!-- the external content is loaded inside this tag -->
+	  <div class="contentWrap"></div>
+	</div>
+  
+  <?php
+  //if the key get alelement is their searh automaticaly
+  if(@$_GET['key'] && is_numeric($_GET['key'])){
+	?>
+	<script>
+		$(document).ready(function(){
+			$(".patient_found").load("search_patient.php?key="+$("#patient_search").val() + "&ins=" + $("#insurance").val());
+			
+		});
+	</script>
+	<?php
+  }
+  ?>
+  <!-- make all links with the 'rel' attribute open overlays -->
+<script>
+function receivePatient(id,ins=""){
+	$(".patient_selected").load("receive_patient.php?key=" + id + "&ins=" + ins);
+}
+
+function findByInsurance(ins){
+	//$(".patient_selected").html("");
+	$(".patient_found").load("search_patient.php?key=" + ins);
+	
+}
+$(document).ready(function(){
+	
+	//if the search button is clicked search the patient_found
+	$("#search").click(function(e){
+		$(".doc_selected").html("");
+		$(".doc_found").load("doc_patient.php?key="+$("#doc_search").val());
+		return e.preventDefault();
+	});
+	$("#insurance").change(function(e){
+		$(".patient_selected").html("");
+		$(".patient_found").load("search_patient.php?key="+$("#patient_search").val() + "&ins=" + $("#insurance").val());
+	});
+	$("#doc_search").keyup(function(e){
+		$(".doc_selected").html("");
+		$(".doc_found").load("doc_patient.php?key="+$("#doc_search").val());
+		return e.preventDefault();
+	});
+});
+
+$(function() {
+
+    // if the function argument is given to overlay,
+    // it is assumed to be the onBeforeLoad event listener
+    $("a[rel]").overlay({
+
+        mask: '#206095',
+        effect: 'apple',
+        onBeforeLoad: function() {
+
+            // grab wrapper element inside content
+            var wrap = this.getOverlay().find(".contentWrap");
+
+            // load the page specified in the trigger
+            wrap.load(this.getTrigger().attr("href"));
+        }
+
+    });
+});
+</script>
+
+<script type="text/javascript">
+$(function(){
+
+	$("#username").keypress(function(e){
+		$("#username").removeClass("error");
+	});
+	$("#password").keypress(function(e){
+		$("#password").removeClass("error");
+	});
+  $('#loginform').submit(function(e){
+	var username = $("#username").val();
+	var password = $("#password").val();
+	if(username == ""){
+		$("#username").addClass("error");
+		return e.preventDefault();
+	}
+	
+	if(password == ""){
+		$("#password").addClass("error");
+		return e.preventDefault();
+	}
+	//submit the request using JQuery Ajax function
+	$.ajax({
+		type: "POST",
+		url: "./login.php",
+		data: "username=" + $("#username").val() + "&password=" + $("#password").val() + "&url=ajax",
+		cache: false,
+		success: function(result){
+			$(".login_result").html(result);
+		}
+	});
+    return e.preventDefault();
+	
+  });
+  
+  $('body').mousedown(function(e) {
+	var clicked = $(e.target); // get the element clicked
+	if (clicked.is('#overlay') || clicked.parents().is('#overlay')) {
+		return; // click happened within the dialog, do nothing here
+   } else { // click was outside the dialog, so close it
+     //$('.overlay').hide();
+	 //return false;
+   }
+});
+});
+</script>
+<?php
+if(@$_POST['rcv_patient']){
+	?>
+	<script>
+		receivePatient("<?php echo @$_POST['patientid'] ?>","<?php echo @$_POST['insurance'] ?>");
+	</script>
+	<?php
+}
+?>
+</body>
+</html>
