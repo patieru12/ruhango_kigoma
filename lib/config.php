@@ -2,7 +2,7 @@
 class DBConnector{
 	public $dbname;
 	public $payroll_user;
-	function __construct($db='care_full_v1_sovu',$server="127.0.0.1",$user="root",$password=''){
+	function __construct($db='care_full_v1',$server="127.0.0.1",$user="root",$password=''){
 		$password = '';
 		$this->dbname = $db;
 		$this->payroll_user = array("hr"=>"Human Resource","nrm"=>"Call Center","fnc"=>"Finance");

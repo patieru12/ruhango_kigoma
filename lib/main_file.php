@@ -1,5 +1,5 @@
 <?php
-$database_name = "care_full_v1_sovu";
+$database_name = "care_full_v1";
 
 $app_name = "Care";
 $version = "Version 2";

@@ -2,7 +2,7 @@
 /* database connection function */
 $con = null;
 
-function connectDB(&$con=null, $db="care_full_v1_sovu",$server="127.0.0.1",$username="root",$password=""){
+function connectDB(&$con=null, $db="care_full_v1",$server="127.0.0.1",$username="root",$password=""){
 	if($con != null)
 		return;
 		
