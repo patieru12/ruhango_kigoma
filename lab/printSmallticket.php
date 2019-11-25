@@ -47,8 +47,8 @@ $patient = formatResultSet($rslt=returnResultSet("SELECT 	a.*,
 															WHERE PatientRecordID ='{$patientID}'
 															", $con), false, $con);
 
-$dateInfo = "<span style='font-size:13px;'>GIHUNDWE HC<br />Tel: 0786282420</span><br /><span style='font-weight:bold; font-size:12px'>***".$records[0]['takenAt']."***</span><br />";
-$printCommand = "GIHUNDWE HC\nTel: 0786282420\n***".$records[0]['takenAt']."***\n";
+$dateInfo = "<span style='font-size:13px;'>{$client_receipt_header}<br />Tel: {$client_receipt_phone}</span><br /><span style='font-weight:bold; font-size:12px'>***".$records[0]['takenAt']."***</span><br />";
+$printCommand = "{$client_receipt_header}\nTel: {$client_receipt_phone}\n***".$records[0]['takenAt']."***\n";
 // $dateInfo = "Date: <b style='font-size:10px;'>{$records[0]['takenAt']}</b><br />";
 
 
@@ -90,10 +90,10 @@ if($printCommand && $_SESSION['user']['printerID']){
 	$cmd = PDB($printCommand, false,$con);
 	saveData("INSERT INTO sy_print_command SET printerID='{$_SESSION['user']['printerID']}', type=2, commandInfo='{$cmd}', pdfData=\"{$dateInfo}\", receitValue=0, submittedOn='".time()."'",$con);
 }
-$dateInfo .= "<div style='position:absolute; top:55%; left:50%; font-size:10px; color:#ff0000; text-align:center; border:1px, solid #fab;'>Press Print on the Phone</div>";
-require_once "../lib/mpdf57/mpdf.php";
+// $dateInfo .= "<div style='position:absolute; top:55%; left:50%; font-size:10px; color:#ff0000; text-align:center; border:1px, solid #fab;'>Press Print on the Phone</div>";
+// require_once "../lib/mpdf57/mpdf.php";
 
-$pdf = new MPDF("","A8",0,'',1,1,1,1);
+$pdf = new mPDF("","A8",0,'',1,1,1,1);
 
 $pdf->Open();
 

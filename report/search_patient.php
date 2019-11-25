@@ -281,8 +281,7 @@ if($patients){
 
 				}
 			}
-			
-				$row++;
+			$row++;
 		}
 		
 		//now write the report title

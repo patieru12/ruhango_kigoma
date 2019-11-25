@@ -31,7 +31,7 @@ foreach($_POST AS $key=>$value){
 		}
 		$patientID = str_replace("laSample_", "", $key);
 
-		$foundData .= generateLaboIDs($patientID, $quaters);
+		$foundData .= generateLaboIDs($patientID, $quaters, $ConsultationRecordID);
 	}
 }
 

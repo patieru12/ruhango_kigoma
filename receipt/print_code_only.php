@@ -21,8 +21,8 @@ $patient = formatResultSet($rslt=returnResultSet("SELECT 	a.*,
 															ON b.InsuranceNameID = d.InsuranceNameID
 															WHERE PatientRecordID ='{$patientID}'
 															", $con), false, $con);
-$stringData = "<span style='font-size:13px;'>GIHUNDWE HC<br />Tel: 0786282420</span><br /><span style='font-weight:bold; font-size:12px'>***".date("Y-m-d H:i:s",time())."***</span><br />";
-$printCommand = "GIHUNDWE HC\nTel: 0786282420\n***".date("Y-m-d H:i:s",time())."***\n";
+$stringData = "<span style='font-size:13px;'>{$client_receipt_header}<br />Tel: {$client_receipt_phone}</span><br /><span style='font-weight:bold; font-size:12px'>***".date("Y-m-d H:i:s",time())."***</span><br />";
+$printCommand = "{$client_receipt_header}\nTel: {$client_receipt_phone}\n***".date("Y-m-d H:i:s",time())."***\n";
 
 $stringData .= "Code: <span style='border:1px solid #000; font-weight:bold; padding-left:30px; padding-right:20px; font-size:12px'>&nbsp;&nbsp;&nbsp;&nbsp;".$patient['dailyID']."&nbsp;&nbsp;&nbsp;&nbsp;</span><br />";
 $printCommand .= "Code:      ".$patient['dailyID']."\n";
@@ -42,9 +42,9 @@ if($printCommand && $_SESSION['user']['printerID']){
 	saveData("INSERT INTO sy_print_command SET printerID='{$_SESSION['user']['printerID']}', commandInfo='{$cmd}', pdfData=\"{$stringData}\", receitValue='0', submittedOn='".time()."'",$con);
 }
 // $stringContent = "<span style='font-family:arial; font-size:10px; border:0px solid green;'>******".(date("Y-m-g H:i:s", time()))."*******<br />Ruberandinda Patience<br />Code: <br />-----------------------------------------------<br />My Data are here<hr />Again test<hr />If success by a bottle<hr />Thanks.....</span>";
-require_once "../lib/mpdf57/mpdf.php";
+// require_once "../lib/mpdf57/mpdf.php";
 
-$pdf = new MPDF("","A8",0,'',6,2,2);
+$pdf = new mPDF("","A8",0,'',6,2,2);
 
 $pdf->Open();
 

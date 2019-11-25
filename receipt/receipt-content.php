@@ -618,14 +618,17 @@ $patient = formatResultSet($rslt=returnResultSet("SELECT 	a.*,
 																			FROM sy_debt_records AS a
 																			WHERE a.PatientRecordID = '{$patientID}'
 																			", $con), false, $con);*/
+				$total_adjusted_amount = $total_to_be_paid_now;
 				$total_to_be_paid_now = RoundUp($total_to_be_paid_now, 10);
+				$total_adjusted_amount = $total_to_be_paid_now - $total_adjusted_amount;
 				?>
 				<table style="width: 100%">
 					<tr>
 						<td>
 							<h1 style="text-align: left; font-size:14px;">
 								Total Amount to pay: <?= number_format($total_to_be_paid_now) ?> RWF 
-								<input type="hidden" name="totalBill" id="totalBill" value="<?= $total_to_be_paid_now; ?>">
+								<input type="text" name="totalBill" id="totalBill" value="<?= $total_to_be_paid_now; ?>">
+								<input type="text" name="totalAdjust" id="totalAdjust" value="<?= $total_adjusted_amount; ?>">
 							</h1>
 						</td>
 						<td>

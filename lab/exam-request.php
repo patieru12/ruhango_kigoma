@@ -49,7 +49,7 @@ if(@$_GET['filter'] && trim($_GET['keyword'])){
 																	a.ExamNumber AS examNumber,
 																	a.ResultNumber AS resultNumber,
 																	f.Name AS patientName,
-																	h.RegisterNumber AS registerNumber,
+																	d.RegisterNumber AS registerNumber,
 																	i.Name AS consultantName,
 																	g.registerCode AS registerCode
 																	FROM la_records AS a
@@ -63,18 +63,17 @@ if(@$_GET['filter'] && trim($_GET['keyword'])){
 																	ON d.PatientRecordID = e.PatientRecordID
 																	INNER JOIN pa_info AS f
 																	ON e.PatientID = f.PatientID
-																	INNER JOIN co_records AS h
-																	ON a.ConsultationRecordID = h.ConsultationRecordID
 																	INNER JOIN sy_users AS i
-																	ON h.ConsultantID = i.UserID
+																	ON d.ConsultantID = i.UserID
 																	INNER JOIN sy_register AS g
-																	ON h.registerId = g.id
+																	ON d.registerId = g.id
 																	WHERE a.ExamNumber='' &&
 																		  a.status != -1
 																	GROUP BY a.ConsultationRecordID
 																	HAVING ResultDate = '{$date}'
 																	", $con), true, $con);
-	// echo $s;
+	// echo $s; die();
+	// $tbData = $s;
 }
 	// var_dump($exams);
 	if(is_array($exams)){
@@ -96,7 +95,7 @@ if(@$_GET['filter'] && trim($_GET['keyword'])){
 			</table>
 		</div>";
 	} else{
-		$tbData = "<tr><td><span class='error-text'>No Exam is Prescribed!</span></td></tr>";
+		$tbData = $s."<tr><td><span class='error-text'>No Exam is Prescribed!</span></td></tr>";
 	}
 $numberOfPatient = count($exams);
 $tbData .= <<<DATA

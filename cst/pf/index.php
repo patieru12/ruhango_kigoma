@@ -148,7 +148,7 @@ require_once "../../lib2/cssmenu/cst_pf_header.html";
 		$("#search").focus();
 		
 		$("#search").keyup(function(){
-			$("#bar").html("<img src='../images/ajax_clock_small.gif' />");
+			$("#bar").html("<img src='../../images/ajax_clock_small.gif' />");
 			//now try send the filter query
 			if(query_sent == false){
 				query_sent = true;

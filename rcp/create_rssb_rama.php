@@ -193,7 +193,7 @@ function familyChief(){
 }
 
 function RAMA(){
-	$(".h_label").html("Affiliate Name: <label class=as_link onclick='$(\"#father\").val($(\"#name\").val())'>Self</label> <label class=error-text>*</label>");
+	$(".h_label").html("Affiliate Name: <label class=error-text>*</label>");
 	$(".fcategory").html("Affectation <label class=error-text>*</label>");
 	$(".fcategorydata").html("<input type=text name=fcategory id=fcategory class=txtfield1 />");
 	$("#fcategory").val("");

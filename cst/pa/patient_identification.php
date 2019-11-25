@@ -118,7 +118,10 @@ if($patient['DateIn'] != date("Y-m-d", time())){
 				<?php
 				if($patient['DocStatus'] == "locked"){
 					?>
-					<a href="./pa/request-unlock.php?records=<?= $patient['PatientRecordID'] ?>" rel="#overlay2">Unlock</a>
+					<!-- <a href="./pa/request-unlock.php?records=<?= $patient['PatientRecordID'] ?>" rel="#overlay2">Unlock</a> -->
+					<script type="text/javascript">
+						// $(".editPatientRecord").prop("disabled");
+					</script>
 					<?php
 				}
 				?>
@@ -225,9 +228,9 @@ if($patient['DateIn'] != date("Y-m-d", time())){
 				Visit Purpose: 
 				<label> Natural Deasese<input type="radio" id="Purpose_1" <?= @$patient['visitPurpose'] == 1?"checked":"" ?> onclick="patientVisit(1, 'visitPurpose')" name="Purpose" value="1"></label>&nbsp;&nbsp;
 				<label>Occupational Desease<input type="radio" id="Purpose_2" <?= @$patient['visitPurpose'] == 2?"checked":"" ?> onclick="patientVisit(2, 'visitPurpose')" name="Purpose" value="2"></label>&nbsp;&nbsp;
-				<label>Road Traffic<input type="radio" id="Purpose_3" <?= @$patient['visitPurpose'] == 3?"checked":"" ?> onclick="patientVisit(3, 'visitPurpose')" name="Purpose" value="3"></label>&nbsp;&nbsp;
-				<label>Work Accident<input type="radio" id="Purpose_4" <?= @$patient['visitPurpose'] == 4?"checked":"" ?> name="Purpose" onclick="patientVisit(4, 'visitPurpose')" value="4"></label>&nbsp;&nbsp;
-				<label>Other<input type="radio" id="Purpose_5" <?= @$patient['visitPurpose'] == 5?"checked":"" ?> onclick="patientVisit(5, 'visitPurpose')" name="Purpose" value="5"></label>
+				<label>Road Traffic<input type="radio" id="Purpose_3" <?= @$patient['visitPurpose'] == 4?"checked":"" ?> onclick="patientVisit(4, 'visitPurpose')" name="Purpose" value="4"></label>&nbsp;&nbsp;
+				<label>Work Accident<input type="radio" id="Purpose_4" <?= @$patient['visitPurpose'] == 5?"checked":"" ?> name="Purpose" onclick="patientVisit(5, 'visitPurpose')" value="5"></label>&nbsp;&nbsp;
+				<label>Other<input type="radio" id="Purpose_5" <?= @$patient['visitPurpose'] == 3?"checked":"" ?> onclick="patientVisit(3, 'visitPurpose')" name="Purpose" value="3"></label>
 			</td>
 		</tr>
 	</table>

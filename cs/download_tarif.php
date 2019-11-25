@@ -93,7 +93,7 @@ PDFDATA;
 							<b>Preparé Par</b>:<br />
 							<br />&nbsp;
 							.............................<br />
-							Comptable C.S Gihundwe
+							Comptable C.S ".ucwords($client_abbr)."
 						</td>
 						<td>
 							<b>Verifié Par</b>:<br />
@@ -105,7 +105,7 @@ PDFDATA;
 							<b>Approuvé Par</b>:<br />
 							<br />&nbsp;
 							<b>{$organisation_represantative}</b><br />
-							Titulaire C.S Gihundwe
+							Titulaire C.S ".ucwords($client_abbr)."
 						</td>
 					</tr>
 				</table>
@@ -117,9 +117,9 @@ PDFDATA;
 
 if($pdfData){
 	//require the MPDF Library
-	require_once "../lib/mpdf57/mpdf.php";
+	// require_once "../lib/mpdf57/mpdf.php";
 
-	$pdf = new MPDF('c','A4','','',25,25,25,25,16,13);
+	$pdf = new mPDF('c','A4','','',10,10,10,10,16,13);
 
 	$pdf->mirrorMargins = 1;
 

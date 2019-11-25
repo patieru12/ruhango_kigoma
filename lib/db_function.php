@@ -29,7 +29,7 @@ function isDataExist($sql, &$con){
 function returnResultSet($sql,&$con){
 	if($con == null)
 		connectDB($con);
-	//echo $sql."<br />";
+	// echo $sql."<br />"; die();
 	if($r = mysql_query($sql)or die(mysql_error()." ".$sql))
 		return $r;
 	echo mysql_error()." ".$sql;
@@ -413,12 +413,30 @@ function generateDocID($type, &$rtnSql,$date = ""){
 	//echo $date;
 	if($date == "")
 		$date = date("Ymd",time());
-	$max = returnSingleField($sql="SELECT MAX(`LastID`) as DocID FROM sy_ids, pa_records, in_name, in_category WHERE pa_records.InsuranceNameID = in_name.InsuranceNameID && in_name.CategoryID = in_category.InsuranceCategoryID  && in_category.InsuranceCategoryID = sy_ids.InsuranceCategoryID && pa_records.InsuranceNameID='{$type}' && sy_ids.Day = '{$date}'","DocID",$data=true, $con);
-	//echo $sql;
+	$sql="SELECT MAX(d.LastID) as DocID
+						FROM pa_records AS a
+						INNER JOIN in_name AS b
+						ON a.InsuranceNameID = b.InsuranceNameID
+						INNER JOIN in_category AS c
+						ON b.CategoryID = c.InsuranceCategoryID
+						INNER JOIN sy_ids AS d
+						ON c.InsuranceCategoryID = d.InsuranceCategoryID
+						WHERE a.InsuranceNameID = '{$type}'
+						AND d.Day = '{$date}'";
+	$sql = "SELECT 	MAX(c.LastID) AS DocID
+					FROM in_name AS a
+					INNER JOIN in_category AS b
+					ON a.CategoryID = b.InsuranceCategoryID
+					INNER JOIN sy_ids AS c
+					ON b.InsuranceCategoryID = c.InsuranceCategoryID
+					WHERE a.InsuranceNameID = '{$type}'
+					AND c.Day = '{$date}'";
+	// die ($sql);
+	$max = returnSingleField($sql,"DocID",$data=true, $con);
+	// echo $sql;
 	//return;
-	//var_dump($type);
-	//var_dump($max);
-	
+	// var_dump($type, $max);
+	// die();
 	if($max == null)
 		$max = 0;//$date.returnSingleField($sql="SELECT InsuranceCode FROM in_category WHERE InsuranceCategoryID='".returnSingleField($sql="SELECT CategoryID FROM in_name WHERE InsuranceNameID='{$type}'","CategoryID",$data=true, $con)."'","InsuranceCode",$data=true, $con);
 	//var_dump($max);
@@ -902,7 +920,7 @@ function getEnglishNumber($number, $level=1){
 	return trim($numberStringOut.($additional?" point ".$additional:""));// . " (".$orginal.")";
 }
 
-function generateLaboIDs($patientID, &$quaters=array()){
+function generateLaboIDs($patientID, &$quaters=array(), &$ConsultationRecordID){
 	// Quanter information here
 	$quaterName = date("Y",time()).$quaters[date("m",time())];
 	$quaterID 	= formatResultSet($rslt= returnResultSet("SELECT 	a.QuarterID AS QuarterID
@@ -1080,6 +1098,7 @@ require_once @$path."main_file.php";
 /**************************************** HERE ALLOW THE USER TO Library installed using composer ******/
 if(file_exists(__DIR__ . "/../vendor/autoload.php")){
 	require_once __DIR__ . "/../vendor/autoload.php";
+	// use mPDF AS MPDF;
 } else {
 	die("
 		<div style='color: orange; font-size: 30px; font-weight: bold; font-family: arial; text-align:center;'>

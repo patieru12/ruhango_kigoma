@@ -1,5 +1,5 @@
 <?php
-header("Content Type:text/html");
+// header("Content Type:text/html");
 	//echo "Done\nDone1\nDone2\nDone22\nDone21\nName1\nName2\n"; die;
 	$q=$_GET['q'];
 	$mysqli=mysql_connect('localhost','root','') or die("Database Error");

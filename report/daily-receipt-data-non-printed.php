@@ -22,7 +22,7 @@ $data = formatResultSet($rslt=returnResultSet($sql,$con), true, $con);
 $receitValue = "SELECT SUM(a.receitValue) AS receiptValue FROM ($sql) AS a";
 $receiptValue = returnSingleField($receitValue, "receiptValue", true,$con);
 // var_dump($data);
-$dataString = "No receipt is printed ".$requestedDate;
+$dataString = "No receipt is not printed ".$requestedDate;
 if(count($data) > 0){
 	$dataString = count($data)." Receipts are available for printing containg the total amount of ".number_format($receiptValue);
 	$dataString .= "<table id=table border=1>";

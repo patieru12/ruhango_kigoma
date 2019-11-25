@@ -6,6 +6,7 @@ if("rcp" !== returnSingleField($sql="SELECT PostCode from sy_post WHERE PostID='
 	echo "<script>window.location='../logout.php';</script>";
 	return;
 }
+$_SESSION['user']['printerID'] = "2018200001";
 header("location:./create_cbhi.php");
 exit();
 //var_dump($_POST);

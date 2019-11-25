@@ -126,7 +126,17 @@ require_once "../lib2/cssmenu/ph_header.html";
 									";*/
 					//now select all non-approved request with the current operation code
 					// $request_data = formatResultSet($rslt=returnResultSet($sql,$con),$multirows=true,$con);
-					$request_data = formatResultSet($rslt=returnResultSet($sql="SELECT md_stock_records.*, md_name.MedecineName, DATE_FORMAT(FROM_UNIXTIME(md_stock_records.Date), '%Y-%m-%d %H:%i:%s') AS requestTime FROM md_name, md_stock, md_stock_records WHERE md_stock.MedicineStockID = md_stock_records.MedicineStockID && md_stock.MedicineNameID = md_name.MedecineNameID && md_stock_records.Status <= 0 && md_stock_records.Operation='REQUEST'",$con),$multirows=true,$con);
+					$request_data = formatResultSet($rslt=returnResultSet($sql="SELECT 	c.*, 
+																						a.MedecineName, 
+																						DATE_FORMAT(FROM_UNIXTIME(c.Date), '%Y-%m-%d %H:%i:%s') AS requestTime 
+																						FROM md_name AS a
+																						INNER JOIN  md_stock AS b
+																						ON a.MedecineNameID = b.MedicineNameID
+																						INNER JOIN md_stock_records AS c
+																						ON b.MedicineStockID = c.MedicineStockID
+																						WHERE c.Status <= 0 && 
+																						c.Operation='REQUEST'
+																						",$con),$multirows=true,$con);
 					//var_dump($request_data);
 					?>
 					<form action="./prepare-request.php" method=post>

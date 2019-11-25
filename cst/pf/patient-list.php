@@ -27,6 +27,7 @@ ALLDATA;
 						a.DateofBirth AS dateOfBirth,
 						a.Sex patientGender,
 						b.PatientRecordID AS patientID,
+						a.PatientID AS patientID,
 						e.status AS status,
 						f.InsuranceName AS InsuranceName,
 						b.TimeIn AS realTimeIn,
@@ -102,6 +103,7 @@ ALLDATA;
 						a.DateofBirth AS dateOfBirth,
 						a.Sex patientGender,
 						b.PatientRecordID AS patientID,
+						a.PatientID AS patientID,
 						e.status AS status,
 						f.InsuranceName AS InsuranceName,
 						b.TimeIn AS realTimeIn,
@@ -189,8 +191,10 @@ $data .= <<<ALLDATA
 		// Load the Diagnostic Information from here
 		$(".activePatient").removeClass("activeP");
 		$("#myTr" + patientID).addClass("activeP");
-		$("#patientIdentification").load("./pa/patient_identification.php?patientID=" + patientID);
-		$("#usageHistory").load("./pa/usage_summary.php?patientID=" + patientID);
+		$("#patientIdentification").load("./pa/patient_identification.php?patientID=" + patientID, function(){
+			$("#usageHistory").load("./pa/usage_summary.php?patientID=" + patientID);
+		});
+		
 	}
 	firstNumber = "{$numberOfPatient}"
 </script>

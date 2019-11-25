@@ -57,7 +57,7 @@ if($registerNumber <= 0){
 }*/ else{
 	//check if this number has
 	// echo $registerId;
-	saveData("UPDATE co_records SET registerId='{$registerId}', RegisterNumber='{$registerNumber}' WHERE ConsultationRecordID='{$recordId}'",$con);
+	saveData("UPDATE co_records SET ConsultantID='{$_SESSION['user']['UserID']}', registerId='{$registerId}', RegisterNumber='{$registerNumber}' WHERE ConsultationRecordID='{$recordId}'",$con);
 	// echo ;
 	if(@$_SESSION['user']['special'] == "PF"){
 		// Check if the user has already registered for the PF Usage

@@ -88,9 +88,9 @@ if(preg_match("/\d/", $_POST['consultationID'])){
 		// Here Check if the Medicines is in the PF Commond Data and register required Information
 		if(!is_null($price["commonDataId"]) && !is_null($patient["pfUserId"])){
 			// Register PF INFORMATION FROM HERE NOW
-			if(!returnSingleField("SELECT id FROM pf_records AS a WHERE a.userId = '{$patient['pfUserId']}' AND a.methodId='{$price['methodId']}' AND a.date='{$currentDateNow}'", "id", true,$con)){
+			if(!returnSingleField("SELECT a.id FROM pf_records AS a WHERE a.userId = '{$patient['pfUserId']}' AND a.methodId='{$price['methodId']}' AND a.date='{$currentDateNow}'", "id", true,$con)){
 				// Check the Duration the method used
-				$methodInfo = formatResultSet($rslt=returnResultSet("SELECT a.duration FROM pf_method WHERE id='{$price['methodId']}'", $con), false, $con);
+				$methodInfo = formatResultSet($rslt=returnResultSet("SELECT a.duration FROM pf_method AS a WHERE a.id='{$price['methodId']}'", $con), false, $con);
 				$checkedSecond = strtotime($date);
 				for($month = 0; $month < $methodInfo["duration"]; $month++){
 					$checkedSecond = strtotime(date("Y-m-t 23:59:59", $checkedSecond)) + 1;

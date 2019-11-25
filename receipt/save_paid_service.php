@@ -22,8 +22,8 @@ $patient = formatResultSet($rslt=returnResultSet("SELECT 	a.*,
 															WHERE PatientRecordID ='{$patientID}'
 															", $con), false, $con);
 // var_dump($patient, $_POST);
-$stringData = "<span style='font-size:13px;'>GIHUNDWE HC<br />Tel: 0786282420</span><br /><span style='font-weight:bold; font-size:12px'>***".date("Y-m-d H:i:s",time())."***</span><br />";
-$printCommand = "GIHUNDWE HC\nTel: 0786282420\n***".date("Y-m-d H:i:s",time())."***\n";
+$stringData = "<span style='font-size:13px;'>{$client_receipt_header}<br />Tel: {$client_receipt_phone}</span><br /><span style='font-weight:bold; font-size:12px'>***".date("Y-m-d H:i:s",time())."***</span><br />";
+$printCommand = "	\nTel: {$client_receipt_phone}\n***".date("Y-m-d H:i:s",time())."***\n";
 
 $stringData .= "Code: <span style='border:1px solid #000; font-weight:bold; padding-left:30px; padding-right:20px; font-size:12px'>&nbsp;&nbsp;&nbsp;&nbsp;".$patient['dailyID']."&nbsp;&nbsp;&nbsp;&nbsp;</span><br />";
 $printCommand .= "Code:      ".$patient['dailyID']."\n";
@@ -37,8 +37,9 @@ $tableName = "rpt_".str_replace(" ", "_", strtolower($patient['InsuranceName']))
 /*var_dump($_POST);
 // echo $stringData;
 die();*/
-$totalBill = 0;
-$totalPaid = 0;
+$totalBill 		= 0;
+$totalPaid 		= 0;
+$totalAdjust	= 0;
 foreach($_POST AS $key=>$value){
 	if($key == "consultation"){
 		saveData("UPDATE co_records SET status=1 WHERE ConsultationRecordID='{$value}'",$con);
@@ -79,6 +80,9 @@ foreach($_POST AS $key=>$value){
 		} else if($key == "totalPaid"){
 			$totalPaid = $value;
 		} else {
+			if($key == "totalAdjust"){
+				$totalAdjust = $value;
+			}
 			$stringData .= preg_replace("/^total/", "", $key).": <span style='border:0px solid #000; font-weight:bold; padding-left:5px; padding-right:2px; font-size:12px'>".number_format($value)." RWF</span><br />";
 			$printCommand .= preg_replace("/^total/", "", $key).": ".number_format($value)." RWF\n";
 			$itemName = $reportRenames[$key]; //"TM Paid";
@@ -95,6 +99,9 @@ $printCommand .= "Total ".number_format($totalBill)." RWF\n";
 $stringData .= "Paid "." <span style='border:0px solid #000; font-weight:bold; padding-left:5px; padding-right:2px; font-size:12px'>".number_format($totalPaid)." RWF</span><br />";
 $printCommand .= "Paid ".number_format($totalPaid)." RWF\n";
 
+/*$stringData .= "Adjust "." <span style='border:0px solid #000; font-weight:bold; padding-left:5px; padding-right:2px; font-size:12px'>".number_format($totalAdjust)." RWF</span><br />";
+$printCommand .= "Adjust ".number_format($totalAdjust)." RWF\n";*/
+
 $stringData .= "<span style=' font-size:12px'>Received By: ".$_SESSION['user']['Phone']."</span>";
 $printCommand .= "Received By: ".$_SESSION['user']['Phone']."\n\n\n";
 // echo $stringData; die();
@@ -103,9 +110,9 @@ if($printCommand && $_SESSION['user']['printerID']){
 	saveData("INSERT INTO sy_print_command SET printerID='{$_SESSION['user']['printerID']}', commandInfo='{$cmd}', pdfData=\"{$stringData}\", receitValue='{$totalPaid}', submittedOn='".time()."'",$con);
 }
 // $stringContent = "<span style='font-family:arial; font-size:10px; border:0px solid green;'>******".(date("Y-m-g H:i:s", time()))."*******<br />Ruberandinda Patience<br />Code: <br />-----------------------------------------------<br />My Data are here<hr />Again test<hr />If success by a bottle<hr />Thanks.....</span>";
-require_once "../lib/mpdf57/mpdf.php";
+// require_once "../lib/mpdf57/mpdf.php";
 
-$pdf = new MPDF("","A8",0,'',6,2,2);
+$pdf = new mPDF("","A8",0,'',2,2,2,2);
 
 $pdf->Open();
 
@@ -123,7 +130,8 @@ $pdf->Output($filename);
 <a href="<?= $filename ?>" id="print_now" target="_blank">Print</a>
 <script>
 	setTimeout(function(){
-		$("#print_now")[0].click();
+		// $("#print_now")[0].click();
+		window.open("../app/print_cmgd.php?process_id=2018200001", '_blank', 'location=yes,height=360,width=500,scrollbars=yes,status=yes');
 	},200);
 	setTimeout(function(){
 		LoadProfile("<?= $_POST['patientID'] ?>");

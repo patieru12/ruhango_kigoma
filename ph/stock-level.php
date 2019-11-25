@@ -23,9 +23,16 @@
 	if(@$_GET['filter'] && trim($_GET['keyword'])){
 		$d = mysql_query("SELECT Date FROM md_price WHERE Date <= '".(date("Y-m-d",time()))."' ORDER BY Date DESC LIMIT 0,1");
 		$active_date = mysql_fetch_assoc($d)['Date'];
-		
-		$diagnostic = formatResultSet($rslt=returnResultSet($sql="SELECT md_name.* FROM md_name, md_price WHERE md_price.MedecineNameID = md_name.MedecineNameID && md_price.Date='{$active_date}' && md_name.MedecineName LIKE('%".PDB($_GET['keyword'],true,$con)."%') ORDER BY MedecineName ASC",$con),$multirows=true,$con);
-		//echo $sql;
+		$query = PDB($_GET['keyword'],true,$con);
+		$diagnostic = formatResultSet($rslt=returnResultSet($sql="SELECT 	md_name.* 
+																			FROM md_name, md_price 
+																			WHERE md_price.MedecineNameID = md_name.MedecineNameID && 
+																			md_name.MedecineName LIKE('%{$query}%') 
+																			GROUP BY md_name.MedecineNameID
+																			ORDER BY MedecineName ASC
+																			",$con),$multirows=true,$con);
+
+		// echo $sql;
 		if($diagnostic){
 			echo "<table class=list><tr><th>#</th><th>Medicine</th><th>Stock</th><th></th></tr>";
 			for($i=0; $i<count($diagnostic); $i++){

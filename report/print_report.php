@@ -117,9 +117,13 @@ if($_GET['format'] == "excel" && @$_SESSION['report']){
 				$activeSheet->getColumnDimension($first_column)->setAutoSize(true);
 				$activeSheet->setCellValue(($first_column++).$row, $v);
 				//var_dump($v); echo "<br />";
-				if($v === "SUB TOTAL"){
+				if($v === "TOTAL 100%"){
 					//echo $v; echo $row;echo "<br />";
-					SpanCells($activeSheet,"A".$row.":K".$row,$align='center');
+					SpanCells($activeSheet,"A".$row.":J".$row,$align='center');
+					$activeSheet->setCellValue("A".$row, $v);
+				}else if($v === "TOTAL 85%"){
+					//echo $v; echo $row;echo "<br />";
+					SpanCells($activeSheet,"A".$row.":J".$row,$align='center');
 					$activeSheet->setCellValue("A".$row, $v);
 				}else if($v === "TOTAL"){
 					//echo $v; echo $row;echo "<br />";
@@ -145,7 +149,7 @@ if($_GET['format'] == "excel" && @$_SESSION['report']){
 		SpanCells($activeSheet,"B".($row + 3).":F".($row + 3),$align='left');
 		$activeSheet->setCellValue("B".($row + 3), "Prepared By: ".returnSingleField("SELECT Name FROM sy_users WHERE UserID='{$_SESSION['user']['UserID']}'","Name",$data=true, $con));
 		
-		$activeSheet->setTitle(date("Y-m-d",time()));
+		$activeSheet->setTitle("Bill Details");
 
 		// Create a new worksheet, after the default sheet
 		$objPHPExcel->createSheet();

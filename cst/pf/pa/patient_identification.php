@@ -9,7 +9,7 @@ if(!$registerId){
 }
 // var_dump($_GET);
 $patientID = $_GET['patientID'];
-$patient = formatResultSet($rslt=returnResultSet("SELECT 	a.*,
+$patient = formatResultSet($rslt=returnResultSet($sql = "SELECT 	a.*,
 															COALESCE(a.serialNumber, '') AS RegisterNumber,
 															COALESCE(b.nationalId,'') AS nationalId,
 															COALESCE(a.dateIn, '') AS startingDate,
@@ -62,10 +62,10 @@ $patient = formatResultSet($rslt=returnResultSet("SELECT 	a.*,
 															ON b.VillageID = c.villageId
 															LEFT JOIN pf_method AS d
 															ON a.usedMethodId = d.id
-															WHERE a.id ='{$patientID}'
+															WHERE a.patientId ='{$patientID}'
 															", $con), false, $con);
 
-// echo "<pre>";var_dump($patient);
+// var_dump($sql);
 // var_dump($patient['RegisterNumber']);
 /*if(!$patient['RegisterNumber'] && $patient['ServiceCode'] != 'PST'){
 	?>
@@ -108,7 +108,10 @@ $patient = formatResultSet($rslt=returnResultSet("SELECT 	a.*,
 				Martial Status: <b><?= $patient['martialStatus'] ?></b></td>
 		</tr>
 		<tr>
-			<td colspan="6" style="text-align: center;">Name: <b><?= $patient['patientName'] ?></b></td>
+			<td colspan="6" style="text-align: center;">
+				Name: <b><?= $patient['patientName'] ?></b>
+				<a class="fa fa-pencil" href="./pf-register.php?patientId=<?= $patient['patientId'] ?>" title="Edit Family Planning Reigter Informations" rel="#overlay2" style="color:blue; text-decoration: none;"></a>
+			</td>
 		</tr>
 		<tr>
 			<td colspan="6">

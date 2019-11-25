@@ -67,7 +67,7 @@ if(preg_match("/\d/", $_GET['patientID'])){
 				$tbData .= "<td>{$e['resultName']}</td>";
 				$tbData .= "<td>
 								".(!is_null($e['sampleTaken'])?"<a style='color:blue; text-decoration:none;' onclick='".($e['status']==0 && strtolower($patient['InsuranceName']) == "private" && 0?"alert(\"This is not Paid.\");":"AllowToAddResult({$e['ExamRecordID']});")."return false;' href='?{$e['ExamRecordID']}' title='Add Result on the Exam'><img src='../images/edit.png' /></a>":"")."
-								".(is_null($e['MonthlyID'])?"&nbsp;<a href='?{$e['ExamRecordID']}' onclick='return false;' title='This is exam is not performed'><img src='../images/delete.png'></a></a>":"")."
+								".(is_null($e['MonthlyID'])?"&nbsp;<a href='?{$e['ExamRecordID']}' onclick='return false;' title='This is exam is not examined'><img src='../images/delete.png'></a></a>":"")."
 							</td>";
 			$tbData .= "</tr>";
 		}

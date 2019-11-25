@@ -70,80 +70,86 @@ $zone_districts = array(2);
 
 $availableInsurance = array("CBHI", "MMI", "RSSB RAMA", "PRIVATE");
 
-$daily_reception_report = array(
-								"TM Paid" => array(
-													"rpt_cbhi"=>array("Number","Amount"),
-													"rpt_mmi"=>array("Number", "Amount"),
-													"rpt_rssb_rama"=>array("Number", "Amount"),
-													"rpt_private"=>array("", ""),
-												),
-								"Fiche de Prestation" => array(
-													"rpt_cbhi"=>array("Number","Amount"),
-													"rpt_mmi"=>array("", ""),
-													"rpt_rssb_rama"=>array("", ""),
-													"rpt_private"=>array("Number", "Amount"),
-												),
-								"Consultation" => array(
-													"rpt_cbhi"=>array("",""),
-													"rpt_mmi"=>array("", ""),
-													"rpt_rssb_rama"=>array("", ""),
-													"rpt_private"=>array("Number", "Amount"),
-												),
-								"Laboratory" => array(
-													"rpt_cbhi"=>array("",""),
-													"rpt_mmi"=>array("", ""),
-													"rpt_rssb_rama"=>array("", ""),
-													"rpt_private"=>array("Number", "Amount"),
-												),
-								"Medicines" => array(
-													"rpt_cbhi"=>array("",""),
-													"rpt_mmi"=>array("", ""),
-													"rpt_rssb_rama"=>array("", ""),
-													"rpt_private"=>array("Number", "Amount"),
-												),
-								"Accouchement" => array(
-													"rpt_cbhi"=>array("",""),
-													"rpt_mmi"=>array("", ""),
-													"rpt_rssb_rama"=>array("", ""),
-													"rpt_private"=>array("Number", "Amount"),
-												),
-								"Other Acts" => array(
-													"rpt_cbhi"=>array("",""),
-													"rpt_mmi"=>array("", ""),
-													"rpt_rssb_rama"=>array("", ""),
-													"rpt_private"=>array("Number", "Amount"),
-												),
-								"Consumables" => array(
-													"rpt_cbhi"=>array("",""),
-													"rpt_mmi"=>array("", ""),
-													"rpt_rssb_rama"=>array("", ""),
-													"rpt_private"=>array("Number", "Amount"),
-												),
-								"Hospitalisation" => array(
-													"rpt_cbhi"=>array("Number","Amount"),
-													"rpt_mmi"=>array("Number", "Amount"),
-													"rpt_rssb_rama"=>array("Number", "Amount"),
-													"rpt_private"=>array("Number", "Amount"),
-												),
-								"Other Printings" => array(
-													"rpt_cbhi"=>array("Number","Amount"),
-													"rpt_mmi"=>array("Number", "Amount"),
-													"rpt_rssb_rama"=>array("Number", "Amount"),
-													"rpt_private"=>array("Number", "Amount"),
-												),
-								"Lunettes" => array(
-													"rpt_cbhi"=>array("",""),
-													"rpt_mmi"=>array("", ""),
-													"rpt_rssb_rama"=>array("", ""),
-													"rpt_private"=>array("Number", "Amount"),
-												),
-								"Mousticaire" => array(
-													"rpt_cbhi"=>array("",""),
-													"rpt_mmi"=>array("", ""),
-													"rpt_rssb_rama"=>array("", ""),
-													"rpt_private"=>array("Number", "Amount"),
-												),
-							);
+$daily_reception_report = [
+	"TM Paid" => [
+		"rpt_cbhi"		=>["Number","Amount"],
+		"rpt_mmi"		=>["Number", "Amount"],
+		"rpt_rssb_rama"	=>["Number", "Amount"],
+		"rpt_private"	=>["", ""],
+	],
+	"Fiche de Prestation" => [
+		"rpt_cbhi"		=>["Number","Amount"],
+		"rpt_mmi"		=>["", ""],
+		"rpt_rssb_rama"	=>["", ""],
+		"rpt_private"	=>["Number", "Amount"],
+	],
+	"Consultation" => [
+		"rpt_cbhi"		=>["",""],
+		"rpt_mmi"		=>["", ""],
+		"rpt_rssb_rama"	=>["", ""],
+		"rpt_private"	=>["Number", "Amount"],
+	],
+	"Laboratory" => [
+		"rpt_cbhi"		=>["",""],
+		"rpt_mmi"		=>["", ""],
+		"rpt_rssb_rama"	=>["", ""],
+		"rpt_private"	=>["Number", "Amount"],
+	],
+	"Medicines" => [
+		"rpt_cbhi"		=>["",""],
+		"rpt_mmi"		=>["", ""],
+		"rpt_rssb_rama"	=>["", ""],
+		"rpt_private"	=>["Number", "Amount"],
+	],
+	"Accouchement" => [
+		"rpt_cbhi"		=>["",""],
+		"rpt_mmi"		=>["", ""],
+		"rpt_rssb_rama"	=>["", ""],
+		"rpt_private"	=>["Number", "Amount"],
+	],
+	"Other Acts" => [
+		"rpt_cbhi"		=>["",""],
+		"rpt_mmi"		=>["", ""],
+		"rpt_rssb_rama"	=>["", ""],
+		"rpt_private"	=>["Number", "Amount"],
+	],
+	"Consumables" => [
+		"rpt_cbhi"		=>["",""],
+		"rpt_mmi"		=>["", ""],
+		"rpt_rssb_rama"	=>["", ""],
+		"rpt_private"	=>["Number", "Amount"],
+	],
+	"Hospitalisation" => [
+		"rpt_cbhi"		=>["Number","Amount"],
+		"rpt_mmi"		=>["Number", "Amount"],
+		"rpt_rssb_rama"	=>["Number", "Amount"],
+		"rpt_private"	=>["Number", "Amount"],
+	],
+	"Other Printings" => [
+		"rpt_cbhi"		=>["Number","Amount"],
+		"rpt_mmi"		=>["Number", "Amount"],
+		"rpt_rssb_rama"	=>["Number", "Amount"],
+		"rpt_private"	=>["Number", "Amount"],
+	],
+	"Lunettes" => [
+		"rpt_cbhi"		=>["",""],
+		"rpt_mmi"		=>["", ""],
+		"rpt_rssb_rama"	=>["", ""],
+		"rpt_private"	=>["Number", "Amount"],
+	],
+	"Mousticaire" => [
+		"rpt_cbhi"		=>["",""],
+		"rpt_mmi"		=>["", ""],
+		"rpt_rssb_rama"	=>["", ""],
+		"rpt_private"	=>["Number", "Amount"],
+	],
+	"Adjustment" => [
+		"rpt_cbhi"		=> ["Number", "Amount"],
+		"rpt_mmi"		=> ["Number", "Amount"],
+		"rpt_rssb_rama"	=> ["Number", "Amount"],
+		"rpt_private"	=> ["Number", "Amount"],
+	],
+];
 $reportRenames = array(
 						"totalTM" 			=> "TM Paid",
 						"totalFiche" 		=> "Fiche de Prestation",
@@ -157,51 +163,52 @@ $reportRenames = array(
 						"totalOTHER" 		=> "Other Printings",
 						"totalLunette"		=> "Lunettes",
 						"totalSupanet"		=> "Mousticaire",
+						"totalAdjust"		=> "Adjustment"
 					);
 $exceptInReport = "Fiche de Prestation";
 $ficheName 		= "Fiche de Prestation";
 $envelopeName = "sachets pour medicaments";
 /*[insuranceID=>[consulatationCategory=>currentPriceID]]*/
 $defaultConsultationPriceID = null;
-$ReportAgeRange 			= array("0-6 Days", "7-2 Month", "2-59 month", "5-19 Years", "20-39 Years", "40 Years and more");
-$diagnosticReportAgeRange = array(
-								0 			=> array(
-															"prefix"=> "Days",
-															"min"	=> 0,
-															"max" => 6,
-															"range" => 0
-														), 
-								1 		=> array(
-															"prefix"=> "Weeks",
-															"min"	=> 1,
-															"max" => 8,
-															"range" => 2
-														),
-								2		=> array(
-															"prefix"=> "Month",
-															"min"	=> 2,
-															"max" => 59,
-															"range" => 0
-														), 
-								3		=> array(
-															"prefix"=> "Years",
-															"min"	=> 5,
-															"max" => 19,
-															"range" => 0
-														), 
-								4		=> array(
-															"prefix"=> "Years",
-															"min"	=> 20,
-															"max" 	=> 39,
-															"range" => 0
-														), 
-								5	=> array(
-															"prefix"=> "Years",
-															"min"	=> 40,
-															"max" 	=> -1,
-															"range" => 0
-														)
-							);
+$ReportAgeRange 			= ["0-6 Days", "7-2 Month", "2-59 month", "5-19 Years", "20-39 Years", "40 Years and more"];
+$diagnosticReportAgeRange = [
+	0 => [
+		"prefix"=> "Days",
+		"min"	=> 0,
+		"max" => 6,
+		"range" => 0
+	], 
+	1 => [
+		"prefix"=> "Weeks",
+		"min"	=> 1,
+		"max" => 8,
+		"range" => 2
+	],
+	2 => [
+		"prefix"=> "Month",
+		"min"	=> 2,
+		"max" => 59,
+		"range" => 0
+	], 
+	3 => [
+		"prefix"=> "Years",
+		"min"	=> 5,
+		"max" => 19,
+		"range" => 0
+	], 
+	4 => [
+		"prefix"=> "Years",
+		"min"	=> 20,
+		"max" 	=> 39,
+		"range" => 0
+	], 
+	5 => [
+		"prefix"=> "Years",
+		"min"	=> 40,
+		"max" 	=> -1,
+		"range" => 0
+	]
+];
 $vitalSignFieldList = array(
 							"Weight"=> array("display"=>"Weight", "alt"=>"Weight"),
 							"Temperature" => array("display"=>"Temperature", "alt"=>"Temp"),
@@ -229,15 +236,17 @@ $cbhiMonthlyBillHeader = array(
 							array("HEALTH FACILITY"=> strtoupper($organisation)),
 							array("CODE / HEALTH FACILITY"=>$organisation_code_minisante),
 						);
-$cbhiMonthlyBillReportTitle = array("title"=>"S U M M A R Y  O F V O U C H E R S  F O R  R W A N D A S O C I A L S E C U R I T Y B O A D (R S S B) / CBHI");
+$cbhiMonthlyBillReportTitle = array("title"=>"S U M M A R Y  O F V O U C H E R S  F O R  R W A N D A S O C I A L S E C U R I T Y B O A D (R S S B) / C B H I");
 $cbhiMonthlyBillDataHeader 	= array(array("No","Number","Date","Service","Cat.","Name","ID Number","Age","Sex","House Holder","ID Number of Household","Cons Cost","Lab","Imaging","Hosp","Procedures & Consumables", "Ambulance","Other Consumables","Drugs","Total","Co-payment","Amount after verification"),
 									array("","","","","","","","","","","","100%","100%","100%","100%","100%", "100%","100%","100%","100%","200 RWF /10%","")
 								);
 
 
-$client = "KIGOMA";
-$client_description = "About Kigoma Health Center";
-$client_abbr = "kigoma"; // <<<<<=============This will hold the file name with html extension to describe the client
+$client_receipt_header 	= "KIGOMA HC";
+$client_receipt_phone 	= "";
+$client 				= "KIGOMA";
+$client_description 	= "About Kigoma Health Center";
+$client_abbr 			= "kigoma"; // <<<<<=============This will hold the file name with html extension to describe the client
 
 $organisationKiny	= "Ikigo Nderabuzima cya KIGOMA";
 $rssb_rama_region 	= "RUHANGO";

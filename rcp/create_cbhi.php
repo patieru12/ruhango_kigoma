@@ -490,19 +490,19 @@ $(document).ready(function(){
 		//$(".patient_found").load("search_patient.php?key="+$("#patient_search").val() + "&ins=" + $("#insurance").val());
 	});
 	$("#patient_search_").keyup(function(e){
-			 $(".found_link").html("");
-			 $("#name").val("");
-			 $("#patient_search").val("");
-			 $("#patient_id").val("");
-			 $("#age").val("");
-			 $("#father").val("");
-			 $("#update_").val("0");
-			 $("#update").removeAttr("checked");
-			
-			 $("#district").val("");
-			 $("#sector").val("");
-			 $("#cell").val("");
-			 $("#village").val("");
+		$(".found_link").html("");
+		$("#name").val("");
+		$("#patient_search").val("");
+		$("#patient_id").val("");
+		$("#age").val("");
+		$("#father").val("");
+		$("#update_").val("0");
+		$("#update").removeAttr("checked");
+		
+		$("#district").val("");
+		$("#sector").val("");
+		$("#cell").val("");
+		$("#village").val("");
 			 
 		$(".patient_found_search").show(2000);
 		$(".patient_selected").html("");

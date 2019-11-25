@@ -12,7 +12,7 @@ if(!trim($_POST['consultationID'])){
 }
 
 if(!in_array($_POST['status'], array(2,3))){
-	echo "<span class=error-text>The Transfer Option is not in ranage</span>";
+	echo "<span class=error-text>The Transfer Option is not in range</span>";
 	return;
 }
 $consultationID = PDB($_POST['consultationID'], true, $con);
@@ -22,6 +22,8 @@ $patientRecordID = returnSingleField("SELECT PatientRecordID FROM co_records AS 
 
 // var_dump($patientRecordID);
 saveData("UPDATE pa_records SET Status='{$status}' WHERE PatientRecordID = '{$patientRecordID}'",$con);
+
+/* Add the transfer file automaticaly to the patient consumable */
 $sql = "SELECT 	a.PatientRecordID AS PatientRecordID,
 				b.ConsultantID AS ConsultantID
 				FROM pa_records AS a 

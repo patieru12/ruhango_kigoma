@@ -2,7 +2,7 @@
 	session_start();
 	
 	require_once "../lib/db_function.php";
-	// var_dump($_POST);
+	var_dump($_POST);
 	$date = date("Y-m-d", time());
 	$date2 = time();
 	$quantity = PDB($_POST['new_value'], true, $con);

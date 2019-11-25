@@ -19,7 +19,7 @@ require_once "../lib2/cssmenu/cst_header.html";
   <div id="w" style='height: auto;'>
     <div id="content" style='height: auto;'>
     	<b>
-		<h1 style='align: center; margin-top:-55px;'>Consultation Dashboard</h1>
+		<h1 style='text-align: center; margin-top:-55px;'>Consultation Dashboard</h1>
 <table class="ds_box" cellpadding="0" cellspacing="0" id="ds_conclass"
 	   style="display: none;">
 	<tr>
@@ -76,7 +76,7 @@ require_once "../lib2/cssmenu/cst_header.html";
 						<form>
 							<!-- <input type="text" id="consultationData" class="txtfield1" name="" placeholder="Enter New Diagnostic" /> -->
 							<textarea style="width: 85%;" id="consultationDataToSave" rows="2" placeholder="Enter Consultation Summary Here"></textarea>
-							<button type="button" id="saveConsultationUpdate" class="flatbtn-blu" style="margin-top: -20px;">Add New</button>
+							<button type="button" id="saveConsultationUpdate" class="flatbtn-blu editPatientRecord" style="margin-top: -20px;">Add New</button>
 						</form>
 					</div>
 					<hr />
@@ -97,7 +97,7 @@ require_once "../lib2/cssmenu/cst_header.html";
 										<input type="hidden" name="examRecorID" id="examRecorID">
 										<input type="text" id="requestExam" class="txtfield1" name=""> &nbsp;
 										<span id="tdrResult"></span>
-										<button id="requestExamBtn" class="flatbtn-blu">Add New</button>
+										<button id="requestExamBtn" class="flatbtn-blu editPatientRecord">Add New</button>
 									</th>
 								</tr>
 							</tfoot>
@@ -115,7 +115,7 @@ require_once "../lib2/cssmenu/cst_header.html";
 							<label><input type="radio" name="diagEpisode" class="caseEpisode" value="0" id="newCaseEpisode">New Case</label>&nbsp;&nbsp;
 							<label><input type="radio" name="diagEpisode" class="caseEpisode" value="1" id="oldCaseEpisode">Old Case</label>&nbsp;&nbsp;
 							<br />
-							<button type="button" id="saveDiagnosticUpdate" class="flatbtn-blu">Add New</button> <input type="hidden" name="DiagnosticRecordID" id="DiagnosticRecordID">
+							<button type="button" id="saveDiagnosticUpdate" class="flatbtn-blu editPatientRecord">Add New</button> <input type="hidden" name="DiagnosticRecordID" id="DiagnosticRecordID">
 						</form>
 					</div>
 					<hr />
@@ -179,7 +179,7 @@ require_once "../lib2/cssmenu/cst_header.html";
 											</tr>
 											<tr>
 												<td>
-													<button id="requestMedicinesBtn" class="flatbtn-blu">Add Medicine</button>
+													<button id="requestMedicinesBtn" class="flatbtn-blu editPatientRecord">Add Medicine</button>
 												</td>
 											</tr>
 										</table>
@@ -216,7 +216,7 @@ require_once "../lib2/cssmenu/cst_header.html";
 								<tr>
 									<th style="border:1px solid #fff; border-top:1px solid #000; padding-top: 5px;"><input id="requestActs" placeholder="Act Name" type="text" class="txtfield1" name=""> <input type="hidden" name="ActRecordID" id="ActRecordID"> </th>
 									<th style="border:1px solid #fff; border-top:1px solid #000; padding-top: 5px;"><input id="requestActsQty" placeholder="Quantity" type="text" class="txtfield1" name="" value="1"> </th>
-									<th style="border:1px solid #fff; border-top:1px solid #000; padding-top: 5px;"><button id="requestActsBtn" class="flatbtn-blu">Add Act</button></th>
+									<th style="border:1px solid #fff; border-top:1px solid #000; padding-top: 5px;"><button id="requestActsBtn" class="flatbtn-blu editPatientRecord">Add Act</button></th>
 								</tr>
 							</tfoot>
 						</table>
@@ -237,7 +237,7 @@ require_once "../lib2/cssmenu/cst_header.html";
 								<tr>
 									<th style="border:1px solid #fff; border-top:1px solid #000; padding-top: 5px;"><input id="requestConsumables" placeholder="Consumable Name" type="text" class="txtfield1" name=""> <input type="hidden" name="ConsumableRecordID" id="ConsumableRecordID"> </th>
 									<th style="border:1px solid #fff; border-top:1px solid #000; padding-top: 5px;"><input id="requestConsumablesQty" placeholder="Consumable Quantity" type="text" class="txtfield1" name=""> </th>
-									<th style="border:1px solid #fff; border-top:1px solid #000; padding-top: 5px;"><button id="requestConsumablesBtn" class="flatbtn-blu">Add Consumable</button></th>
+									<th style="border:1px solid #fff; border-top:1px solid #000; padding-top: 5px;"><button id="requestConsumablesBtn" class="flatbtn-blu editPatientRecord">Add Consumable</button></th>
 								</tr>
 							</tfoot>
 						</table>
@@ -259,7 +259,7 @@ require_once "../lib2/cssmenu/cst_header.html";
 								<th style="border:1px solid #fff; border-top:1px solid #000; padding-top: 5px;"><input id="requestType" placeholder="Select Hospitalization Room Type" type="text" class="txtfield1" name=""><!--<button id="requestHospitalizationIn" class="flatbtn">Get In</button>--> </th>
 								<th style="border:1px solid #fff; border-top:1px solid #000; padding-top: 5px;"><input id="requestDateIn" onclick="ds_sh(this,'requestDateIn');" placeholder="Select Hospitalization Date In" type="text" class="txtfield1" name=""><!--<button id="requestHospitalizationIn" class="flatbtn">Get In</button>--> </th>
 								<th style="border:1px solid #fff; border-top:1px solid #000; padding-top: 5px;"><input id="requestDateOut" onclick="ds_sh(this,'requestDateOut');" placeholder="Select Hospitalization Date Out" type="text" class="txtfield1" name=""></th>
-								<th style="border:1px solid #fff; border-top:1px solid #000; padding-top: 5px;"><input type="hidden" id="HORecordID" name=""><button id="requestHospitalizationOut" class="flatbtn-blu">Add Hosp</button></th>
+								<th style="border:1px solid #fff; border-top:1px solid #000; padding-top: 5px;"><input type="hidden" id="HORecordID" name=""><button id="requestHospitalizationOut" class="flatbtn-blu editPatientRecord">Add Hosp</button></th>
 								<th style="border:1px solid #fff; border-top:1px solid #000; padding-top: 5px;"></th>
 							</tr>
 							</tr>
@@ -271,9 +271,9 @@ require_once "../lib2/cssmenu/cst_header.html";
 				<a href="" rel="#overlay" id="preview_history" ></a>
 				<a href="" rel="#overlay2" id="transfer_patient" ></a>
 				<button class="flatbtn" onclick="checkHistory();">History</button>
-				<button class="flatbtn" onclick="transfer(2)">Transfer</button>
-				<button onclick="transfer(3)" class="flatbtn">Transfer With Ambulance</button> 
-				<button class="flatbtn" onclick="checkTrasfer();">Internal Transfer</button>
+				<button class="flatbtn editPatientRecord" onclick="transfer(2)">Transfer</button>
+				<button class="flatbtn editPatientRecord" onclick="transfer(3)">Transfer With Ambulance</button> 
+				<button class="flatbtn editPatientRecord" onclick="checkTrasfer();">Internal Transfer</button>
 				
     			</td>
     		</tr>

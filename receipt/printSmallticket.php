@@ -1,8 +1,8 @@
 <?php
 $stringContent = "<span style='font-family:arial; font-size:10px; border:0px solid green;'>******".(date("Y-m-g H:i:s", time()))."*******<br />Ruberandinda Patience<br />Code: <br />-----------------------------------------------<br />My Data are here<hr />Again test<hr />If success by a bottle<hr />Thanks.....</span>";
-require_once "../lib/mpdf57/mpdf.php";
+// require_once "../lib/mpdf57/mpdf.php";
 
-$pdf = new MPDF("","A8",0,'',6,2,2);
+$pdf = new mPDF("","A8",0,'',6,2,2);
 
 $pdf->Open();
 

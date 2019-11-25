@@ -10,6 +10,17 @@ if(!$registerId){
 // var_dump($_GET);
 $patientID 		= PDB($_GET['patientID'], true, $con);
 
+/*Here match the comming Patient ID to the PF User Id*/
+$pfInfo = returnSingleField("SELECT b.id AS patientId
+									FROM pa_info AS a
+									INNER JOIN pf_user AS b
+									ON a.PatientID = b.patientId
+									WHERE a.PatientID = '{$patientID}'
+									", "patientId", true, $con);
+if($pfInfo){
+	$patientID = $pfInfo;
+}
+
 $sql = "SELECT 	a.userId,
 				a.serviceYear,
 				jan.usedMethod AS `Jan`,

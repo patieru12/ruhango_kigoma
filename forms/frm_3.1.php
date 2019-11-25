@@ -31,12 +31,12 @@ if($record['visitPurpose'] == 3){
 }
 
 $rta_str = "<img src='../images/box.png' style='width:35px;' />";
-if($record['visitPurpose'] == 4){
+if($record['visitPurpose'] == 5){
 	$rta_str = "<img src='../images/box-checked.png' style='width:35px;' />";
 }
 
 $wa_str = "<img src='../images/box.png' style='width:35px;' />";
-if($record['visitPurpose'] == 5){
+if($record['visitPurpose'] == 4){
 	$wa_str = "<img src='../images/box-checked.png' style='width:35px;' />";
 }
 
@@ -370,6 +370,7 @@ $info = <<<INFO
 	.withborders td, .withborders th{
 		border:1px solid #000;
 		vertical-align:top;
+		font-size: 11px;
 	}
 	
 	.inner_table td{margin-left:-2px;}
@@ -451,7 +452,7 @@ $info = <<<INFO
 		</td>
 	</tr>
 	<tr>
-		<td style='border:0px solid #f00; text-align:center; text-decoration:underline; font-weight:bold; font-size:13px;'>
+		<td style='border:0px solid #f00; text-align:center; text-decoration:underline; font-weight:bold; font-size:11px;'>
 			DETAILS DES SOINS RECUS
 		</td>
 	</tr>
@@ -464,34 +465,34 @@ $info = <<<INFO
 					<th>Coût(en chiffre)</td>
 				</tr>
 				<tr>
-					<td style="text-align:center; height:40px"><br /><span style='font-weight:bold; font-size:11px;'>{$record['DateIn']}</span></td>
-					<td>Consultation:<br />&nbsp;<span style='font-weight:bold; font-size:11px;'>{$consultationString}</span></td>
-					<td><br /><span style='font-weight:bold; font-size:11px;'>{$consultationStringAmount}</span></td>
+					<td style="text-align:center; height:40px"><br /><span style='font-weight:bold; font-size:9px;'>{$record['DateIn']}</span></td>
+					<td>Consultation:<br />&nbsp;<span style='font-weight:bold; font-size:9px;'>{$consultationString}</span></td>
+					<td><br /><span style='font-weight:bold; font-size:9px;'>{$consultationStringAmount}</span></td>
 				</tr>
 				<tr valign=top>
 					<td><br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;</td>
-					<td>Exam:<br /><span style='font-weight:bold; font-size:11px;'>{$existing_exams}</span></td>
-					<td><br /><span style='font-weight:bold; font-size:11px;'>{$existing_examsAmount}</span></td>
+					<td>Exam:<br /><span style='font-weight:bold; font-size:9px;'>{$existing_exams}</span></td>
+					<td><br /><span style='font-weight:bold; font-size:9px;'>{$existing_examsAmount}</span></td>
 				</tr>
 				<tr valign=top>
 					<td style='height:100px'>&nbsp;</td>
-					<td>Médicaments:<br /><span style='font-weight:bold; font-size:11px;'>{$existing_medicines}</td>
-					<td><br /><span style='font-weight:bold; font-size:11px;'>{$existing_medicinesAmount}</td>
+					<td>Médicaments:<br /><span style='font-weight:bold; font-size:9px;'>{$existing_medicines}</td>
+					<td><br /><span style='font-weight:bold; font-size:9px;'>{$existing_medicinesAmount}</td>
 				</tr>
 				<tr valign=top>
 					<td style='height:40px'>&nbsp;</td>
-					<td>Hospitalisation (Nombre de Jours)<br /><span style='font-weight:bold; font-size:11px;'>{$hospitalisationString}</span></td>
-					<td><br /><span style='font-weight:bold; font-size:11px;'>{$hospitalisationStringAmount}</td>
+					<td>Hospitalisation (Nombre de Jours)<br /><span style='font-weight:bold; font-size:9px;'>{$hospitalisationString}</span></td>
+					<td><br /><span style='font-weight:bold; font-size:9px;'>{$hospitalisationStringAmount}</td>
 				</tr>
 				<tr valign=top>
 					<td style='height:110px'>&nbsp;</td>
-					<td>Autre (Spécifier):<br /><span style='font-weight:bold; font-size:11px;'>{$actString} {$consumableString}</span></td>
-					<td><br/><span style='font-weight:bold; font-size:11px;'>{$actStringAmount} {$consumableStringAmount}</span></td>
+					<td>Autre (Spécifier):<br /><span style='font-weight:bold; font-size:9px;'>{$actString} {$consumableString}</span></td>
+					<td><br/><span style='font-weight:bold; font-size:9px;'>{$actStringAmount} {$consumableStringAmount}</span></td>
 				</tr>
 				<tr valign=top>
 					<td style='height:50px'>&nbsp;</td>
 					<td style='padding-left:80px;'>
-						<table border=0 style='border:0px solid #000;'>
+						<table border=0 style='border:0px solid #000; font-size: 10px;'>
 							<tr>
 								<td style='width:80px; border:0px solid #000; font-weight:bold;'>TOTAL</td><td style='text-align:right; border:0px solid #000; font-weight:bold;'>100%:</td><td style='width:200px; border:0px solid #000; font-weight:bold;'>{$mainTotalAmount}</td>
 							</tr>

@@ -2,6 +2,7 @@
 session_start();
 // var_dump($_GET);
 require_once "../lib/db_function.php";
+
 if("rcp" !== returnSingleField($sql="SELECT PostCode from sy_post WHERE PostID='{$_SESSION['user']['PostID']}'",$field="PostCode",$data=true, $con)){
 	echo "<script>window.location='../logout.php';</script>";
 	return;
@@ -99,7 +100,7 @@ if(is_array($validDates)){
 				</table>
 PDFDATA;
 		$html = '
-		<h3>Tarif used in '.$month[(int)$_GET['month']].' '.$_GET["year"].'</h3>
+		<h3 style="text-align: center;">Tarif used in '.$month[(int)$_GET['month']].' '.$_GET["year"].'</h3>
 		<table border="1" style="border-collapse:collapse;">
 			<thead>
 				<tr>';
@@ -156,9 +157,9 @@ PDFDATA;
 	<?php
 	$html = utf8_encode($pdfData.$html);
 	//require the MPDF Library
-	require_once "../lib/mpdf57/mpdf.php";
+	// require_once "../lib/mpdf57/mpdf.php";
 
-	$pdf = new MPDF($mode='',$format='A4',$default_font_size=0,$default_font='',$mgl=15,$mgr=15,$mgt=10,$mgb=10);
+	$pdf = new mPDF($mode='',$format='A4',$default_font_size=0,$default_font='',$mgl=15,$mgr=15,$mgt=10,$mgb=10);
 
 	$pdf->Open();
 
@@ -167,7 +168,7 @@ PDFDATA;
 	$pdf->SetFont("Arial","N",10);
 
 	$pdf->WriteHTML($html);
-	$pdf->setHTMLFooter("<div style='float:right; border:0px solid red; width:49%;'>Printed using care software | easy one ltd</div></div>");
+	$pdf->setHTMLFooter("<div style='float:right; border:0px solid red; width:49%;'>Printed using care software | Genius Software ltd</div></div>");
 	$filename = "./tarif.pdf";
 	//echo $filename;
 	$pdf->Output($filename);

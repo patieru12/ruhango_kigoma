@@ -82,7 +82,9 @@ if(@$_POST['rcv_patient_btn']){
 		$inNameID = $_POST['insurance'];
 		$seNameD  = $_POST['service'];
 		$log = array();
+
 		$ConsultationPriceID = autoConsulatationPricing($inNameID, $seNameD, $log);
+		// die("OK ".$ConsultationPriceID);
 		if(!$ConsultationPriceID){
 			echo "<span class=error-text>No Consulation is available for current service<br />{$log['msg']}</span>";
 			return;
@@ -95,7 +97,7 @@ if(@$_POST['rcv_patient_btn']){
 		if($save_in_insurance){
 			saveData("INSERT INTO pa_insurance_cards SET PatientID='{$patient_id}', InsuranceNameID='{$_POST['insurance']}', InsuranceCardsID='{$_POST['card_id']}', Status=1".($ins == "RSSB RAMA"?" ,AffiliateNumber='{$_POST['fcategory']}', AffiliateName='{$_POST['father']}', Affectation='{$_POST['location']}'":"").($ins == "MMI"?", AffiliateName='{$_POST['father']}'":""),$con);
 		}
-		
+		// die($patient_id);
 		if($patient_id){
 			if($record = returnSingleField("SELECT PatientRecordID FROM pa_records WHERE Status=0 && DateIn='{$_POST['date']}' && PatientID='{$patient_id}'",$field="PatientRecordID",$data=true, $con)){
 				
@@ -154,6 +156,7 @@ if(@$_POST['rcv_patient_btn']){
 					}
 
 					//check if the service 
+					// echo "Here!"; die();
 					$service = formatResultSet($rslt=returnResultSet($sql="SELECT DISTINCT se_name.* FROM se_name WHERE se_name.ServiceCode='PST'",$con),$multirows=false,$con);
 					if($service['ServiceNameID'] == $_POST['service']){
 						//now save data related to the pst service

@@ -263,7 +263,7 @@ if($patients){
 		$ddd[] = "";
 		$ddd[] = "";
 		$ddd[] = "";
-		$ddd[] = "SUB TOTAL";
+		$ddd[] = "TOTAL 100%";
 		$ddd[] = "";
 		$ddd[] = "";
 		foreach($t as $tt){
@@ -284,7 +284,7 @@ if($patients){
 		$ddd[] = "";
 		$ddd[] = "";
 		$ddd[] = "";
-		$ddd[] = "SUB TOTAL";
+		$ddd[] = "TOTAL 85%";
 		$ddd[] = "";
 		$ddd[] = "";
 		$empty =  0;
