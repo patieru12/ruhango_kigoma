@@ -1093,6 +1093,7 @@ $location = "KIGOMA";
 
 /**************************************** MAIN FILE CONTETS LOADED HERE *******/
 require_once @$path."main_file.php";
+require_once @$path."configure.php";
 /**************************************** MAIN FILE CONTETS LOADED HERE *******/
 
 /**************************************** HERE ALLOW THE USER TO Library installed using composer ******/
@@ -1116,6 +1117,6 @@ if(file_exists(__DIR__ . "/../vendor/autoload.php")){
 // die();
 
 //connect db by default
-connectDB($con);
+connectDB($con, $usedDatabase);
 require_once @$path."mode_switching.php";
 ?>

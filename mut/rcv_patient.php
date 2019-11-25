@@ -62,13 +62,14 @@ if(@$_POST['rcv_patient_btn']){
 
 		$fatherId = preg_replace("/[^0-9]/", "", $_POST['fatherID']);
 		$invalidChars = preg_match("/[^0-9]/", $_POST['fatherID']);
-		if(strlen($fatherId) != 16){
+		if(!in_array(strlen($fatherId), [16, 8])) {
 			echo $invalidChars?"<span class=success>Invalid Character found in the Household Id and will be removed check you input please.</span><br />":"";
-			echo "<span class=error-text>Please Sixteen Digits required for Household Id Number.</span>";
+			echo "<span class=error-text>Please Household Id Number.</span>";
 			return;
 		}
 
 		// Here Validate the ID Card Number
+		// var_dump($_POST['id_card_']); die();
 		$fieldToSaveIn = PDB($_POST['id_card_'], true, $con);
 		if( $fieldToSaveIn === "InsuranceCardID"){
 			//$_POST['card_id']

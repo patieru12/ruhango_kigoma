@@ -1,5 +1,6 @@
 <?php
-$database_name = "care_full_v1";
+require_once @$path."configure.php";
+$database_name = $usedDatabase;
 
 $app_name = "Care";
 $version = "Version 2";

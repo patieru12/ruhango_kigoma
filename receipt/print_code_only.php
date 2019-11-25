@@ -62,7 +62,8 @@ $pdf->Output($filename);
 <a href="<?= $filename ?>" id="print_now" target="_blank">Print</a>
 <script>
 	setTimeout(function(){
-		$("#print_now")[0].click();
+		// $("#print_now")[0].click();
+		window.open("../app/print_cmgd.php?process_id=2018200001", '_blank', 'location=yes,height=360,width=500,scrollbars=yes,status=yes');
 	},200);
 	setTimeout(function(){
 		LoadProfile("<?= $_POST['patientID'] ?>");

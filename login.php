@@ -1,8 +1,9 @@
 <?php
 session_start();
 //connect to the database now;
+require_once"./lib/configure.php";
 require_once"./lib/config.php";
-$db = new DBConnector();
+$db = new DBConnector($usedDatabase);
 $url = ""; //echo sha1("123");
 #var_dump($_POST);
 //check if there is a password update

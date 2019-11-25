@@ -155,7 +155,7 @@ Data;
 				<span class=error-text>*</span>
 			</td>
 			<td class=h_label>
-				House Manager Name:<label class=as_link onclick='$("#father").val($("#name").val())'>Self</label>
+				House Manager Name:<label class=as_link onclick='$("#father").val($("#name").val()); $("#fatherID").val($("#pa").val());'>Self</label>
 				<span class=error-text>*</span>
 			</td>
 			<td class=h_label>
