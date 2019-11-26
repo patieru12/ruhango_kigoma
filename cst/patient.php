@@ -490,10 +490,13 @@ require_once "../lib2/cssmenu/cst_header.html";
 		var mesurePattern = "";
 		var usableQty = null;
 		var calculateTotal = true;
+		var nextToStock = false;
 		// var specialData = "";
 
 		$("#dosage").focus(function(e){
+			var stockOutFound = false;
 			if(noRetry){
+				// console.log("Cancelled");
 				return;
 			}
 			// console.log(specialData);
@@ -501,7 +504,11 @@ require_once "../lib2/cssmenu/cst_header.html";
 				var mdname = $("#requestMedicines").val();
 				if(!mdname){
 					$("#requestMedicines").focus();
-					alert("Which Medicine are you prescribing?\nPlease fill in the Medicine name first");
+					if(nextToStock){
+						nextToStock = false;
+					} else {
+						alert("Which Medicine are you prescribing?\nPlease fill in the Medicine name first");
+					}
 
 					return;
 				}
@@ -518,6 +525,9 @@ require_once "../lib2/cssmenu/cst_header.html";
 					if(data.stockLevel <= data.criticalLevel){
 						$("#stockAlert").html("<span class='error-text'>" + $("#requestMedicines").val() + " Stock Value:" + data.stockLevel + "<br />Ne Prescrit pas ce medicament.</span>");
 						$("#requestMedicines").val("");
+						// $("#requestMedicines").focus();
+						stockOutFound 	= true;
+						nextToStock 	= true;
 					} else if(data.stockLevel <= data.lowLevel){
 						$("#stockAlert").html("<span class='error-text'>" + $("#requestMedicines").val() + " Stock Value:" + data.stockLevel + "</span>");
 					} else{
@@ -526,7 +536,11 @@ require_once "../lib2/cssmenu/cst_header.html";
 				}).done(function(){
 					$("#dosage").removeProp("disabled");
 					$("#dosage").val("");
-					noRetry = true;
+					if(stockOutFound){
+						noRetry = false;
+					} else {
+						noRetry = true;
+					}
 					$("#dosage").focus();
 					requestCompleted = true;
 					/*if(specialData.trim()){
