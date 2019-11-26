@@ -1,3 +1,4 @@
 /vendor
 /lib/configure.php
 /report/receipt.pdf
+*.pdf
