@@ -25,7 +25,7 @@ if(strlen($_GET['key'])){
 	ad_cell.SectorID=ad_sector.SectorID && ad_sector.DistrictID=ad_district.DistrictID && 
 	pa_records.DateIn != '0000-00-00' && (pa_records.DocID LIKE('%{$_GET['key']}%') || pa_records.InsuranceCardID LIKE('%{$_GET['key']}%') || pa_info.Name LIKE('%{$_GET['key']}%')) ORDER BY  pa_records.Status ASC, DateIn DESC, DocID ASC LIMIT 0, 20 "*/
 	$sql = "SELECT 	a.*,
-					g.Name AS AffiliateName,
+					'g.Name' AS AffiliateName,
 					a.FamilyCode AS AffiliateNumber,
 					'' AS AffiliateGender,
 					b.InsuranceCardID AS InsuranceCardID,
