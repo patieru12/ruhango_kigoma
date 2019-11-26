@@ -535,7 +535,16 @@ $patient = formatResultSet($rslt=returnResultSet("SELECT 	a.*,
 						<th colspan="2">Main Total <?= ($main_total + $special_Hosp ) ?> RWF</th>
 						<th>Total: <?= $total_to_paid ?> RWF </th>
 						<th <?= $tmInformation['status'] == 1 && $tmInformation['TicketPaid'] == $patient_part?"class='available'":"class='locked'" ?> >
-							<label><?= $tmInformation['status'] == 1 && $tmInformation['TicketPaid'] == $patient_part?"Paid ":"<input type='checkbox' name='patientTM_{$tmInformation['TicketID']}' value='{$patient_part}' checked onclick='return false;' />" ; ?>Patient <?= $patient['ValuePaid'].($patient['TypeofPayment']?"%":"RWF") ?>: <?= number_format($patient_part); ?> RWF</label></th>
+							<label><?= $tmInformation['status'] == 1 && $tmInformation['TicketPaid'] == $patient_part?"Paid ":"<input type='checkbox' name='patientTM_{$tmInformation['TicketID']}' value='{$patient_part}' checked onclick='return false;' />" ; ?>Patient <?= $patient['ValuePaid'].($patient['TypeofPayment']?"%":"RWF") ?>: <?= number_format($patient_part); ?> RWF</label>
+							<?php
+							if($tmInformation['Type'] == "CATEGORY" && $tmInformation['status'] == 0){
+								?>
+								<a title="Ticket Modulateur Modifier" href="./edit-tm.php?patientID=<?= $patientID ?>&TicketID=<?= $tmInformation['TicketID'] ?>" rel="#overlay"><img src="../images/edit.png" /></a>
+								<?php
+							}
+							// var_dump($tmInformation);
+							?>
+						</th>
 						<th>Insurance: <?= $insurancePart ?> RWF</th>
 						<th></th>
 					</tr>
