@@ -53,8 +53,8 @@ $patient = formatResultSet($rslt=returnResultSet("SELECT 	a.*,
 															WHERE PatientRecordID ='{$patientID}'
 															", $con), false, $con);
 
-$stringData = "<span style='font-size:13px;'>GIHUNDWE HC<br />Tel: 0786282420</span><br /><span style='font-weight:bold; font-size:12px'>***".date("Y-m-d H:i:s",time())."***</span><br />";
-$printCommand = "GIHUNDWE HC\nTel: 0786282420\n***".date("Y-m-d H:i:s",time())."***\n";
+$stringData = "<span style='font-size:13px;'>{$client_receipt_header}<br />Tel: {$client_receipt_phone}</span><br /><span style='font-weight:bold; font-size:12px'>***".date("Y-m-d H:i:s",time())."***</span><br />";
+$printCommand = "{$client_receipt_header}\nTel: {$client_receipt_phone}\n***".date("Y-m-d H:i:s",time())."***\n";
 
 $stringData .= "Code: <span style='border:1px solid #000; font-weight:bold; padding-left:30px; padding-right:20px; font-size:12px'>&nbsp;&nbsp;&nbsp;&nbsp;".$patient['dailyID']."&nbsp;&nbsp;&nbsp;&nbsp;</span><br />";
 $printCommand .= "Code:      ".$patient['dailyID']."\n";
@@ -109,7 +109,8 @@ $pdf->Output($filename);
 <a href="<?= $filename ?>" id="print_now" target="_blank">Print</a>
 <script>
 	setTimeout(function(){
-		$("#print_now")[0].click();
+		// $("#print_now")[0].click();
+		window.open("../app/print_cmgd.php?process_id=2018200001", '_blank', 'location=yes,height=360,width=500,scrollbars=yes,status=yes');
 	},100);
 	setTimeout(function(){
 		$(".close").click();

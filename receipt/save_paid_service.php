@@ -23,7 +23,7 @@ $patient = formatResultSet($rslt=returnResultSet("SELECT 	a.*,
 															", $con), false, $con);
 // var_dump($patient, $_POST);
 $stringData = "<span style='font-size:13px;'>{$client_receipt_header}<br />Tel: {$client_receipt_phone}</span><br /><span style='font-weight:bold; font-size:12px'>***".date("Y-m-d H:i:s",time())."***</span><br />";
-$printCommand = "	\nTel: {$client_receipt_phone}\n***".date("Y-m-d H:i:s",time())."***\n";
+$printCommand = "{$client_receipt_header}\nTel: {$client_receipt_phone}\n***".date("Y-m-d H:i:s",time())."***\n";
 
 $stringData .= "Code: <span style='border:1px solid #000; font-weight:bold; padding-left:30px; padding-right:20px; font-size:12px'>&nbsp;&nbsp;&nbsp;&nbsp;".$patient['dailyID']."&nbsp;&nbsp;&nbsp;&nbsp;</span><br />";
 $printCommand .= "Code:      ".$patient['dailyID']."\n";
