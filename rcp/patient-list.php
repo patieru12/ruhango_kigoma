@@ -22,6 +22,7 @@ ALLDATA;
 		// && b.InsuranceNameID = 1 && b.ReceptionistID= 0 && b.cbhiAgent IS NOT NULL && b.DateIn = '{$date}
 		$sql = "SELECT 	a.*,
 						COALESCE(b.InsuranceCardID, b.applicationNumber, '') AS InsuranceCardID,
+						IF(`InsuranceCardID` IS NULL,'applicationNumber', 'InsuranceCardID') AS usedType,
 						b.FamilyCategory AS FamilyCategory,
 						b.InsuranceNameID AS InsuranceNameID,
 						b.DateIn AS DateIn,
@@ -64,6 +65,7 @@ ALLDATA;
 		$time = time();
 		$sql = "SELECT 	a.*,
 						COALESCE(b.InsuranceCardID, b.applicationNumber, '') AS InsuranceCardID,
+						IF(`InsuranceCardID` IS NULL,'applicationNumber', 'InsuranceCardID') AS usedType,
 						b.FamilyCategory AS FamilyCategory,
 						b.InsuranceNameID AS InsuranceNameID,
 						b.DateIn AS DateIn,
@@ -133,6 +135,7 @@ STR;
 			 
 			 $("#update_").val("1");
 			 $("#update").attr("checked",":true");
+			 $("#{$patients[$i]["usedType"]}").attr("checked", ":true");
 			 if("{$patients[$i]["Sex"]}" == "Male" || "{$patients[$i]["Sex"]}" == "M"){
 				$("#male").attr("checked",":true");
 			 }

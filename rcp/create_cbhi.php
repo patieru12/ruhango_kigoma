@@ -97,8 +97,8 @@ Data;
 					<table border=0 style='width:200px; text-align:center; font-size:12px;'>
 						<tr>
 							<td style='width:100px; font-size:14px'>
-								<label><input type=radio name='id_card_' checked value="InsuranceCardID"/>ID Card</label>/ 
-								<label><input type=radio name='id_card_' value="applicationNumber"/>Appl. Number</label>
+								<label><input type=radio name='id_card_' checked value="InsuranceCardID" id="InsuranceCardID" />ID Card</label>/ 
+								<label><input type=radio name='id_card_' value="applicationNumber" id="applicationNumber" />Appl. Number</label>
 							</td>
 						</tr>
 					</table>
