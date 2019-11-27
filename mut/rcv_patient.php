@@ -75,7 +75,7 @@ if(@$_POST['rcv_patient_btn']){
 			//$_POST['card_id']
 			$insuranceCardId = preg_replace("/[^0-9]/", "", $_POST['card_id']);
 			$invalidChars = preg_match("/[^0-9]/", $_POST['card_id']);
-			if(strlen($insuranceCardId) != 16){
+			if(!in_array(strlen($insuranceCardId), [0,8,16])){
 				echo $invalidChars?"<span class=success>Invalid Character found in the Patient Id and will be removed check you input please.</span><br />":"";
 				echo "<span class=error-text>Please Sixteen Digits required for Patient Id Number.<br />If it is an application number please switch the button on top of the card input box</span>";
 				return;
