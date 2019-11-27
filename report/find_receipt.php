@@ -102,7 +102,7 @@ if($patients){
 		<table class=list id=vsbl border="1" style='width:100%; font-size:30px;'>
 			
 			<?php
-			$columns = 2;
+			$columns = 6;
 			$isOpened = false;
 			for($i=0; $i < count($patients); $i++){
 				$receipt = $patients[$i];
