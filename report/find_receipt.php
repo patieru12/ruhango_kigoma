@@ -56,6 +56,7 @@ if(strlen($_GET['key'])){
 																	FROM sy_print_command AS a
 																	WHERE a.submittedOn >= {$startTime}
 																	AND a.submittedOn <= '{$endTime}'
+																	AND a.type = 1
 																	{$sp_condition}
 																	",$con),$multirows=true,$con);
 // echo $sql; die();
