@@ -11,11 +11,16 @@ if(!trim($_REQUEST['process_id'])){
 $dailyID = PDB($_REQUEST['process_id'], true, $con);
 $types = array("2018200001"=>1, "2018200002"=>2, "2018200003"=>3);
 $type = $types[$dailyID];
+$forcePrint = @$_REQUEST['commandId'];
+$adds = "";
+if(trim($forcePrint) && is_numeric($forcePrint)){
+	$adds = " OR a.id='{$forcePrint}'";
+}
 
 $sql = "SELECT 	a.id AS commandID,
 				a.pdfData AS commandInfo
 				FROM sy_print_command AS a
-				WHERE a.printerID = '{$dailyID}' && status = 0 && type={$type}
+				WHERE (a.printerID = '{$dailyID}' && status = 0 && type={$type}) {$adds}
 				ORDER BY submittedOn ASC";
 $patientInfo = formatResultSet($rslt=returnResultSet($sql,$con),$multirows=true,$con);
 // var_dump($patientInfo);
