@@ -65,10 +65,7 @@ if(@$_POST['rcv_patient_btn']){
 		}
 		
 		$save_in_insurance = false;
-		if($ins != "Private" && !$_POST['card_id']){
-			echo "<span class=error-text>Enter Insurance Card ID</span>";
-			return;
-		} elseif( !$card_id = returnSingleField($sql="SELECT * FROM pa_insurance_cards WHERE InsuranceNameID='{$_POST['insurance']}' && InsuranceCardsID='{$_POST['card_id']}' && Status=1",$field="PatientInsuranceCardsID",$data=true, $con)){
+		if( !$card_id = returnSingleField($sql="SELECT * FROM pa_insurance_cards WHERE InsuranceNameID='{$_POST['insurance']}' && InsuranceCardsID='{$_POST['card_id']}' && Status=1",$field="PatientInsuranceCardsID",$data=true, $con)){
 			/* to be incommented when the list of all possible patient is loaded otherwise this lock new patient to be recorded in the system */
 			/* 
 			echo "<span class=error-text>Invalid Insurance Card Found</span>";
