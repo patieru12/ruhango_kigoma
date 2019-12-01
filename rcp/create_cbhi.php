@@ -254,7 +254,7 @@ Data;
   ?>
 	<div class="apple_overlay_custom1" id="overlay">
 	  <!-- the external content is loaded inside this tag -->
-	  <div class="contentWrap"></div>
+	  <div class="contentWrap" style="padding: 20px;"></div>
 	</div>
   <!-- make all links with the 'rel' attribute open overlays -->
 <script>

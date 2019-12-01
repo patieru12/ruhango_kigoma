@@ -2,6 +2,11 @@
 //var_dump($_GET);
 if(trim(@$_GET['code']) == ""){
 	echo "<span class=error>The Invalid Code Found!</span>";
+	?>
+	<script>
+		$("#pst_").attr("checked",":true");
+	</script>
+	<?php
 	return;
 }
 
