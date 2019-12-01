@@ -174,7 +174,7 @@ if($patient['DateIn'] != date("Y-m-d", time())){
 							</b>
 						</td>
 						<td>
-							Blood Group:
+							Tension:
 							<b>
 								<?= !is_null($patient['bloodGroup'])?$patient['bloodGroup']:"" ?>
 								<a class="fa fa-pencil" href="./pa/editvitalsign.php?PatientRecordID=<?= $patient['PatientRecordID'] ?>&field=bloodGroup" rel="#overlay2" style="color:blue; text-decoration: none;"></a>
