@@ -16,7 +16,8 @@ if(trim($_POST['data'])){
 			continue;
 		}
 		// var_dump($r); 
-		$r = preg_match("/tropho/", strtolower($r))?str_replace(" ", "+", $r):$r;
+		// $r = preg_match("/tropho/", strtolower($r))?str_replace(" ", "+", $r):$r;
+		$r = str_replace(" ", "+", $r);
 		// Get the Result ID
 		$examID = formatResultSet($rslt=returnResultSet($sql = "SELECT 	b.ExamID
 																	FROM la_exam AS b

@@ -64,9 +64,9 @@ if(strlen($_GET['key'])){
 	// echo "<pre>"; var_dump($patients);
 	// return;
 	//echo "OK";
-	if($patients[0]['InsuranceNameID'] != $InsuranceNameID){
+	/*if($patients[0]['InsuranceNameID'] != $InsuranceNameID){
 		echo "<span class=error-text>The Patient is not registered by CBHI Agent</span>";
-	}else if($patients){
+	}else */if($patients){
 		//echo count($patients);
 		?>
 		<script>

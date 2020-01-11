@@ -17,9 +17,9 @@ $tmAmount = ($tm_private != null?$tm_private:($_POST['tm'] == "COMPASSION" || $_
 $additionalField = ($_POST['tm'] != 200 && $ins=="CBHI"?", Type='{$_POST['tm']}'":"");
 
 if(!$tmID){
-	saveAndReturnID($stm = "INSERT INTO mu_tm SET PatientRecordID='{$record}', TicketPaid='{$tmAmount}', ReceiptNumber='{$_POST['receipt_number']}'{$additionalField}, Date='{$_POST['Date']}', UserID='{$_SESSION['user']['UserID']}'", $con);
+	saveAndReturnID($stm = "INSERT INTO mu_tm SET PatientRecordID='{$record}', TicketPaid='{$tmAmount}', ReceiptNumber='{$_POST['receipt_number']}'{$additionalField}, Date='{$_POST['Date']}', UserID='{$_SESSION['user']['UserID']}', status=0", $con);
 } else{
-	saveData("UPDATE mu_tm SET TicketPaid='{$tmAmount}', ReceiptNumber='{$_POST['receipt_number']}'{$additionalField}, Date='{$_POST['Date']}', UserID='{$_SESSION['user']['UserID']}' WHERE TicketID='{$tmID}'",$con);
+	saveData("UPDATE mu_tm SET TicketPaid='{$tmAmount}', ReceiptNumber='{$_POST['receipt_number']}'{$additionalField}, Date='{$_POST['Date']}', UserID='{$_SESSION['user']['UserID']}', status=0 WHERE TicketID='{$tmID}'",$con);
 }
 
 /*$record = formatResultSet($rslt=returnResultSet("SELECT a.*

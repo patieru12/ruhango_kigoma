@@ -103,7 +103,7 @@ Data;
 						</tr>
 					</table>
 				</td>
-				<td>Name:<span class=error-text>*</span></td><td>Age [<label class=as_link>yyyy-mm-dd or yyyy</label>]:</td><td>Sex<span class=error-text>*</span><!--<td>Family Chief ID Card:</td><td>Family Position:</td>-->
+				<td>Name:<span class=error-text>*</span></td><td>Age C[<label class=as_link>yyyy-mm-dd or yyyy</label>]:</td><td>Sex<span class=error-text>*</span><!--<td>Family Chief ID Card:</td><td>Family Position:</td>-->
 			</tr>
 		<tr>
 			<td>
@@ -124,10 +124,10 @@ Data;
 			
 			</td>
 			
-			<td><input disabled="true" type=text name='name' autocomplete="off" onkeyup='if(familyChief()){$("#father").val($("#name").val());}' id=name class='txtfield1' style='' /></td>
-			<td><input disabled="true" type=text name='age' autocomplete="off" onblur='' id=age class='txtfield1 date_on' onclick="ds_sh(this,'age')" style='' /></td>
-			<td><label><input disabled="true" type=radio name=sex value="Female" required id=female>Female</label> 
-				<label><input disabled="true" type=radio name=sex value="Male" required id=male>Male</label>
+			<td><input type=text name='name' autocomplete="off" onkeyup='if(familyChief()){$("#father").val($("#name").val());}' id=name class='txtfield1' style='' /></td>
+			<td><input type=text name='age' autocomplete="off" onblur='' id=age class='txtfield1 date_on' onclick="ds_sh(this,'age')" style='' /></td>
+			<td><label><input type=radio name=sex value="Female" required id=female>Female</label> 
+				<label><input type=radio name=sex value="Male" required id=male>Male</label>
 			</td>
 			
 		</tr>
@@ -147,7 +147,7 @@ Data;
 				House Manager ID:<label class=as_link >*</label>
 				<span class=error-text>*</span>
 			</td>
-			<td class=h_label>House Manager<span class=error-text>*</span></td>
+			<td class=h_label>House Manager <label class=as_link onclick='$("#father").val($("#name").val()); $("#fatherID").val($("#pa").val());'>Self</label> <span class=error-text>*</span></td>
 
 			<td class=h_label>
 				Phone Number
@@ -158,7 +158,7 @@ Data;
 		<tr>
 			
 			<td><input type=text name='fatherID' autocomplete="off" id=fatherID class='txtfield1' style='width: 100%;' /></td>
-			<td><input disabled="true" type=text name='father' autocomplete="off" id=father class='txtfield1' style='' /></td>
+			<td><input type=text name='father' autocomplete="off" id=father class='txtfield1' style='' /></td>
 			<td><input type=text name='phoneNumber' autocomplete="off" id=phoneNumber class='txtfield1' style='width: 100%;' /></td>
 			
 			<td class=affection_locationdata></td>
@@ -173,10 +173,10 @@ Data;
 		<tr style="border-bottom: 1px solid #000;">
 			<td class=fcategorydata colspan=4>
 				<input autocomplete="off" type=hidden name=fcategory id=fcategory value='' class=txtfield1 />
-				<label style="cursor:pointer;"><input disabled="true" type=radio onclick="$('#fcategory').val(1); $('#cat').removeAttr('checked');" name=cbhi_category value='1' id='cbhi_category1'>Category 1</label>
-				<label style="cursor:pointer;"><input disabled="true" type=radio onclick="$('#fcategory').val(2); $('#cat').removeAttr('checked');" name=cbhi_category value='2' id='cbhi_category2'>Category 2</label>
-				<label style="cursor:pointer;"><input disabled="true" type=radio onclick="$('#fcategory').val(3); $('#cat').removeAttr('checked');" name=cbhi_category value='3' id='cbhi_category3'>Category 3</label>
-				<label style="cursor:pointer;"><input disabled="true" type=radio onclick="$('#fcategory').val(4); $('#cat').removeAttr('checked');" name=cbhi_category value='4' id='cbhi_category4'>Category 4</label>
+				<label style="cursor:pointer;"><input type=radio onclick="$('#fcategory').val(1); $('#cat').removeAttr('checked');" name=cbhi_category value='1' id='cbhi_category1'>Category 1</label>
+				<label style="cursor:pointer;"><input type=radio onclick="$('#fcategory').val(2); $('#cat').removeAttr('checked');" name=cbhi_category value='2' id='cbhi_category2'>Category 2</label>
+				<label style="cursor:pointer;"><input type=radio onclick="$('#fcategory').val(3); $('#cat').removeAttr('checked');" name=cbhi_category value='3' id='cbhi_category3'>Category 3</label>
+				<label style="cursor:pointer;"><input type=radio onclick="$('#fcategory').val(4); $('#cat').removeAttr('checked');" name=cbhi_category value='4' id='cbhi_category4'>Category 4</label>
 			</td>
 		</tr>
 		<tr>
