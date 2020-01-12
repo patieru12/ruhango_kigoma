@@ -12,7 +12,22 @@ $error = "";
 if(@$_POST['rcv_patient_btn']){
 	//check if the date in is valid
 	$_GET['key'] = $_POST['patient_id'];
-	if(!isDataExist($sql="SELECT in_name.* FROM in_name,in_category,in_price,in_forms WHERE in_name.CategoryID= in_category.InsuranceCategoryID && in_forms.InsuranceNameID = in_name.InsuranceNameID && in_price.InsuranceNameID = in_name.InsuranceNameID && in_name.InsuranceNameID='{$_POST['insurance']}'", $con)){
+
+	if(preg_match("/^[0-9]{4}$/",$_POST['age']) && ((date("Y", time()) - $_POST['age']) <= 5) ){
+		echo "<span class=error-text>For Children under 5 years old<br />Please Enter the full date of birth</span>";
+		return;
+	}
+	
+	$_POST['age'] = preg_match("/^[0-9]{4}$/",$_POST['age'])?$_POST['age']."-01-01":$_POST['age'];
+	//var_dump($_POST); die;
+	$_POST['age'] = !$_POST['age']?"0000-00-00":$_POST['age'];
+	if(preg_match("/^[0-9]{2}$/",$_POST['age'])){
+		$_POST['age'] = date("Y",time()) - $_POST['age']."-01-01";
+	}
+	if(date("Y-m-d",time()) < $_POST['age']){
+		$error = "<span class=error-text>Invalid Date</span>";
+		
+	} else if(!isDataExist($sql="SELECT in_name.* FROM in_name,in_category,in_price,in_forms WHERE in_name.CategoryID= in_category.InsuranceCategoryID && in_forms.InsuranceNameID = in_name.InsuranceNameID && in_price.InsuranceNameID = in_name.InsuranceNameID && in_name.InsuranceNameID='{$_POST['insurance']}'", $con)){
 		$error = "<span class=error-text>Unsupported Insurance </span>";
 	} else{
 		//var_dump($docid); die;
@@ -39,6 +54,143 @@ if(@$_POST['rcv_patient_btn']){
 		//save patient information
 		$card_id = 0;
 		// echo $ins; die;
+		// var_dump($_POST);
+		if(!trim($_POST['fatherID'])){
+			echo "<span class=error-text>Enter Family Category</span>";
+			return;
+		}
+
+		$fatherId = preg_replace("/[^0-9]/", "", $_POST['fatherID']);
+		$invalidChars = preg_match("/[^0-9]/", $_POST['fatherID']);
+		if(!in_array(strlen($fatherId), [16, 8])) {
+			echo $invalidChars?"<span class=success>Invalid Character found in the Household Id and will be removed check you input please.</span><br />":"";
+			echo "<span class=error-text>Please Household Id Number.</span>";
+			return;
+		}
+
+		// Here Validate the ID Card Number
+		// var_dump($_POST['id_card_']); die();
+		$fieldToSaveIn = PDB($_POST['id_card_'], true, $con);
+		if( $fieldToSaveIn === "InsuranceCardID"){
+			//$_POST['card_id']
+			$insuranceCardId = preg_replace("/[^0-9]/", "", $_POST['card_id']);
+			$invalidChars = preg_match("/[^0-9]/", $_POST['card_id']);
+			if(!in_array(strlen($insuranceCardId), [0,8,16])){
+				echo $invalidChars?"<span class=success>Invalid Character found in the Patient Id and will be removed check you input please.</span><br />":"";
+				echo "<span class=error-text>Please Sixteen Digits required for Patient Id Number.<br />If it is an application number please switch the button on top of the card input box</span>";
+				return;
+			}
+		}
+		/* check if the category is there for CBHI */
+		if($ins == "CBHI" && !$_POST['fcategory']){
+			echo "<span class=error-text>Enter Family Category</span>";
+			return;
+		}
+		//var_dump($_POST['tm']); die;
+		
+		//var_dump($_POST); die;
+		if(!@$_POST['sex']){
+			echo "<span class=error-text>Select Patient Gender</span>";
+			return;
+		}
+		
+		
+		$save_in_insurance = false;
+		if( !$card_id = returnSingleField($sql="SELECT * FROM pa_insurance_cards WHERE InsuranceNameID='{$_POST['insurance']}' && InsuranceCardsID='{$_POST['card_id']}' && Status=1",$field="PatientInsuranceCardsID",$data=true, $con)){
+			/* to be incommented when the list of all possible patient is loaded otherwise this lock new patient to be recorded in the system */
+			/* 
+			echo "<span class=error-text>Invalid Insurance Card Found</span>";
+			return; */
+			//return;
+			//try to save this card info if dos not exist before
+			$save_in_insurance = true;
+		}
+		//die;
+		//var_dump($_POST); die;
+		if(!$_POST['name']){
+			echo "<span class=error-text>Enter Patient Name</span>";
+			return;
+		}
+		if(!$_POST['fatherID']){
+			echo "<span class=error-text>Enter House Manage Name</span>";
+			return;
+		}
+		$patient_id = returnSingleField($sql="SELECT * FROM pa_info WHERE PatientID='{$_POST['patient_id']}'",$field="PatientID",$data=true, $con);
+		
+		if(!$patient_id){
+			//return;
+			$_POST['name'] = ucwords(mysql_real_escape_string(trim($_POST['name'])));
+			$_POST['father'] = ucwords(mysql_real_escape_string(trim($_POST['father'])));
+			$father = "";
+			
+			//var_dump($_POST);
+			if(!$_POST['age']){
+				$_POST['age'] = "0000-00-00";
+			} 
+			if(!preg_match("/^[0-9]{4}/",$_POST['age'])){
+				echo "<span class=error-text>Invalid Birth date format{$_POST['age']}</span>";
+				return;
+			} else{
+				$_POST['phoneNumber'] = PDB($_POST['phoneNumber'], true, $con);
+				//check if the patient exist and return his information to the receptionis
+				$sql = "SELECT PatientID FROM pa_info WHERE Name='{$_POST['name']}' && FamilyCode='{$_POST['father']}' && 
+						DateofBirth='{$_POST['age']}' && VillageID='{$village_id}'";
+				if(!$patient_id = returnSingleField($sql,$field="PatientID",$data=true, $con)){
+					$sql = "INSERT INTO pa_info SET Name='{$_POST['name']}', FamilyCode='{$_POST['father']}', VillageID='{$village_id}', 
+							DateofBirth='{$_POST['age']}', Sex='{$_POST['sex']}', phoneNumber='{$_POST['phoneNumber']}'";
+					// echo $sql; die;
+					if(!$patient_id = saveAndReturnID($sql, $con)){
+						echo "<span class=error-text><br />Unable to save Patient {$sql}</span>";
+						return;
+					}
+				}
+					
+			}
+		} else {
+			$_POST['phoneNumber'] = PDB($_POST['phoneNumber'], true, $con);
+			$sql = "UPDATE pa_info SET Name='{$_POST['name']}', FamilyCode='{$_POST['father']}', 
+										DateofBirth='{$_POST['age']}', Sex='{$_POST['sex']}', phoneNumber='{$_POST['phoneNumber']}' WHERE PatientID={$patient_id}";
+			// echo $sql;
+			saveData($sql, $con);
+		}
+
+		if($patient_id){
+			if(!($record = returnSingleField("SELECT PatientRecordID FROM pa_records WHERE Status=0 && DateIn='{$_POST['date']}' && PatientID='{$patient_id}'",$field="PatientRecordID",$data=true, $con))){
+				
+				//generate the document id now
+				$docid = "";
+				$documentNumber = NULL; 
+
+				$currentMonth = date("Y-m", time());
+				$currentDate = date("Y-m-d", time());
+				
+				$monthlyID = NULL;
+				
+				$dailyID = NULL;
+				//str_replace()
+				$_POST['fatherID'] = PDB($_POST['fatherID'], true, $con);
+				
+				$sql = "INSERT INTO pa_records SET 	DocID='',
+													PatientID='{$patient_id}',
+													InsuranceNameID='{$_POST['insurance']}',
+													`{$fieldToSaveIn}`='{$_POST['card_id']}',
+													HouseManagerID='{$_POST['fatherID']}',
+													DateIn='{$_POST['date']}',
+													Status=0,
+													VillageID='{$village_id}',
+													ReceptionistID='0',
+													cbhiAgent='{$_SESSION['user']['UserID']}',
+													TimeIn = '".(time())."'";
+		
+				$sql .=  ", FamilyCategory='{$_POST['fcategory']}'";
+				
+				$record = saveAndReturnID($sql, $con);
+			}
+		}
+
+		if($patient_id){
+			$_POST['patient_id'] = $patient_id;
+		}
 		/* check if the category is there for CBHI */
 		if($ins == "CBHI" && !$_POST['fcategory']){
 			echo "<span class=error-text>Enter Family Category</span>";

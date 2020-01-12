@@ -150,6 +150,10 @@ Data;
 							echo "<label><input onclick='if($(this).prop(\"checked\")) {calculateTotal({$s['productAmount']}, \"add\");} else {calculateTotal({$s['productAmount']}, \"remove\");}' type='checkbox' name='srv_{$s['ProductPriceID']}' value='1'>{$s['ProductName']} - ".number_format($s['productAmount'])." RWF </label><br />";
 						} else if(preg_match("/vaccination/", strtolower($s['ProductName']))){
 							echo "<label><input onclick='if($(this).prop(\"checked\")) {calculateTotal({$s['productAmount']}, \"add\");} else {calculateTotal({$s['productAmount']}, \"remove\");}' type='checkbox' name='srv_{$s['ProductPriceID']}' value='1'>{$s['ProductName']} - ".number_format($s['productAmount'])." RWF </label><br />";
+						} else if(preg_match("/attestation/", strtolower($s['ProductName']))){
+							echo "<label><input onclick='if($(this).prop(\"checked\")) {calculateTotal({$s['productAmount']}, \"add\");} else {calculateTotal({$s['productAmount']}, \"remove\");}' type='checkbox' name='srv_{$s['ProductPriceID']}' value='1'>{$s['ProductName']} - ".number_format($s['productAmount'])." RWF </label><br />";
+						}else if(preg_match("/supprositoire/", strtolower($s['ProductName']))){
+							echo "<label><input onclick='if($(this).prop(\"checked\")) {calculateTotal({$s['productAmount']}, \"add\");} else {calculateTotal({$s['productAmount']}, \"remove\");}' type='checkbox' name='srv_{$s['ProductPriceID']}' value='1'>{$s['ProductName']} - ".number_format($s['productAmount'])." RWF </label><br />";
 						}
 					}
 				?>

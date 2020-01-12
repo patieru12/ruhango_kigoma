@@ -99,7 +99,7 @@ if($patient['DateIn'] != date("Y-m-d", time())){
 	<thead>
 		<tr>
 			<th style=" padding: 0px; background-color: #4f94cf; border:1px solid #4f94cf; color:#fff;" id="registerNumber">
-				<?= $patient['RegisterNumber'] ?>
+				<a id="askForRegisterID" href="./assign_register.php?recordid=<?= $patient['ConsultationRecordID'] ?>" rel="#overlay2"><?= $patient['RegisterNumber'] ?></a>
 			</th>
 			<th>Date</th>
 			<th>Name</th>
