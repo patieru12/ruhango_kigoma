@@ -65,7 +65,7 @@ if(strlen($_GET['key'])){
 					g.hospitalizationAmount AS hospitalizationAmount,
 					ROUND(h.actsConsummableAmount, 1) AS actsConsummableAmount,
 					0 AS ambulanceCost,
-					0 AS otherConsumables,
+					ROUND(k.consummableAmount, 1) AS otherConsumables,
 					ROUND(f.medicineAmount, 1) AS medicineAmount,
 
 					ROUND(( 	
@@ -194,18 +194,33 @@ if(strlen($_GET['key'])){
 												INNER JOIN cn_price AS c
 												ON b.MedecinePriceID = c.MedecinePriceID
 												WHERE a.InsuranceNameID ='{$_GET['key']}' && 
-													  a.DateIn LIKE('{$_GET['year']}-{$_GET['month']}%')
+													  a.DateIn LIKE('{$_GET['year']}-{$_GET['month']}%') &&
+									  				  c.MedecineNameID NOT IN ('{$gantAndSachet}')
 												GROUP BY a.PatientRecordID
 								) AS a
 								GROUP BY a.PatientRecordID
 					) AS h
 					ON a.PatientRecordID = h.PatientRecordID
+					LEFT JOIN (
+						SELECT 	a.PatientRecordID AS PatientRecordID,
+								SUM(c.Amount*b.Quantity) AS consummableAmount
+								FROM pa_records AS a
+								INNER JOIN cn_records AS b
+								ON a.PatientRecordID = b.PatientRecordID
+								INNER JOIN cn_price AS c
+								ON b.MedecinePriceID = c.MedecinePriceID
+								WHERE a.InsuranceNameID ='{$_GET['key']}' && 
+									  a.DateIn LIKE('{$_GET['year']}-{$_GET['month']}%') &&
+									  c.MedecineNameID IN ('{$gantAndSachet}')
+								GROUP BY a.PatientRecordID
+					) AS k
+					ON a.PatientRecordID = k.PatientRecordID
 					WHERE a.InsuranceNameID='{$_GET['key']}' && 
 						  a.DateIn LIKE('{$_GET['year']}-{$_GET['month']}%')
 					ORDER BY a.DateIn ASC, 
 							 a.DocNumber ASC
 					";
-	// echo $sql; die();
+	// echo "<pre>".$sql; die();
 	$patients = formatResultSet($rslt=returnResultSet($sql,$con),$multirows=true,$con);
 	//select all possible information on the comming id
 	
@@ -363,8 +378,8 @@ if($patients){
 				echo "<td></td>";
 				$total[$columsCounter] = "";
 				$columsCounter++;
-				echo "<td></td>";
-				$total[$columsCounter] = "";
+				echo "<td>{$r['otherConsumables']}</td>";
+				$total[$columsCounter] = (@$total[$columsCounter]?($total[$columsCounter]+$r['otherConsumables']):$r['otherConsumables']);
 				$columsCounter++;
 				echo "<td>{$r['medicineAmount']}</td>";
 				$medicinesMainTotal += $r['medicineAmount'];
@@ -392,7 +407,7 @@ if($patients){
 			SpanCells($activeSheet,"A".$row.":K".$row,$align='center');
 			$activeSheet->setCellValue("A".$row, "TOTAL"); 
 			foreach($total AS $t){
-				echo "<th>{$t}</th>";
+				echo "<th>".number_format( ((double)$t) )."</th>";
 				$activeSheet->setCellValue(($first_column++).$row, $t);
 			}
 			$row++;

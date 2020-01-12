@@ -12,7 +12,7 @@ $project_name = "CARE Medical Information System";
 
 $release_date = "2018-07-01";
 $pharmacy_module_release_date = "2018-10-01";
-$Start_Year = "2018";
+$Start_Year = "2019";
 
 $app_name = "Care";
 $app_level = "Health Center";
@@ -237,11 +237,24 @@ $cbhiMonthlyBillHeader = array(
 							array("HEALTH FACILITY"=> strtoupper($organisation)),
 							array("CODE / HEALTH FACILITY"=>$organisation_code_minisante),
 						);
-$cbhiMonthlyBillReportTitle = array("title"=>"S U M M A R Y  O F V O U C H E R S  F O R  R W A N D A S O C I A L S E C U R I T Y B O A D (R S S B) / C B H I");
-$cbhiMonthlyBillDataHeader 	= array(array("No","Number","Date","Service","Cat.","Name","ID Number","Age","Sex","House Holder","ID Number of Household","Cons Cost","Lab","Imaging","Hosp","Procedures & Consumables", "Ambulance","Other Consumables","Drugs","Total","Co-payment","Amount after verification"),
+$cbhiMonthlyBillReportTitle = array("title"=>"S U M M A R Y  O F  V O U C H E R S  F O R  R W A N D A S O C I A L S E C U R I T Y B O A D (R S S B) / C B H I");
+$cbhiMonthlyBillReportTitleMonthl = array("title"=>"");
+$cbhiMonthlyBillDataHeader 	= array(array("No","Number","Date","Service","Cat.","Name","ID NUMBER/APLICATION NUMBER OF BENEFICIARY","BENEFICIARY'S AGE","BENEFICIARY'S AGE","HEAD HOUSEHOLDER'S NAMES","ID NUMBER/APPLICATION OF HEAD OF HOUSEHOLD","Cons Cost","Lab","Imaging","Hosp","Procedures & Consumables", "Ambulance","Other Consumables","Drugs","Total","Co-payment","Amount after verification"),
 									array("","","","","","","","","","","","100%","100%","100%","100%","100%", "100%","100%","100%","100%","200 RWF /10%","")
 								);
+$cbhiMonthlyBillDataHeaderMonthly 	= array(array("Service","Cons Cost","Lab","Imaging","Hosp","Procedures & Consumables", "Ambulance","Other Consumables","Drugs","Other Services",)
+								);
+/*
++----------------+------------------------------------------------------------+
+| MedecineNameID | MedecineName                                               |
++----------------+------------------------------------------------------------+
+|             17 | Gants d'examen latex non sterile   No 7.5  UU              |
+|             18 | Gants chirurgicaux stÃ©riles en latex NÂº 7 paire UU       |
+|             31 | sachets pour medicaments                                   |
+|             53 | Gants chirurgicaux stÃ©riles en latex NÂº 7,5 paire UU     |
++----------------+------------------------------------------------------------+*/
 
+$gantAndSachet = "17,18,31,53";
 
 $client_receipt_header 	= "KIGOMA HC";
 $client_receipt_phone 	= "";
@@ -253,6 +266,8 @@ $organisationKiny	= "Ikigo Nderabuzima cya KIGOMA";
 $rssb_rama_region 	= "RUHANGO";
 $rssb_rama_district = "KIGOMA";
 
+
+$cbhiMonthlyBillReportTitleMonthly = array("title"=> $client." Monthly Income Summary");
 $systemPath = "../";
 $systemPDFFooter = '
 <pagefooter name="odds" content-right="Odd Footer" footer-style-right="color: #880000; font-style: italic;" line="1" />
