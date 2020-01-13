@@ -72,7 +72,9 @@ foreach($_POST AS $key=>$value){
 		// echo $SSSQL;
 		saveData("UPDATE mu_tm SET TicketPaid={$value}, status=1 WHERE TicketID='{$TicketID}'", $con);
 		$itemName = "TM Paid";
-		saveData($sql = "INSERT INTO `{$tableName}` SET PatientRecordID='{$patientID}', itemName='{$itemName}', Number=1, Amount='{$value}', Date='{$date}'", $con);
+		if($value > 0){
+			saveData($sql = "INSERT INTO `{$tableName}` SET PatientRecordID='{$patientID}', itemName='{$itemName}', Number=1, Amount='{$value}', Date='{$date}'", $con);
+		}
 		// echo $key."1.".$sql."<hr />";
 	} else if(preg_match("/^total/", $key)){
 		if($key == "totalBill"){

@@ -116,9 +116,33 @@ if(strlen($_GET['key'])){
 								ON b.ConsultationRecordID = c.ConsultationRecordID
 								INNER JOIN la_price AS d
 								ON c.ExamPriceID = d.ExamPriceID
+								INNER JOIN se_records AS e
+								ON a.PatientRecordID = e.PatientRecordID
+								INNER JOIN se_name AS f
+								ON e.ServiceNameID = f.ServiceNameID
 								WHERE a.InsuranceNameID='{$_GET['key']}' && 
-									  a.DateIn LIKE('{$_GET['year']}-{$_GET['month']}%')
+									  a.DateIn LIKE('{$_GET['year']}-{$_GET['month']}%') &&
+									  f.ServiceCode NOT IN ('CPN')
 								GROUP BY a.PatientRecordID
+							UNION
+								SELECT 	a.PatientRecordID AS PatientRecordID,
+										SUM(d.Amount) AS laboratoryAmount
+										FROM pa_records AS a
+										INNER JOIN co_records AS b
+										ON a.PatientRecordID = b.PatientRecordID
+										INNER JOIN la_records AS c
+										ON b.ConsultationRecordID = c.ConsultationRecordID
+										INNER JOIN la_price AS d
+										ON c.ExamPriceID = d.ExamPriceID
+										INNER JOIN se_records AS e
+										ON a.PatientRecordID = e.PatientRecordID
+										INNER JOIN se_name AS f
+										ON e.ServiceNameID = f.ServiceNameID
+										WHERE a.InsuranceNameID='{$_GET['key']}' && 
+											  a.DateIn LIKE('{$_GET['year']}-{$_GET['month']}%') &&
+											  f.ServiceCode IN ('CPN') &&
+											  d.ExamID NOT IN (10, 23, 24)
+										GROUP BY a.PatientRecordID
 					) AS e
 					ON a.PatientRecordID = e.PatientRecordID
 					LEFT JOIN (
@@ -126,7 +150,7 @@ if(strlen($_GET['key'])){
 								SUM(a.medicineAmount) AS medicineAmount
 								FROM (
 									SELECT 	a.PatientRecordID AS PatientRecordID,
-											SUM(c.Quantity*d.Amount) AS medicineAmount
+											SUM(c.Quantity*d.Amount*c.flag) AS medicineAmount
 											FROM pa_records AS a
 											INNER JOIN co_records AS b
 											ON a.PatientRecordID = b.PatientRecordID
@@ -141,7 +165,7 @@ if(strlen($_GET['key'])){
 											GROUP BY a.PatientRecordID
 									UNION 
 										SELECT 	a.PatientRecordID AS PatientRecordID,
-												SUM(c.Quantity*d.Amount) AS medicineAmount
+												SUM(c.Quantity*d.Amount*c.flag) AS medicineAmount
 												FROM pa_records AS a
 												INNER JOIN co_records AS b
 												ON a.PatientRecordID = b.PatientRecordID
@@ -187,7 +211,7 @@ if(strlen($_GET['key'])){
 											GROUP BY a.PatientRecordID
 									UNION
 										SELECT 	a.PatientRecordID AS PatientRecordID,
-												SUM(c.Amount*b.Quantity) AS actsAmount
+												SUM(c.Amount* (b.Quantity - b.removedQty)) AS actsAmount
 												FROM pa_records AS a
 												INNER JOIN cn_records AS b
 												ON a.PatientRecordID = b.PatientRecordID

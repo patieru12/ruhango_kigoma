@@ -66,7 +66,8 @@ $transfer_data = array(
 						2=>"Transfer",
 						3=>"Ambulance"
 					);
-$zone_cells = array(29, 34, 43, 45, 46);
+$zone_village = [4=>[19, 27, 35, 21, 29, 36, 20]];
+$zone_cells = array(2, 6, 10, 4);
 $zone_districts = array(2);
 
 $availableInsurance = array("CBHI", "MMI", "RSSB RAMA", "PRIVATE");
