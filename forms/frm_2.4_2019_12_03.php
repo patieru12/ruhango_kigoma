@@ -265,7 +265,6 @@ if(in_array($patient_address['CellID'], $zone_cells)){
 } else {
 	$horsdistrict = "<img src='../images/box-checked.png' />";
 }
-
 // var_dump($agentName); die();
 $totalAmount = "";
 $currentDiagnostics = returnAllData("SELECT GROUP_CONCAT(c.DiagnosticName) AS currentDiagnostics,
@@ -350,12 +349,9 @@ if(is_array($currentLaboratoryExams)){
 	$examUnitCostString = "";
 	$examTOtalCostString= "";
 	for($i=0; $i<count($currentLaboratoryExams); $i++){
+		$totalLaboratoryTest += $currentLaboratoryExams[$i]['Amount'];
 		$examNameString .= $currentLaboratoryExams[$i]['examName']."<br />";
 		$examQuantityString .= $currentLaboratoryExams[$i]['Quantity']."<br />";
-		if($service['ServiceCode'] == 'CPN'){
-			$currentLaboratoryExams[$i]['Amount'] = 0;
-		}
-		$totalLaboratoryTest += $currentLaboratoryExams[$i]['Amount'];
 		$examUnitCostString .= $currentLaboratoryExams[$i]['Amount']."<br />";
 		$examTOtalCostString.= $currentLaboratoryExams[$i]['Amount']."<br />";
 		/*$loboratoryString .= "<tr>
@@ -411,109 +407,6 @@ if(is_array($currentHospitalizationRecords)){
 	}
 }
 
-$medicinesString = <<<MEDICINES
-				<tr>
-					<td style="text-align: left; border-left: 0 solid #000; border-bottom: 0 solid #000; ">
-						Medicines/ Midicaments<br />
-						(Form/Forme & Dosage)
-						<br />&nbsp;
-						<br />&nbsp;
-						<br />&nbsp;
-					</td>
-					<td style="text-align: left; width:440px; ">
-						&nbsp;
-					</td>
-					<td style="text-align: left; ">
-						&nbsp;
-					</td>
-					<td style="text-align: left; ">
-						&nbsp;
-					</td>
-					<td style="text-align: left; border-right: 0px solid #000; ">
-						&nbsp;
-					</td>
-				</tr>
-MEDICINES;
-$currentMedicines = returnAllData("SELECT 	CONCAT(c.MedecineName, ': ', a.SpecialPrescription) AS MedecineName,
-											a.MedecineRecordID AS MedecineRecordID,
-											a.Quantity AS Quantity,
-											b.Amount AS Amount,
-											a.Date AS Date,
-											c.MedecineNameID
-											FROM md_records AS a
-											INNER JOIN md_price AS b
-											ON a.MedecinePriceID = b.MedecinePriceID
-											INNER JOIN md_name AS c
-											ON b.MedecineNameID = c.MedecineNameID
-											WHERE a.ConsultationRecordID ='{$currentDiagnostics['ConsultationRecordID']}'
-											", $con);
-// var_dump($currentMedicinesExams);
-$removedSachets = 0;
-$medicinesTotal = "";
-if(is_array($currentMedicines)){
-	$medicinesTotal 		= 0; //$currentMedicines[0]['Amount'] * $currentMedicines[0]['Quantity'];
-	$medineNameString 		= "";
-	$medineQuantityString 	= "";
-	$medineUnitCostString 	= "";
-	$medineTotalCostString 	= "";
-	for($i=0; $i<count($currentMedicines); $i++){
-		if($record['FamilyCategory'] <= 2 && preg_match("/oartem/", strtolower($currentMedicines[$i]['MedecineName']))){
-			$currentMedicines[$i]['Amount'] = 0;
-		} else if($record['FamilyCategory'] <= 2 && preg_match("/artesunat/", strtolower($currentMedicines[$i]['MedecineName']))){
-			$currentMedicines[$i]['Amount'] = 0;
-		} else if($record['FamilyCategory'] <= 2 && preg_match("/quinine/", strtolower($currentMedicines[$i]['MedecineName']))){
-			$currentMedicines[$i]['Amount'] = 0;
-		}
-
-		if($service['ServiceCode'] == "CPN"){
-			/*
-			 27. Fer Acide Folique ce 200mg
-			*/
-			if(in_array($currentMedicines[$i]['MedecineNameID'], [27])){
-				$currentMedicines[$i]['Amount'] = 0;
-				$removedSachets++;
-				saveData("UPDATE md_records SET flag=0 WHERE MedecineRecordID='{$currentMedicines[$i]['MedecineRecordID']}'",$con);
-			}
-		}
-		$medicinesTotal 		+= $currentMedicines[$i]['Amount']*$currentMedicines[$i]['Quantity'];
-		$medicineTotal 			= ($currentMedicines[$i]['Amount']*$currentMedicines[$i]['Quantity']);
-		$medineNameString 		.= "<b>{$currentMedicines[$i]['MedecineName']}</b><br />";
-		$medineQuantityString 	.= "<b>{$currentMedicines[$i]['Quantity']}</b><br />";
-		$medineUnitCostString 	.= "<b>{$currentMedicines[$i]['Amount']}</b><br />";
-		$medineTotalCostString 	.= "<b>{$medicineTotal}</b><br />";
-		
-	}
-	$medicinesString = <<<MEDICINES
-				<tr>
-					<td style="text-align: left; border-left: 0 solid #000; border-bottom: 0 solid #000; ">
-						Medicines/ Midicaments<br />
-						(Form/Forme & Dosage)
-						<br />&nbsp;
-						<br />&nbsp;
-						<br />&nbsp;
-					</td>
-					<td style="text-align: left; width:440px;">
-						{$medineNameString}&nbsp;
-					</td>
-					<td style="text-align: right; padding:5px;">
-						{$medineQuantityString}&nbsp;
-					</td>
-					<td style="text-align: right; padding:5px;">
-						{$medineUnitCostString}&nbsp;
-					</td>
-					<td style="text-align: right; padding:5px; border-right: 0px solid #000; ">
-						{$medineTotalCostString}&nbsp;
-					</td>
-				</tr>
-MEDICINES;
-
-	if($totalAmount > 0){
-		$totalAmount += $medicinesTotal;
-	} else {
-		$totalAmount = $medicinesTotal;
-	}
-}
-
 $acts_proceduresString = <<<ACT
 				<tr>
 					<td style="text-align: left; border-left: 0 solid #000; border-bottom: 0 solid #000; ">
@@ -552,9 +445,7 @@ $currentActs = returnAllData("SELECT 	a.Quantity AS Quantity,
 $currentConsumables = returnAllData("SELECT 	a.Quantity AS Quantity,
 												a.Date AS Date,
 												b.Amount AS Amount,
-												c.MedecineName AS Name,
-												a.ConsumableRecordID,
-												c.MedecineNameID
+												c.MedecineName AS Name
 												FROM cn_records AS a
 												INNER JOIN cn_price AS b
 												ON a.MedecinePriceID = b.MedecinePriceID
@@ -587,11 +478,6 @@ if(is_array($currentConsumables)){
 		$actsTotal = 0; 
 	}
 	for($i=0; $i<count($currentConsumables); $i++){
-		// Reduce the consummable Qty
-		if($removedSachets > 0 && $currentConsumables[$i]['MedecineNameID'] == 31){
-			saveData("UPDATE cn_records SET removedQty='{$removedSachets}' WHERE ConsumableRecordID='{$currentConsumables[$i]['ConsumableRecordID']}'");
-			$currentConsumables[$i]['Quantity'] = $currentConsumables[$i]['Quantity'] - $removedSachets;
-		}
 		$actsTotal += $currentConsumables[$i]['Quantity'] * $currentConsumables[$i]['Amount'];
 		$actTotalCost 		= ($currentConsumables[$i]['Quantity'] * $currentConsumables[$i]['Amount']);
 		$actNameString 		.= "<b>{$currentConsumables[$i]['Name']}</b><br />";
@@ -631,7 +517,95 @@ ACT;
 	}
 }
 // var_dump($currentActs);
+$medicinesString = <<<MEDICINES
+				<tr>
+					<td style="text-align: left; border-left: 0 solid #000; border-bottom: 0 solid #000; ">
+						Medicines/ Midicaments<br />
+						(Form/Forme & Dosage)
+						<br />&nbsp;
+						<br />&nbsp;
+						<br />&nbsp;
+					</td>
+					<td style="text-align: left; width:440px; ">
+						&nbsp;
+					</td>
+					<td style="text-align: left; ">
+						&nbsp;
+					</td>
+					<td style="text-align: left; ">
+						&nbsp;
+					</td>
+					<td style="text-align: left; border-right: 0px solid #000; ">
+						&nbsp;
+					</td>
+				</tr>
+MEDICINES;
+$currentMedicines = returnAllData("SELECT 	CONCAT(c.MedecineName, ': ', a.SpecialPrescription) AS MedecineName,
+											a.MedecineRecordID AS MedecineRecordID,
+											a.Quantity AS Quantity,
+											b.Amount AS Amount,
+											a.Date AS Date
+											FROM md_records AS a
+											INNER JOIN md_price AS b
+											ON a.MedecinePriceID = b.MedecinePriceID
+											INNER JOIN md_name AS c
+											ON b.MedecineNameID = c.MedecineNameID
+											WHERE a.ConsultationRecordID ='{$currentDiagnostics['ConsultationRecordID']}'
+											", $con);
+// var_dump($currentMedicinesExams);
+$medicinesTotal = "";
+if(is_array($currentMedicines)){
+	$medicinesTotal 		= 0; //$currentMedicines[0]['Amount'] * $currentMedicines[0]['Quantity'];
+	$medineNameString 		= "";
+	$medineQuantityString 	= "";
+	$medineUnitCostString 	= "";
+	$medineTotalCostString 	= "";
+	for($i=0; $i<count($currentMedicines); $i++){
+		if($record['FamilyCategory'] <= 2 && preg_match("/oartem/", strtolower($currentMedicines[$i]['MedecineName']))){
+			$currentMedicines[$i]['Amount'] = 0;
+		} else if($record['FamilyCategory'] <= 2 && preg_match("/artesunat/", strtolower($currentMedicines[$i]['MedecineName']))){
+			$currentMedicines[$i]['Amount'] = 0;
+		} else if($record['FamilyCategory'] <= 2 && preg_match("/quinine/", strtolower($currentMedicines[$i]['MedecineName']))){
+			$currentMedicines[$i]['Amount'] = 0;
+		}
+		$medicinesTotal 		+= $currentMedicines[$i]['Amount']*$currentMedicines[$i]['Quantity'];
+		$medicineTotal 			= ($currentMedicines[$i]['Amount']*$currentMedicines[$i]['Quantity']);
+		$medineNameString 		.= "<b>{$currentMedicines[$i]['MedecineName']}</b><br />";
+		$medineQuantityString 	.= "<b>{$currentMedicines[$i]['Quantity']}</b><br />";
+		$medineUnitCostString 	.= "<b>{$currentMedicines[$i]['Amount']}</b><br />";
+		$medineTotalCostString 	.= "<b>{$medicineTotal}</b><br />";
+		
+	}
+	$medicinesString = <<<MEDICINES
+				<tr>
+					<td style="text-align: left; border-left: 0 solid #000; border-bottom: 0 solid #000; ">
+						Medicines/ Midicaments<br />
+						(Form/Forme & Dosage)
+						<br />&nbsp;
+						<br />&nbsp;
+						<br />&nbsp;
+					</td>
+					<td style="text-align: left; width:440px;">
+						{$medineNameString}&nbsp;
+					</td>
+					<td style="text-align: right; padding:5px;">
+						{$medineQuantityString}&nbsp;
+					</td>
+					<td style="text-align: right; padding:5px;">
+						{$medineUnitCostString}&nbsp;
+					</td>
+					<td style="text-align: right; padding:5px; border-right: 0px solid #000; ">
+						{$medineTotalCostString}&nbsp;
+					</td>
+				</tr>
+MEDICINES;
 
+	if($totalAmount > 0){
+		$totalAmount += $medicinesTotal;
+	} else {
+		$totalAmount = $medicinesTotal;
+	}
+}
 $tmAmount = returnAllData("SELECT * FROM mu_tm WHERE PatientRecordID='{$_GET['records']}'",$con)[0];
 $tmPaid = (int)$tmAmount['TicketPaid'];
 $totalAmountInsurance = $totalAmount;

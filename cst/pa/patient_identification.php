@@ -99,7 +99,7 @@ if($patient['DateIn'] != date("Y-m-d", time())){
 	<thead>
 		<tr>
 			<th style=" padding: 0px; background-color: #4f94cf; border:1px solid #4f94cf; color:#fff;" id="registerNumber">
-				<?= $patient['RegisterNumber'] ?>
+				<a id="askForRegisterID" href="./assign_register.php?recordid=<?= $patient['ConsultationRecordID'] ?>" rel="#overlay2"><?= $patient['RegisterNumber'] ?></a>
 			</th>
 			<th>Date</th>
 			<th>Name</th>
@@ -174,7 +174,7 @@ if($patient['DateIn'] != date("Y-m-d", time())){
 							</b>
 						</td>
 						<td>
-							Blood Group:
+							Tension:
 							<b>
 								<?= !is_null($patient['bloodGroup'])?$patient['bloodGroup']:"" ?>
 								<a class="fa fa-pencil" href="./pa/editvitalsign.php?PatientRecordID=<?= $patient['PatientRecordID'] ?>&field=bloodGroup" rel="#overlay2" style="color:blue; text-decoration: none;"></a>
