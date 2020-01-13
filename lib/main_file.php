@@ -244,8 +244,10 @@ $cbhiMonthlyBillReportTitleMonthl = array("title"=>"");
 $cbhiMonthlyBillDataHeader 	= array(array("No","Number","Date","Service","Cat.","Name","ID NUMBER/APLICATION NUMBER OF BENEFICIARY","BENEFICIARY'S AGE","BENEFICIARY'S AGE","HEAD HOUSEHOLDER'S NAMES","ID NUMBER/APPLICATION OF HEAD OF HOUSEHOLD","Cons Cost","Lab","Imaging","Hosp","Procedures & Consumables", "Ambulance","Other Consumables","Drugs","Total","Co-payment","Amount after verification"),
 									array("","","","","","","","","","","","100%","100%","100%","100%","100%", "100%","100%","100%","100%","200 RWF /10%","")
 								);
-$cbhiMonthlyBillDataHeaderMonthly 	= array(array("Service","Cons Cost","Lab","Imaging","Hosp","Procedures & Consumables", "Ambulance","Other Consumables","Drugs","Other Services",)
+$cbhiMonthlyBillDataHeaderMonthly 	= array(array("Service","Cons Cost","Lab","Imaging","Hosp","Procedures & Consumables", "Ambulance","Other Consumables","Buying","Drugs","Other Services",)
 								);
+
+$cbhiid = 1;
 /*
 +----------------+------------------------------------------------------------+
 | MedecineNameID | MedecineName                                               |

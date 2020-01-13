@@ -12,7 +12,7 @@ if("rcp" !== returnSingleField($sql="SELECT PostCode from sy_post WHERE PostID='
 $error = "";
 //die;
 //var_dump($_SESSION);
-$insurance = formatResultSet($rslt=returnResultSet($sql="SELECT DISTINCT in_name.* from in_name, in_category, in_forms, in_price WHERE in_name.CategoryID=in_category.InsuranceCategoryID && in_name.InsuranceNameID = in_forms.InsuranceNameID && in_name.InsuranceName='Private' && in_name.InsuranceNameID = in_price.InsuranceNameID ORDER BY InsuranceCode ASC, InsuranceName DESC",$con),$multirows=true,$con);
+$insurance = formatResultSet($rslt=returnResultSet($sql="SELECT DISTINCT in_name.* from in_name, in_category, in_forms, in_price WHERE in_name.CategoryID=in_category.InsuranceCategoryID && in_name.InsuranceNameID = in_forms.InsuranceNameID && in_name.InsuranceName='ARV' && in_name.InsuranceNameID = in_price.InsuranceNameID ORDER BY InsuranceCode ASC, InsuranceName DESC",$con),$multirows=true,$con);
 $insurance_all = formatResultSet($rslt=returnResultSet($sql="SELECT DISTINCT in_name.* from in_name, in_category, in_forms, in_price WHERE in_name.CategoryID=in_category.InsuranceCategoryID && in_name.InsuranceNameID = in_forms.InsuranceNameID && in_name.InsuranceNameID = in_price.InsuranceNameID ORDER BY InsuranceCode ASC, InsuranceName DESC",$con),$multirows=true,$con);
 $service = formatResultSet($rslt=returnResultSet($sql="SELECT DISTINCT se_name.* FROM se_name, sy_users WHERE sy_users.UserID = se_name.DirectorID && sy_users.CenterID = '{$_SESSION['user']['CenterID']}' && se_name.Status=1 ORDER BY ServiceName ASC",$con),$multirows=true,$con);
 $active = "create";
@@ -60,7 +60,7 @@ Data;
 			}
 			?>
 	  </div>
-	  <h1>SEX WORKERS PATIENT MEDICAL DOCUMENT</h1>
+	  <h1>ARV PATIENT MEDICAL DOCUMENT</h1>
 	  <form method=post action="rcv_patient_private.php" id='rcv_patient_frm'>
 	  <input type='hidden' name='rcv_patient_btn' value='save' />
 	  <input type=hidden id='insurance' name='insurance' value='<?php echo $insurance[0]['InsuranceNameID'] ?>' />

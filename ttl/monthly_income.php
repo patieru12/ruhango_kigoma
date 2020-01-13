@@ -66,6 +66,7 @@ if(strlen($_GET['key'])){
 					ROUND(SUM(h.actsAmount), 1) AS actsConsummableAmount,
 					0 AS ambulanceAmount,
 					ROUND(SUM(l.consummableAmount), 1) AS otherConsumablesAmount,
+					ROUND(SUM(f.buyingAmount), 1) AS buyingAmount,
 					ROUND(SUM(f.medicineAmount), 1) AS medicineAmount,
 					ROUND(SUM(k.otherServiceAmount), 1) AS otherServiceAmount,
 
@@ -121,9 +122,11 @@ if(strlen($_GET['key'])){
 					ON a.PatientRecordID = e.PatientRecordID
 					LEFT JOIN (
 						SELECT a.PatientRecordID AS PatientRecordID,
+								SUM(a.buyingAmount) AS buyingAmount,
 								SUM(a.medicineAmount) AS medicineAmount
 								FROM (
 									SELECT 	a.PatientRecordID AS PatientRecordID,
+											SUM(c.Quantity*d.BuyingPrice) AS buyingAmount,
 											SUM(c.Quantity*d.Amount) AS medicineAmount
 											FROM pa_records AS a
 											INNER JOIN co_records AS b
@@ -139,6 +142,7 @@ if(strlen($_GET['key'])){
 											GROUP BY a.PatientRecordID
 									UNION 
 										SELECT 	a.PatientRecordID AS PatientRecordID,
+												SUM(c.Quantity*d.BuyingPrice) AS buyingAmount,
 												SUM(c.Quantity*d.Amount) AS medicineAmount
 												FROM pa_records AS a
 												INNER JOIN co_records AS b
@@ -153,6 +157,7 @@ if(strlen($_GET['key'])){
 												GROUP BY a.PatientRecordID
 									UNION 
 										SELECT 	a.PatientRecordID AS PatientRecordID,
+												SUM(c.Quantity*d.BuyingPrice) AS buyingAmount,
 												SUM(c.Quantity*d.Amount) AS medicineAmount
 												FROM pa_records AS a
 												INNER JOIN co_records AS b
@@ -162,8 +167,7 @@ if(strlen($_GET['key'])){
 												INNER JOIN md_price AS d
 												ON c.MedecinePriceID = d.MedecinePriceID
 												WHERE a.InsuranceNameID NOT IN ('{$cbhiid}') && 
-													  a.DateIn LIKE('{$_GET['year']}-{$_GET['month']}%') &&
-													  a.FamilyCategory NOT IN(1, 2)
+													  a.DateIn LIKE('{$_GET['year']}-{$_GET['month']}%')
 												GROUP BY a.PatientRecordID
 								) AS a
 								GROUP BY a.PatientRecordID
@@ -236,7 +240,7 @@ if($patients){
 	<span class=styling></span>
 	<div style='max-height:85%; padding-top:5px; border:0px solid #000; overflow:auto;'>
 	<table class=list id=vsbl border="1" style='width:100%; font-size:30px;'>
-		<tr><th>Service</th><th>Cons Cost</th><th>Lab</th><th>Imaging</th><th>Hosp.</th><th>Proc & Mat.</th><th>Ambul.</th><th>Consum.</th><th>Drugs.</th><th>Other Services.</th></tr>
+		<tr><th>Service</th><th>Cons Cost</th><th>Lab</th><th>Imaging</th><th>Hosp.</th><th>Proc & Mat.</th><th>Ambul.</th><th>Consum.</th><th>Buying.</th><th>Drugs.</th><th>Other Services.</th></tr>
 		<!-- <tr><th>&nbsp;</th><th>100%</th><th>100%</th><th>100%</th><th>100%</th><th>100%</th><th>100%</th><th>100%</th><th>100%</th></tr> -->
 		<?php
 		require_once "../lib2/PHPExcel/IOFactory.php";
@@ -375,6 +379,10 @@ if($patients){
 				$columsCounter++;
 				echo "<td></td>";
 				$total[$columsCounter] = "";
+				$columsCounter++;
+				echo "<td style='text-align: right; padding: 0 10px;'>".number_format($r['buyingAmount'])."</td>";
+				$medicinesMainTotal += $r['buyingAmount'];
+				$total[$columsCounter] = (@$total[$columsCounter]?($total[$columsCounter]+$r['buyingAmount']):$r['buyingAmount']);
 				$columsCounter++;
 				echo "<td style='text-align: right; padding: 0 10px;'>".number_format($r['medicineAmount'])."</td>";
 				$medicinesMainTotal += $r['medicineAmount'];

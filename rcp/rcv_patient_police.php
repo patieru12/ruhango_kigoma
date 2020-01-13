@@ -250,6 +250,7 @@ if(@$_POST['rcv_patient_btn']){
 						Status=0,
 						VillageID='{$village_id}',
 						ReceptionistID='{$_SESSION['user']['UserID']}',
+						policeman='{$_POST['phonenumber']}',
 						TimeIn = '".(time())."'";
 		
 				if($ins == "RSSB RAMA"){

@@ -91,7 +91,7 @@ $signature = returnSingleField("SELECT signature FROM sy_users AS a INNER JOIN c
 // var_dump($nurseName); die();
 $nurseSignature = "";
 if($signature){
-	$nurseSignature = "<img src='../images/signatures/{$signature}' />";
+	$nurseSignature = "<img style='height: 20px' src='../images/signatures/{$signature}' />";
 }
 		
 if($records){
@@ -875,7 +875,7 @@ $info = <<<INFO
 	</tr>
 	<tr>
 		<td colspan=2 style="text-align: left; font-size:12px; border-bottom: 0px solid #000;  border-left: 1px solid #000;  border-right: 1px solid #000;">
-			<b>{$currentDiagnostics['currentDiagnostics']}</b><br />&nbsp;
+			<b>{$currentDiagnostics['currentDiagnostics']}</b>
 		</td>
 	</tr>
 	<tr>
@@ -956,8 +956,6 @@ $info = <<<INFO
 				<tr>
 					<td style="text-align: left; border-left: 0 solid #000; border-bottom: 1 solid #000; ">
 						Other/Autre(To specify/&agrave; specifier)
-						<br />&nbsp;
-						<br />&nbsp;
 					</td>
 					<td style="text-align: left; width:440px; ">
 						&nbsp;
@@ -1007,7 +1005,6 @@ $info = <<<INFO
 					</td>
 				</tr>
 			</table>
-			&nbsp;<br />
 		</td>
 	</tr>
 	<tr>

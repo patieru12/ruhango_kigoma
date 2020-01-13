@@ -335,7 +335,7 @@ require_once "../lib2/cssmenu/cst_header.html";
 	var TDR_Found = false;
 	$("#requestExam").keyup(function(e){
 		// Here try to check if the exam is TDR and request for the Result now for better saving
-		/*if(!temporisationStarted){
+		if(!temporisationStarted){
 			temporisationStarted = true;
 			$("#tdrResult").html("checking TDR");
 			setTimeout(function(e){
@@ -354,7 +354,7 @@ require_once "../lib2/cssmenu/cst_header.html";
 				}
 				temporisationStarted = false;
 			}, 2000);
-		}*/
+		}
 	});
 
 	function checkHistory(){
