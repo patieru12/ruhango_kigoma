@@ -13,4 +13,14 @@
 	<br />&reg; GENIUS SOFTWARE LTD
 </div>
 
-<!-- <div style="position: fixed; top: 10px;left: 10%;">Telephone Ya Patience Yazimye:<br />Yanze numurilo<br />Uwabona Emmanuel Mbere yamubwira agakora Login akoresheje <span style="font-weight: bold; font-size: 32px;">emmanuel</span> nk username password agashyiramo <span style="font-size: 32px; font-weight: bold;">123</span><br />MURAKOZE. Patience</div> -->
+<!-- <div style="position: fixed; top: 10px;left: 10%;">Telephone Ya Patience Yazimye:<br />Yanze numurilo<br />Itangazo</div> -->
+
+<div style="position: fixed; bottom: 10%; right: 1%;" id="careMessanger">
+	Send Message
+</div>
+
+<script type="text/javascript">
+	$("#careMessanger").load("<?= @$path ?>msg/load.php", function(){
+		console.log("The Messanger app is loaded.")
+	});
+</script>

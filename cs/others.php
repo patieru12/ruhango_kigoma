@@ -118,6 +118,8 @@ require_once "../lib2/cssmenu/cs_header.html";
 												<?php
 											}
 											echo "</select>";
+
+											// var_dump($pp);
 											?>
 										</td>
 										<td>
@@ -125,7 +127,7 @@ require_once "../lib2/cssmenu/cs_header.html";
 											
 										</td>
 										<td>
-											<input id="date" onclick='ds_sh(this,"date")' type='date' name='date' class='txtfield1'  style='width:100px;' value="<?= @$pp['Date']?$pp['Date']:date('Y-m-d',time()) ?>" readonly />
+											<input id="date" onclick='ds_sh(this,"date")' type='date' name='date' class='txtfield1'  style='width:100px;' value="<?= @$pp['Date']?$pp['Date']:'2020-01-01' ?>" readonly />
 										</td>
 							<td colspan='1'>
 								<center>
