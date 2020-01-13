@@ -2,3 +2,5 @@
 /lib/configure.php
 /report/receipt.pdf
 *.pdf
+*.xlsx
+*.docx
