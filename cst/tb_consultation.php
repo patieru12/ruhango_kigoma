@@ -9,6 +9,15 @@ if(!$registerId){
 }
 // var_dump($_GET);
 $patientID = $_GET['recordid'];
+
+//Here Check if the Patience has a TB Record
+$tbINfo = formatResultSet($rslt=returnResultSet("SELECT 	a.id
+															FROM tb_records AS a
+															WHERE PatientRecordID = '{$patientID}'
+															", $con), false, $con);
+if(!$tbINfo){
+	saveData("INSERT INTO tb_records SET PatientRecordID='{$patientID}', Date=NOW()", $con);
+}
 $patient = formatResultSet($rslt=returnResultSet("SELECT 	a.*,
 															b.CategoryID AS insuranceCategory,
 															c.Name AS patientName,

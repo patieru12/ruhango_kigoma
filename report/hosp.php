@@ -48,7 +48,7 @@ require_once "../lib2/cssmenu/rcp_header.html";
   </style>
   <div id="w">
     <div id="content">
-      <h1 style='margin-top:-55px'>Daily Reception Report Summary</h1>
+      <h1 style='margin-top:-55px'>Hospitalisation Report</h1>
       <b>
 	  		<input type=hidden value=0 id=edit_mode />
 <table class="ds_box" cellpadding="0" cellspacing="0" id="ds_conclass"
@@ -58,7 +58,7 @@ require_once "../lib2/cssmenu/rcp_header.html";
 	</tr></table>
 	  <input type=hidden name=insurance value='<?= $insurance[0]['InsuranceNameID'] ?>' id=insurance />
 	  <input type=hidden name=post_ value='_<?= $_SESSION['user']['CenterID']; ?>' id=post />
-	  <table class=list-1><tr><td>Post</td><td>Year</td><td>Month</td><td>Day</td></tr>
+	  <table class=list-1><tr><td>Post</td><td>Year</td><td>Month</td></tr>
 	  <tr>
 	  <td>
 	  <?php
@@ -85,7 +85,7 @@ require_once "../lib2/cssmenu/rcp_header.html";
 		}
 		?>
 	  </select>
-	  </td>
+	  </td><!--
 	  <td class=day>
 	  <select name=year class=txtfield1 style='width:70px;' id=year>
 		<?php
@@ -94,7 +94,7 @@ require_once "../lib2/cssmenu/rcp_header.html";
 		}
 		?>
 	  </select>
-	  </td><!--<td>
+	  </td><td>
 	  <input type=text class=txtfield1 style='width:250px;' id=medecines value='ALL' />
 	  
 	  </td>--><td>
@@ -106,11 +106,10 @@ require_once "../lib2/cssmenu/rcp_header.html";
 	  <?php echo $error; ?>
 	  <span class=update_result></span>
 	  <input type=hidden id=filter_ />
-	  <div class="patient_found" style='height:92%; border:0px solid #000;'>
-		<span class=error-text>Select Post to view Daily Records</span>
+	  <div class="patient_found" style='max-height:430px;'>
+		<span class=error-text>Select Post to view Hospitalisation Records</span>
 	  </div>
 	  <div class="doc_selected">
-	  
 	  </div>
 	  </b>
     </div>
@@ -140,17 +139,11 @@ $(document).ready(function(){
 	$(".day").load("load_day.php?year=" + $("#year").val() + "&month=" + $("#month").val());
 	$("#year").change(function(e){
 		$(".day").load("load_day.php?year=" + $("#year").val() + "&month=" + $("#month").val());
-		//then load the data automatically after 800 milliseconds
-		/* setTimeout(function(){
-			$("#generate").click();
-		},800); */
+	
 	});
 	$("#month").change(function(e){
 		$(".day").load("load_day.php?year=" + $("#year").val() + "&month=" + $("#month").val());
-		//then load the data automatically after 800 milliseconds
-		/* setTimeout(function(){
-			$("#generate").click();
-		},800); */
+	
 	});
 	
 	$("#generate").click(function(e){
@@ -162,7 +155,7 @@ $(document).ready(function(){
 			return e.preventDefault();
 		}
 		$(".patient_found").html("Please Wait...<br /><img src='../images/loading.gif' />");
-		$(".patient_found").load("daily_data.php?key=" + $("#insurance").val() + "&day=" + $("#day").val() + "&month=" + $("#month").val() + "&year=" + $("#year").val() + "&post=" + $("#post").val() + "&filter=" + $("#filter_").val());
+		$(".patient_found").load("hosp_data.php?key=" + $("#insurance").val() + "&day=" + $("#day").val() + "&month=" + $("#month").val() + "&year=" + $("#year").val() + "&post=" + $("#post").val() + "&filter=" + $("#filter_").val());
 	});
 	
 	//if the search button is clicked search the patient_found

@@ -152,6 +152,12 @@ $daily_reception_report = [
 		"rpt_rssb_rama"	=> ["Number", "Amount"],
 		"rpt_private"	=> ["Number", "Amount"],
 	],
+	"Retained" => [
+		"rpt_cbhi"		=> ["Number", "Amount"],
+		"rpt_mmi"		=> ["Number", "Amount"],
+		"rpt_rssb_rama"	=> ["Number", "Amount"],
+		"rpt_private"	=> ["Number", "Amount"],
+	],
 ];
 $reportRenames = array(
 						"totalTM" 			=> "TM Paid",
@@ -166,7 +172,8 @@ $reportRenames = array(
 						"totalOTHER" 		=> "Other Printings",
 						"totalLunette"		=> "Lunettes",
 						"totalSupanet"		=> "Mousticaire",
-						"totalAdjust"		=> "Adjustment"
+						"totalAdjust"		=> "Adjustment",
+						"totalRetained"		=> "Retained",
 					);
 $exceptInReport = "Fiche de Prestation";
 $ficheName 		= "Fiche de Prestation";
@@ -244,7 +251,7 @@ $cbhiMonthlyBillReportTitleMonthl = array("title"=>"");
 $cbhiMonthlyBillDataHeader 	= array(array("No","Number","Date","Service","Cat.","Name","ID NUMBER/APLICATION NUMBER OF BENEFICIARY","BENEFICIARY'S AGE","BENEFICIARY'S AGE","HEAD HOUSEHOLDER'S NAMES","ID NUMBER/APPLICATION OF HEAD OF HOUSEHOLD","Cons Cost","Lab","Imaging","Hosp","Procedures & Consumables", "Ambulance","Other Consumables","Drugs","Total","Co-payment","Amount after verification"),
 									array("","","","","","","","","","","","100%","100%","100%","100%","100%", "100%","100%","100%","100%","200 RWF /10%","")
 								);
-$cbhiMonthlyBillDataHeaderMonthly 	= array(array("Service","Cons Cost","Lab","Imaging","Hosp","Procedures & Consumables", "Ambulance","Other Consumables","Buying","Drugs","Other Services",)
+$cbhiMonthlyBillDataHeaderMonthly 	= array(array("Service","Cons Cost","Lab","Imaging","Hosp","Procedures & Consumables", "Ambulance","Other Consumables","Buying Medines","Selling Medicines", "Medicines Incomes","Other Services",)
 								);
 
 $cbhiid = 1;

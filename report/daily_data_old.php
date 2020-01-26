@@ -51,46 +51,12 @@ if(@$_GET['filter']){
 		pa_info.FamilyCode LIKE('%{$_GET['filter']}%')
 	)";
 }
-/*echo "<pre>"; var_dump($daily_reception_report);
-die();*/
-
 //echo $sys;
 if(strlen($_GET['key'])){
-
 	//select all possible information on the comming id
-	$patients = formatResultSet($rslt=returnResultSet($sql="SELECT 	DISTINCT pa_records.DocID, 
-																	pa_records.PatientRecordID, 
-																	pa_records.FamilyCategory, 
-																	pa_records.DateIn, 
-																	pa_records.InsuranceCardID, 
-																	pa_info.* 
-																	FROM se_name, 
-																	se_records, 
-																	pa_records, 
-																	pa_info, 
-																	ad_village, 
-																	ad_cell, 
-																	ad_sector, 
-																	ad_district, 
-																	sy_users, 
-																	sy_center 
-																	WHERE pa_records.PatientRecordID = se_records.PatientRecordID && 
-																		  se_records.ServiceNameID = se_name.ServiceNameID && 
-																		  se_name.ServiceCode='MAT' && 
-																		  pa_info.PatientID = pa_records.PatientID && 
-																		  pa_info.VillageID=ad_village.ViillageID && 
-																		  ad_village.CellID=ad_cell.CellID && 
-																		  ad_cell.SectorID=ad_sector.SectorID && 
-																		  ad_sector.DistrictID=ad_district.DistrictID && 
-																		  pa_records.ReceptionistID = sy_users.UserID && 
-																		  sy_users.CenterID = sy_center.CenterID && {$sys} && 
-																		  DateIn LIKE('{$_GET['year']}-{$_GET['month']}-{$_GET['day']}') {$sp_condition} 
-																	ORDER BY pa_records.DateIn ASC, 
-																			 pa_records.PatientRecordID ASC
-																	",$con),$multirows=true,$con); // && pa_records.Status != 0 
+	$patients = formatResultSet($rslt=returnResultSet($sql="SELECT DISTINCT pa_records.DocID, pa_records.PatientRecordID, pa_records.FamilyCategory, pa_records.DateIn, pa_records.InsuranceCardID, pa_info.* FROM se_name, se_records, pa_records, pa_info, ad_village, ad_cell, ad_sector, ad_district, sy_users, sy_center WHERE pa_records.PatientRecordID = se_records.PatientRecordID && se_records.ServiceNameID = se_name.ServiceNameID && se_name.ServiceCode='MAT' && pa_info.PatientID = pa_records.PatientID && pa_info.VillageID=ad_village.ViillageID && ad_village.CellID=ad_cell.CellID && ad_cell.SectorID=ad_sector.SectorID && ad_sector.DistrictID=ad_district.DistrictID && pa_records.ReceptionistID = sy_users.UserID && sy_users.CenterID = sy_center.CenterID && {$sys} && DateIn LIKE('{$_GET['year']}-{$_GET['month']}-{$_GET['day']}') {$sp_condition} ORDER BY pa_records.DateIn ASC, pa_records.PatientRecordID ASC",$con),$multirows=true,$con); // && pa_records.Status != 0 
 	$date = $_GET['year']."-".$_GET['month']."-".$_GET['day'];
 //echo $sql;
-	// var_dump($patients);
 if($patients || !$patients){
 	$all_amount = 0;
 	//sum of patient CBHI
@@ -104,14 +70,19 @@ if($patients || !$patients){
 	$patient_cbhi_amount_compassion = returnSingleField("SELECT  SUM(`TicketPaid`) AS TMCBHIPAID FROM mu_tm, pa_records, in_name WHERE pa_records.PatientRecordID = mu_tm.PatientRecordID && pa_records.InsuranceNameID = in_name.InsuranceNameID && in_name.InsuranceName='CBHI' && mu_tm.Type = 'COMPASSION' && pa_records.DateIn='{$date}'","TMCBHIPAID",true,$con);
 	
 	//count how many CBHI user paid deterrent fees
-	$facture = $ph = $patient_cbhi_paid = returnSingleField("SELECT  COUNT(`TicketPaid`) AS TMCBHIPAID FROM mu_tm, pa_records, in_name WHERE pa_records.PatientRecordID = mu_tm.PatientRecordID && pa_records.InsuranceNameID = in_name.InsuranceNameID && in_name.InsuranceName='CBHI' && pa_records.DateIn='{$date}' && mu_tm.Type='OK'","TMCBHIPAID",true,$con);
+	$facture = $ph = $patient_cbhi_paid = returnSingleField("SELECT  COUNT(`TicketPaid`) AS TMCBHIPAID FROM mu_tm, pa_records, in_name WHERE pa_records.PatientRecordID = mu_tm.PatientRecordID && pa_records.InsuranceNameID = in_name.InsuranceNameID && in_name.InsuranceName='CBHI' && pa_records.DateIn='{$date}' && (mu_tm.Type='OK' || (mu_tm.Type='CATEGORY' && mu_tm.TicketPaid != 0 ) )","TMCBHIPAID",true,$con);
 	//sum all deterrent fees paid by CBHI Patients
-	$patient_cbhi_paid_amount = returnSingleField("SELECT  SUM(`TicketPaid`) AS TMCBHIPAID FROM mu_tm, pa_records, in_name WHERE pa_records.PatientRecordID = mu_tm.PatientRecordID && pa_records.InsuranceNameID = in_name.InsuranceNameID && in_name.InsuranceName='CBHI' && pa_records.DateIn='{$date}' && mu_tm.Type='OK'","TMCBHIPAID",true,$con);
+	$patient_cbhi_paid_amount = returnSingleField("SELECT  SUM(`TicketPaid`) AS TMCBHIPAID FROM mu_tm, pa_records, in_name WHERE pa_records.PatientRecordID = mu_tm.PatientRecordID && pa_records.InsuranceNameID = in_name.InsuranceNameID && in_name.InsuranceName='CBHI' && pa_records.DateIn='{$date}' && (mu_tm.Type='OK' || (mu_tm.Type='CATEGORY' && mu_tm.TicketPaid != 0 ) )","TMCBHIPAID",true,$con);
 	
 	//select how many patient that can pay themselves deterrent fees
 	$patient_cbhi_not_paid_indigent = returnSingleField("SELECT  COUNT(`TicketPaid`) AS TMCBHIPAID FROM mu_tm, pa_records, in_name WHERE pa_records.PatientRecordID = mu_tm.PatientRecordID && pa_records.InsuranceNameID = in_name.InsuranceNameID && in_name.InsuranceName='CBHI' && pa_records.DateIn='{$date}' && mu_tm.Type='INDIGENT'","TMCBHIPAID",true,$con);
 	//sum all deterrent fees paid by CBHI Patients
 	$patient_cbhi_not_paid_indigent_amount = returnSingleField("SELECT  SUM(`TicketPaid`) AS TMCBHIPAID FROM mu_tm, pa_records, in_name WHERE pa_records.PatientRecordID = mu_tm.PatientRecordID && pa_records.InsuranceNameID = in_name.InsuranceNameID && in_name.InsuranceName='CBHI' && pa_records.DateIn='{$date}' && mu_tm.Type='INDIGENT'","TMCBHIPAID",true,$con);
+	
+	//select how many patient that can pay themselves deterrent fees
+	$patient_cbhi_not_paid_cat2_malaria = returnSingleField("SELECT  COUNT(`TicketPaid`) AS TMCBHIPAID FROM mu_tm, pa_records, in_name WHERE pa_records.PatientRecordID = mu_tm.PatientRecordID && pa_records.InsuranceNameID = in_name.InsuranceNameID && in_name.InsuranceName='CBHI' && pa_records.DateIn='{$date}' && mu_tm.Type='CATEGORY' && mu_tm.TicketPaid=0","TMCBHIPAID",true,$con);
+	//sum all deterrent fees paid by CBHI Patients
+	$patient_cbhi_not_paid_cat2_malaria_amount = returnSingleField("SELECT  SUM(`TicketPaid`) AS TMCBHIPAID FROM mu_tm, pa_records, in_name WHERE pa_records.PatientRecordID = mu_tm.PatientRecordID && pa_records.InsuranceNameID = in_name.InsuranceNameID && in_name.InsuranceName='CBHI' && pa_records.DateIn='{$date}' && mu_tm.Type='CATEGORY' && mu_tm.TicketPaid=0","TMCBHIPAID",true,$con);
 	
 	//select how many patient that can pay themselves deterrent fees
 	$patient_cbhi_not_paid_pst = returnSingleField("SELECT  COUNT(`TicketPaid`) AS TMCBHIPAID FROM mu_tm, pa_records, in_name WHERE pa_records.PatientRecordID = mu_tm.PatientRecordID && pa_records.InsuranceNameID = in_name.InsuranceNameID && in_name.InsuranceName='CBHI' && pa_records.DateIn='{$date}' && mu_tm.Type='PANSEMENT'","TMCBHIPAID",true,$con);
@@ -142,7 +113,7 @@ if($patients || !$patients){
 	$patient_corar = returnSingleField($sql = "SELECT  COUNT(`TicketPaid`) AS TMCBHIPAID FROM mu_tm, pa_records, in_name WHERE pa_records.PatientRecordID = mu_tm.PatientRecordID && pa_records.InsuranceNameID = in_name.InsuranceNameID && in_name.InsuranceName='CORAR' && pa_records.DateIn='{$date}'","TMCBHIPAID",true,$con);
 	//sum of amount CORAR
 	$patient_corar_amount = returnSingleField("SELECT  SUM(`TicketPaid`) AS TMCBHIPAID FROM mu_tm, pa_records, in_name WHERE pa_records.PatientRecordID = mu_tm.PatientRecordID && pa_records.InsuranceNameID = in_name.InsuranceNameID && in_name.InsuranceName='CORAR' && pa_records.DateIn='{$date}'","TMCBHIPAID",true,$con);
-	// echo $sql;
+	
 	//sum of patient PRIVATE
 	$private_total = returnSingleField($sql = "SELECT  COUNT(`TicketPaid`) AS TMCBHIPAID FROM mu_tm, pa_records, in_name WHERE pa_records.PatientRecordID = mu_tm.PatientRecordID && pa_records.InsuranceNameID = in_name.InsuranceNameID && in_name.InsuranceName='Private' && pa_records.DateIn='{$date}'","TMCBHIPAID",true,$con);
 	//sum of amount PRIVATE
@@ -161,8 +132,10 @@ if($patients || !$patients){
 	//select the consultation related to the private patient
 	//echo $sql;
 	$amount_consultation = returnSingleField($sql="SELECT SUM(`Amount`) as ConsulatationPrice FROM co_price, co_records, pa_records, in_category WHERE pa_records.PatientRecordID = co_records.PatientRecordID && co_records.ConsultationPriceID = co_price.ConsultationPriceID && co_price.InsuranceCategoryID = in_category.InsuranceCategoryID && in_category.InsuranceCode = 'E' && pa_records.DateIn='{$date}'","ConsulatationPrice",true,$con);//$private_records_amount['ConsulatationPrice'];
+	//$private_total_amount += $amount_consultation;
 	//echo $sql;
 	$amount_labo = returnSingleField($sql="SELECT SUM(`Amount`) as LaboPrice FROM la_price, la_records, co_records, pa_records, in_category WHERE pa_records.PatientRecordID = co_records.PatientRecordID && co_records.ConsultationRecordID = la_records.ConsultationRecordID && la_records.ExamPriceID = la_price.ExamPriceID && la_price.InsuranceTypeID = in_category.InsuranceCategoryID && in_category.InsuranceCode = 'E' && pa_records.DateIn='{$date}'","LaboPrice",true,$con);//$private_records_amount['ConsulatationPrice'];
+	$private_total_amount += $amount_labo;
 	$md_records = formatResultSet($rslt=returnResultSet($sql="SELECT md_price.Amount, md_records.Quantity FROM md_price, md_records, co_records, pa_records, in_name WHERE pa_records.PatientRecordID = co_records.PatientRecordID && co_records.ConsultationRecordID = md_records.ConsultationRecordID && md_records.MedecinePriceID = md_price.MedecinePriceID && pa_records.InsuranceNameID = in_name.InsuranceNameID && in_name.InsuranceName = 'Private' && pa_records.DateIn='{$date}'",$con),true,$con);//$private_records_amount['ConsulatationPrice'];
 	//var_dump($md_records);
 	//loop all medicines found
@@ -171,7 +144,7 @@ if($patients || !$patients){
 		foreach($md_records as $m){
 			$amount_md += $m['Quantity'] * $m['Amount'];
 		}
-	
+	$private_total_amount += $amount_md;
 	$ac_without_acc_records = formatResultSet($rslt=returnResultSet($sql="SELECT ac_price.Amount, ac_records.Quantity FROM ac_price, ac_name, ac_records, pa_records, in_name WHERE pa_records.PatientRecordID = ac_records.PatientRecordID && ac_records.ActPriceID = ac_price.ActPriceID && ac_price.ActNameID = ac_name.ActNameID && pa_records.InsuranceNameID = in_name.InsuranceNameID && in_name.InsuranceName = 'Private' && pa_records.DateIn='{$date}' && ac_name.Name NOT LIKE('%acc%')",$con),true,$con);//$private_records_amount['ConsulatationPrice'];
 	//var_dump($ac_without_acc_records);
 	//loop all medicines found
@@ -180,7 +153,7 @@ if($patients || !$patients){
 		foreach($ac_without_acc_records as $m){
 			$amount_act_sans_accouchement += $m['Quantity'] * $m['Amount'];
 		}
-	
+	$private_total_amount += $amount_act_sans_accouchement;
 	$ac_with_acc_records = formatResultSet($rslt=returnResultSet($sql="SELECT ac_price.Amount, ac_records.Quantity FROM ac_price, ac_name, ac_records, pa_records, in_name WHERE pa_records.PatientRecordID = ac_records.PatientRecordID && ac_records.ActPriceID = ac_price.ActPriceID && ac_price.ActNameID = ac_name.ActNameID && pa_records.InsuranceNameID = in_name.InsuranceNameID && in_name.InsuranceName = 'Private' && pa_records.DateIn='{$date}' && ac_name.Name LIKE('%acc%')",$con),true,$con);//$private_records_amount['ConsulatationPrice'];
 	//var_dump($ac_without_acc_records);
 	//loop all medicines found
@@ -189,7 +162,7 @@ if($patients || !$patients){
 		foreach($ac_with_acc_records as $m){
 			$amount_accouchement += $m['Quantity'] * $m['Amount'];
 		}
-	
+	$private_total_amount += $amount_accouchement;
 	$cn_records = formatResultSet($rslt=returnResultSet($sql="SELECT cn_price.Amount, cn_records.Quantity FROM cn_price, cn_records, pa_records, in_name WHERE pa_records.PatientRecordID = cn_records.PatientRecordID && cn_records.MedecinePriceID = cn_price.MedecinePriceID && pa_records.InsuranceNameID = in_name.InsuranceNameID && in_name.InsuranceName = 'Private' && pa_records.DateIn='{$date}'",$con),true,$con);//$private_records_amount['ConsulatationPrice'];
 	//var_dump($md_records);
 	//loop all medicines found
@@ -198,17 +171,16 @@ if($patients || !$patients){
 		foreach($cn_records as $m){
 			$amount_consummable += $m['Quantity'] * $m['Amount'];
 		}
-	
-	$ho_records = formatResultSet($rslt=returnResultSet($sql="SELECT ho_price.Amount, ho_record.StartDate, ho_record.EndDate FROM ho_price, ho_record, pa_records, in_name WHERE pa_records.PatientRecordID = ho_record.RecordID && ho_record.HOPriceID = ho_price.HOPriceID && pa_records.InsuranceNameID = in_name.InsuranceNameID && in_name.InsuranceName = 'Private' && pa_records.DateIn='{$date}'",$con),false,$con);//$private_records_amount['ConsulatationPrice'];
+	$private_total_amount += $amount_consummable;
+	$ho_records = formatResultSet($rslt=returnResultSet($sql="SELECT ho_price.Amount, ho_record.Days FROM ho_price, ho_record, pa_records, in_name WHERE pa_records.PatientRecordID = ho_record.RecordID && ho_record.HOPriceID = ho_price.HOPriceID && pa_records.InsuranceNameID = in_name.InsuranceNameID && in_name.InsuranceName = 'Private' && pa_records.DateIn='{$date}'",$con),false,$con);//$private_records_amount['ConsulatationPrice'];
 	//var_dump($ho_records);
 	//loop all medicines found
 	$amount_hosp = 0;
-	if($ho_records){
+	if($ho_records)
 		//foreach($ho_records as $m){
-			$days = getAge($ho_records['StartDate'], 1, $ho_records['EndDate'], true);
-			$amount_hosp += $days * $ho_records['Amount'];
+			$amount_hosp += $ho_records['Days'] * $ho_records['Amount'];
 		//}
-	}
+	$private_total_amount += $amount_hosp;
 	//select number coarteme6x1 delivered at the selected date
 	$coarteme6x1 = returnSingleField($sql="SELECT COUNT(`md_records`.`Quantity`) AS QTY FROM md_price, md_records, md_name, co_records, pa_records WHERE pa_records.PatientRecordID = co_records.PatientRecordID && co_records.ConsultationRecordID = md_records.ConsultationRecordID && md_records.MedecinePriceID = md_price.MedecinePriceID && md_price.MedecineNameID = md_name.MedecineNameID && md_records.Date='{$date}' && md_name.MedecineName LIKE('coartem 6x1%')","QTY",$con);//$private_records_amount['ConsulatationPrice'];
 	if($malariaid = returnSingleField("SELECT MalariaID FROM la_malaria WHERE Date='{$date}'","MalariaID",true,$con)){
@@ -271,9 +243,6 @@ if($patients || !$patients){
 	<?= $post ?> Daily Records<br />
 	Date: <?= $_GET['day']."/".$_GET['month']."/".$_GET['year'] ?><br />
 	</span>
-	<?php
-	$usableDate = $_GET['year']."-".$_GET['month']."-".$_GET['day'];
-	?>
 	<style>
 		table#vsbl td, table#vsbl th{font-size:11px; font-family:arial; font-weight:bold; border:1px solid #000;}
 		.number_right{ text-align:right; }
@@ -289,204 +258,10 @@ if($patients || !$patients){
 		#number{ text-align:right; }
 		a{color:blue; text-decoration:none; }
 	</style>
-	<?php
-	$dataToPrint = "";
-	// die();
-	if($daily_reception_report){
-		$date = $_GET['year']."-".$_GET['month']."-".$_GET['day'];
-		$totalAmount = 0;
-		$dataToPrint = "<table id=table>";
-			$dataToPrint .= "<tr>";
-				$dataToPrint .= "<td class=tb_title rowspan=2 style='border:1px solid #000;'>&nbsp;</td>";
-				foreach($availableInsurance AS $a){
-					$dataToPrint .= "<td colspan=2 class=tb_title style='border:1px solid #000;'>".$a."</td>";
-				}
-				$dataToPrint .= "<td class=tb_title colspan=2 style='border:1px solid #000;'>Total</td>";
-				
-			$dataToPrint .= "</tr>";
-			$dataToPrint .= "<tr>";
-				foreach($availableInsurance AS $a){
-					$dataToPrint .= "<td class=tb_title style='border:1px solid #000;'>Number</td>";
-					$dataToPrint .= "<td class=tb_title style='border:1px solid #000;'>Amount</td>";
-				}
-				$dataToPrint .= "<td class=tb_title style='border:1px solid #000;'>Number</td>";
-				$dataToPrint .= "<td class=tb_title style='border:1px solid #000;'>Amount</td>";
-			$dataToPrint .= "</tr>";
-		foreach($daily_reception_report AS $term=>$content){
-			$rowTotalNumber = 0;
-			$rowTotalAmount = 0;
-			$dataToPrint .= "<tr>";
-				$dataToPrint .= "<td style='border:1px solid #000;'>".$term."</td>";
-				foreach($content AS $table=>$fields){
-					foreach($fields AS $field){
-						if($field){
-							$data = getReceptionNumbers($term, $date, $table,$field);
-							$variableName = "rowTotal".$field;
-							$$variableName += $data;
-
-							/*if($field == "Amount"){
-								$totalAmount += $data;
-							}*/
-							$dataToPrint .= "<td id=number style='border:1px solid #000;'>";
-								$dataToPrint .= number_format($data);
-							$dataToPrint .= "</td>";
-						} else{
-							$dataToPrint .= "<td class='empty_field' id=number style='border:1px solid #000;'>&nbsp;</td>";
-						}
-						
-					}
-				}
-				$dataToPrint .= "<td id=number style='border:1px solid #000;'>".(number_format($rowTotalNumber))."</td>";
-				$dataToPrint .= "<td id=number style='border:1px solid #000;'>".(number_format($rowTotalAmount))."</td>";
-				$totalAmount += $rowTotalAmount;
-			$dataToPrint .= "</tr>";
-		}
-		// Here Get the List of addition Product that are still active late use
-		/*$otherProduct = returnAllData($sql = "SELECT * FROM sy_product WHERE ProductName != '{$exceptInReport}' ORDER BY ProductName",$con);
-		if($otherProduct){
-			foreach($otherProduct AS $product){
-				$rowTotalNumber = 0;
-				$rowTotalAmount = 0;
-				$dataToPrint .= "<tr>";
-					$dataToPrint .= "<td style='border:1px solid #000;'>{$product['ProductName']}</td>";
-					$term = $product['ProductName'];
-					foreach($availableInsurance AS $a){
-						$table = "rpt_".strtolower(str_replace(" ", "_", $a));
-						$field = "Number";
-						$data = getReceptionNumbers($term, $date, $table,$field);
-						$variableName = "rowTotal".$field;
-						$$variableName += $data;
-						$dataToPrint .= "<td id=number style='border:1px solid #000;'>".number_format($data)."</td>";
-
-						$field = "Amount";
-						$data = getReceptionNumbers($term, $date, $table,$field);
-						$variableName = "rowTotal".$field;
-						$$variableName += $data;
-						$dataToPrint .= "<td id=number style='border:1px solid #000;'>".number_format($data)."</td>";
-					}
-					$dataToPrint .= "<td id=number style='border:1px solid #000;'>".(number_format($rowTotalNumber))."</td>";
-					$dataToPrint .= "<td id=number style='border:1px solid #000;'>".(number_format($rowTotalAmount))."</td>";
-					$totalAmount += $rowTotalAmount;
-				$dataToPrint .= "</tr>";
-			}
-		}*/
-		$dailyPaymentsNumber = returnSingleField("SELECT COUNT(a.id) AS payments FROM sy_debt_payment AS a WHERE Date='{$date}'", "payments", true, $con);
-		$dailyPaymentsAmount = returnSingleField("SELECT SUM(a.paidAmount) AS payments FROM sy_debt_payment AS a WHERE Date='{$date}'", "payments", true, $con);
-		$dataToPrint .= "<tr>";
-			$dataToPrint .= "<td style='border:1px solid #000;'>Daily Payments</td>";
-			foreach($availableInsurance AS $a){
-				$dataToPrint .= "<td class=empty_field style='border:1px solid #000;'>&nbsp;</td>";
-				$dataToPrint .= "<td class=empty_field style='border:1px solid #000;'>&nbsp;</td>";
-			}
-			$dataToPrint .= "<td id=number style='border:1px solid #000;'>".number_format($dailyPaymentsNumber)."</td>";
-			$dataToPrint .= "<td id=number style='border:1px solid #000;'>".number_format($dailyPaymentsAmount)."</td>";
-			$totalAmount += $dailyPaymentsAmount;
-		$dataToPrint .= "</tr>";
-		$dailyDebtNumber = returnSingleField("SELECT COUNT(a.id) AS debts FROM sy_debt_records AS a WHERE Date='{$date}'", "debts", true, $con);
-		$sql = "SELECT 	SUM(a.debts) AS debts 
-						FROM (
-							SELECT 	(a.requiredAmount - a.availableAmount) AS debts
-									FROM sy_debt_records AS a 
-									WHERE a.Date = '{$date}'
-						) AS a
-						";
-		// echo $sql;
-		$dailyDebtAmount = returnSingleField($sql, "debts", true, $con);
-		$dataToPrint .= "<tr>";
-			$dataToPrint .= "<td style='border:1px solid #000;'>Daily Debt</td>";
-			foreach($availableInsurance AS $a){
-				$dataToPrint .= "<td class=empty_field style='border:1px solid #000;'>&nbsp;</td>";
-				$dataToPrint .= "<td class=empty_field style='border:1px solid #000;'>&nbsp;</td>";
-			}
-			$dataToPrint .= "<td id=number style='border:1px solid #000;'>".number_format($dailyDebtNumber)."</td>";
-			$dataToPrint .= "<td id=number style='border:1px solid #000;'>".number_format($dailyDebtAmount)."</td>";
-			$totalAmount -= $dailyDebtAmount;
-		$dataToPrint .= "</tr>";
-		$dataToPrint .= "<tr>";
-			$dataToPrint .= "<td style='border:1px solid #000;'>Balance</td>";
-			foreach($availableInsurance AS $a){
-				$dataToPrint .= "<td class=empty_field style='border:1px solid #000;'>&nbsp;</td>";
-				$dataToPrint .= "<td class=empty_field style='border:1px solid #000;'>&nbsp;</td>";
-			}
-			$dataToPrint .= "<td class=empty_field style='border:1px solid #000;'>&nbsp;</td>";
-			$dataToPrint .= "<td id=number style='border:1px solid #000;'>".number_format($totalAmount)."</td>";
-
-			$sql1 = "INSERT INTO sy_caisse SET amount='{$totalAmount}', date='{$usableDate}'";
-			$sql2 = "SELECT id FROM sy_caisse WHERE date='{$usableDate}'";
-			$caiseInfo = insertOrReturnID($sql1, $sql2, "id", $con);
-			saveData("UPDATE sy_caisse SET amount = '{$totalAmount}' WHERE id='{$caiseInfo}'", $con);
-		$dataToPrint .= "</tr>";
-		$dataToPrint .= "</table>";
-	}
-	echo $dataToPrint;
-	$provinceData = strtoupper($_PROVINCE);
-	$distictData = strtoupper($_DISTRICT);
-	$sectorData = strtoupper($_SECTOR);
-	$healthCenter = strtoupper($organisation);
-	$hcemail = strtolower($organisation_email);
-
-	$dataToPrintHeader = <<<PDFINFO
-		<table style="font-size: 12px; width:100%; border:0px solid #000;">
-		<tr>
-			<td style="text-align: left;">REPUBLIC OF RWANDA</td>
-		</tr>
-		<tr>
-			<td style="vertical-align: middle; padding-bottom: 2px; text-align: left;">
-				<img src="../images/rwanda.png" style='width:50px' /><br />
-			</td>
-		</tr>
-		<tr><td>{$provinceData} PROVINCE</td></tr>
-		<tr><td>{$distictData} DISTRICT</td></tr>
-		<tr><td>{$sectorData} SECTOR</td></tr>
-		<tr><td>{$healthCenter}</td></tr>
-		<tr><td>Tel: {$organisation_phone}</td></tr>
-		<tr><td>Email: {$hcemail}</td></tr>
-	</table>
-	<div style='text-align:center; border-bottom:1px solid #000; font-weight:bold; margin-bottom:5px;'>
-		Daily Reception Summary {$date}
-	</div>
-	<div class='main_title'>
-		{$client}
-	</div>
-PDFINFO;
-	$dataToPrint = $dataToPrintHeader.$dataToPrint;
-	$dataToPrint .= "<br />&nbsp;<br /><table style='width:100%;'>";
-		$dataToPrint .= "<tr>";
-			$dataToPrint .= "<td>";
-				$dataToPrint .= "Submitted By: <br />";
-				$dataToPrint .= $_SESSION['user']['Name'];
-				$dataToPrint .= "<br />&nbsp;<br />&nbsp;<br />Cashier";
-			$dataToPrint .= "</td>";
-			$dataToPrint .= "<td class='tb_title'>";
-				$dataToPrint .= "Verified and approved by: <br />";
-				$dataToPrint .= "<br />&nbsp;<br />&nbsp;<br />Accountant";
-			$dataToPrint .= "</td>";
-		$dataToPrint .= "</tr>";
-	$dataToPrint .= "</table>";
-	// require_once "../lib/mpdf57/mpdf.php";
-
-	$pdf = new mPDF();
-
-	$pdf->Open();
-
-	$pdf->AddPage("P");
-
-	$pdf->SetFont("Arial","N",10);
-	$css = file_get_contents("./pdf_css.css");
-	
-	$pdf->WriteHTML($css,1);
-	
-	$pdf->WriteHTML($dataToPrint);
-	$filename = "./dailyreceptiondata.pdf";
-	//echo $filename;
-	$pdf->Output($filename); 
-	echo "<a style='font-size:12px; font-weight:bold;' href='./{$filename}' target='_blank'>Download</a>";
-	die();
-	?>
 	<table border=0 class=no-out-border style='margin:2px;'>
 		<tr>
 			<td colspan=9 class='tb_title tb_separator' style="border:0px solid #000;">&nbsp;</td>
-			<td colspan=5 style='text-align:center;'>Empty Documents</td>
+			<td colspan=7 style='text-align:center;'>Empty Documents</td>
 		</tr>
 		<tr>
 			<td rowspan=2 colspan=2 class=tb_title style='border-left:1px solid #000;'><label class=rpt_title>RECEPTION</label></td>
@@ -499,6 +274,8 @@ PDFINFO;
 			<td class=tb_title>CPN</td>
 			<td class=tb_title>PST</td>
 			<td class=tb_title>MAT</td>
+			<td class=tb_title>NCDs</td>
+			<td class=tb_title>SM</td>
 			<td class=tb_title>TOT</td>
 		</tr>
 		<tr>
@@ -508,12 +285,14 @@ PDFINFO;
 			<td class="emptyCBHICPN" id=number>&nbsp;</td>
 			<td class="emptyCBHIPST" id=number>&nbsp;</td>
 			<td class="emptyCBHIMAT" id=number>&nbsp;</td>
+			<td class="emptyCBHINCDs" id=number>&nbsp;</td>
+			<td class="emptyCBHISM" id=number>&nbsp;</td>
 			<td class="emptyCBHI" id=number>&nbsp;</td>
 		</tr>
 		<tr>
-			<td rowspan=5 class=tb_title>CBHI</td>
+			<td rowspan=6 class=tb_title>CBHI</td>
 			<td>TM Paid</td>
-			<td id=number><a href='../rcp/document_cbhi_sp.php?day=<?= $_GET['day'] ?>&month=<?= $_GET['month'] ?>&year=<?= $_GET['year'] ?>&sp=OK' target='_blank'><?= $cbhi_patient_ph = ($patient_cbhi_paid + $patient_cbhi_compassion + $patient_cbhi_not_paid_indigent) ?></a></td>
+			<td id=number><a href='../rcp/document_cbhi_sp.php?day=<?= $_GET['day'] ?>&month=<?= $_GET['month'] ?>&year=<?= $_GET['year'] ?>&sp=OK' target='_blank'><?= $cbhi_patient_ph = $patient_cbhi_paid + $patient_cbhi_compassion + $patient_cbhi_not_paid_dettes ?></a></td>
 			<td id=number><?= $patient_cbhi_paid_amount + $patient_cbhi_amount_compassion + $patient_cbhi_not_paid_dettes_amount ?></td>
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
@@ -524,6 +303,8 @@ PDFINFO;
 			<td class="emptyRSSBRAMACPN" id=number>&nbsp;</td>
 			<td class="emptyRSSBRAMAPST" id=number>&nbsp;</td>
 			<td class="emptyRSSBRAMAMAT" id=number>&nbsp;</td>
+			<td class="emptyRSSBRAMANCDs" id=number>&nbsp;</td>
+			<td class="emptyRSSBRAMASM" id=number>&nbsp;</td>
 			<td class="emptyRSSBRAMA" id=number>&nbsp;</td>
 		</tr>
 		<tr>
@@ -538,11 +319,14 @@ PDFINFO;
 			<td class="emptyMMICPN" id=number>&nbsp;</td>
 			<td class="emptyMMIPST" id=number>&nbsp;</td>
 			<td class="emptyMMIMAT" id=number>&nbsp;</td>
+			<td class="emptyMMINCDs" id=number>&nbsp;</td>
+			<td class="emptyMMISM" id=number>&nbsp;</td>
 			<td class="emptyMMI" id=number>&nbsp;</td>
 		</tr>
-		<tr><td>TM Not Paid PST</td>
-			<td id=number><a href='../rcp/document_cbhi_sp.php?day=<?= $_GET['day'] ?>&month=<?= $_GET['month'] ?>&year=<?= $_GET['year'] ?>&sp=PANSEMENT' target='_blank'><?= $patient_cbhi_not_paid_pst ?></a></td>
-			<td id=number><?= $patient_cbhi_not_paid_pst_amount ?></td>
+		<tr>
+			<td>TM not paid(CAT 2 malaria)</td>
+			<td id=number><?= $patient_cbhi_not_paid_cat2_malaria ?></td>
+			<td id=number><?= $patient_cbhi_not_paid_cat2_malaria_amount ?></td>
 			<td class=empty_field>&nbsp;</td>
 			<td class=empty_field>&nbsp;</td>
 			<td class=empty_field>&nbsp;</td>
@@ -551,14 +335,13 @@ PDFINFO;
 			<td class="emptyMEDIPLANCPN" id=number>&nbsp;</td>
 			<td class="emptyMEDIPLANPST" id=number>&nbsp;</td>
 			<td class="emptyMEDIPLANMAT" id=number>&nbsp;</td>
+			<td class="emptyMEDIPLANNCDs" id=number>&nbsp;</td>
+			<td class="emptyMEDIPLANSM" id=number>&nbsp;</td>
 			<td class="emptyMEDIPLAN" id=number>&nbsp;</td>
 		</tr>
-		<tr><td>Fiche de Prestation</td>
-			<td id=number><?= $cbhi_patient_ph_p = $cbhi_patient_ph; ?></td>
-			<td id=number> <?= $cbhi_patient_ph *= 20; ?></td>
-			<?php
-			$patient_cbhi_amount += $cbhi_patient_ph;
-			?>
+		<tr><td>TM Not Paid PST</td>
+			<td id=number><a href='../rcp/document_cbhi_sp.php?day=<?= $_GET['day'] ?>&month=<?= $_GET['month'] ?>&year=<?= $_GET['year'] ?>&sp=PANSEMENT' target='_blank'><?= $patient_cbhi_not_paid_pst ?></a></td>
+			<td id=number><?= $patient_cbhi_not_paid_pst_amount ?></td>
 			<td class=empty_field>&nbsp;</td>
 			<td class=empty_field>&nbsp;</td>
 			<td class=empty_field>&nbsp;</td>
@@ -567,7 +350,27 @@ PDFINFO;
 			<td class="emptyCORARCPN" id=number>&nbsp;</td>
 			<td class="emptyCORARPST" id=number>&nbsp;</td>
 			<td class="emptyCORARMAT" id=number>&nbsp;</td>
+			<td class="emptyCORARNCDs" id=number>&nbsp;</td>
+			<td class="emptyCORARSM" id=number>&nbsp;</td>
 			<td class="emptyCORAR" id=number>&nbsp;</td>
+		</tr>
+		<tr><td>FICHES</td>
+			<td id=number><?= $patient_cbhi; ?></td>
+			<td id=number> <?= $cbhi_patient_ph_p  = $patient_cbhi * 20; ?></td>
+			<?php
+			$patient_cbhi_amount += $cbhi_patient_ph_p ;
+			?>
+			<td class=empty_field>&nbsp;</td>
+			<td class=empty_field>&nbsp;</td>
+			<td class=empty_field>&nbsp;</td>
+			<td>Sans Mutuelle</td>
+			<td class="emptyPRIVATECPC" id=number>&nbsp;</td>
+			<td class="emptyPRIVATECPN" id=number>&nbsp;</td>
+			<td class="emptyPRIVATEPST" id=number>&nbsp;</td>
+			<td class="emptyPRIVATEMAT" id=number>&nbsp;</td>
+			<td class="emptyPRIVATENCDs" id=number>&nbsp;</td>
+			<td class="emptyPRIVATESM" id=number>&nbsp;</td>
+			<td class="emptyPRIVATE" id=number>&nbsp;</td>
 		</tr>
 		<tr><td>Sous-total CBHI</td>
 			<td id=number><a href='../rcp/document_cbhi_sp.php?day=<?= $_GET['day'] ?>&month=<?= $_GET['month'] ?>&year=<?= $_GET['year'] ?>&sp=all' target='_blank'><?= $patient_cbhi ?></a></td>
@@ -578,12 +381,14 @@ PDFINFO;
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
-			<td>Sans Mutuelle</td>
-			<td class="emptyPRIVATECPC" id=number>&nbsp;</td>
-			<td class="emptyPRIVATECPN" id=number>&nbsp;</td>
-			<td class="emptyPRIVATEPST" id=number>&nbsp;</td>
-			<td class="emptyPRIVATEMAT" id=number>&nbsp;</td>
-			<td class="emptyPRIVATE" id=number>&nbsp;</td>
+			<td>Total</td>
+			<td class="emptyCPC" id=number>&nbsp;</td>
+			<td class="emptyCPN" id=number>&nbsp;</td>
+			<td class="emptyPST" id=number>&nbsp;</td>
+			<td class="emptyMAT" id=number>&nbsp;</td>
+			<td class="emptyNCDs" id=number>&nbsp;</td>
+			<td class="emptySM" id=number>&nbsp;</td>
+			<td class="emptyServiceTotal" id=number>&nbsp;</td>
 		</tr>
 		<tr>
 			<td rowspan=4 class=tb_title>Autres</td>
@@ -592,17 +397,16 @@ PDFINFO;
 			<td id=number><?= round($patient_rama_amount,0) ?></td>
 			<?php
 				$all_amount += $patient_rama_amount;
-				
 			?>
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
-			<td>Total</td>
+			<!-- <td>Total</td>
 			<td class="emptyCPC" id=number>&nbsp;</td>
 			<td class="emptyCPN" id=number>&nbsp;</td>
 			<td class="emptyPST" id=number>&nbsp;</td>
 			<td class="emptyMAT" id=number>&nbsp;</td>
-			<td class="emptyServiceTotal" id=number>&nbsp;</td>
+			<td class="emptyServiceTotal" id=number>&nbsp;</td> -->
 			
 		</tr>
 		<tr><td>MMI</td>
@@ -745,7 +549,7 @@ ENDDATA;
 			<td>&nbsp;</td>
 			<td class=empty_field>&nbsp;</td>
 			<td rowspan=2 style='border:0px solid #000;'>&nbsp;</td>
-			<td colspan=6 style='text-align:center;'>Patients accueillis</td>
+			<td colspan=7 style='text-align:center;'>Patients accueillis</td>
 			
 		</tr>
 		<?php
@@ -770,6 +574,8 @@ ENDDATA;
 			<td>CPN</td>
 			<td>PST</td>
 			<td>MAT</td>
+			<td>NCDs</td>
+			<td>SM</td>
 			<td>TOT</td>
 		</tr>
 		<?php
@@ -795,6 +601,8 @@ ENDDATA;
 			<td class="totalsCBHICPN" id=number>&nbsp;</td>
 			<td class="totalsCBHIPST" id=number>&nbsp;</td>
 			<td class="totalsCBHIMAT" id=number>&nbsp;</td>
+			<td class="totalsCBHINCDS" id=number>&nbsp;</td>
+			<td class="totalsCBHISM" id=number>&nbsp;</td>
 			<td class="totalsCBHI" id=number>&nbsp;</td>
 		</tr>
 		<?php
@@ -820,6 +628,8 @@ ENDDATA;
 			<td class="totalsRSSBRAMACPN" id=number>&nbsp;</td>
 			<td class="totalsRSSBRAMAPST" id=number>&nbsp;</td>
 			<td class="totalsRSSBRAMAMAT" id=number>&nbsp;</td>
+			<td class="totalsRSSBRAMANCDs" id=number>&nbsp;</td>
+			<td class="totalsRSSBRAMASM" id=number>&nbsp;</td>
 			<td class="totalsRSSBRAMA" id=number>&nbsp;</td>
 		</tr>
 		<?php
@@ -845,9 +655,12 @@ ENDDATA;
 			<td class="totalsMMICPN" id=number>&nbsp;</td>
 			<td class="totalsMMIPST" id=number>&nbsp;</td>
 			<td class="totalsMMIMAT" id=number>&nbsp;</td>
+			<td class="totalsMMINCDs" id=number>&nbsp;</td>
+			<td class="totalsMMISM" id=number>&nbsp;</td>
 			<td class="totalsMMI" id=number>&nbsp;</td>
 		</tr>
 		<?php
+		$r = round($amount_consummable,0) ;
 		$data_to_print_part1 .= <<<ENDDATA
 		<tr><td>Consommables</td>
 			<td class=empty_field>&nbsp;</td>
@@ -860,7 +673,7 @@ ENDDATA;
 		?>
 		<tr><td>Consommables</td>
 			<td class=empty_field>&nbsp;</td>
-			<td id=number><?= round($amount_consummable,0) ?></td>
+			<td id=number><?= $r ?></td>
 			<td class=empty_field>&nbsp;</td>
 			<td>&nbsp;</td>
 			<td class=empty_field>&nbsp;</td>
@@ -869,6 +682,8 @@ ENDDATA;
 			<td class="totalsMEDIPLANCPN" id=number>&nbsp;</td>
 			<td class="totalsMEDIPLANPST" id=number>&nbsp;</td>
 			<td class="totalsMEDIPLANMAT" id=number>&nbsp;</td>
+			<td class="totalsMEDIPLANNCDs" id=number>&nbsp;</td>
+			<td class="totalsMEDIPLANSM" id=number>&nbsp;</td>
 			<td class="totalsMEDIPLAN" id=number>&nbsp;</td>
 		</tr>
 		<?php
@@ -894,28 +709,25 @@ ENDDATA;
 			<td class="totalsCORARCPN" id=number>&nbsp;</td>
 			<td class="totalsCORARPST" id=number>&nbsp;</td>
 			<td class="totalsCORARMAT" id=number>&nbsp;</td>
+			<td class="totalsCORARNCDS" id=number>&nbsp;</td>
+			<td class="totalsCORARSM" id=number>&nbsp;</td>
 			<td class="totalsCORAR" id=number>&nbsp;</td>
 		</tr>
 		<?php
 		$fiche_amount = $private_total * 100;
-		$ph_facture_private_amount = $private_total * 40;
+		$ph_facture_private_amount = 0;// $private_total * 40;
 		$r = RoundUp($private_total_amount,5);
 		//$private_total_amount += $ph_facture_private_amount + $fiche_amount;
 		$data_to_print_part1 .= <<<ENDDATA
-		<tr><td class=empty_field>&nbsp;</td>
-			<td class=empty_field id=number>&nbsp;</td>
-			<td class=empty_field id=number>&nbsp;</td>
-			<td class=empty_field>&nbsp;</td>
-			<td class=empty_field>&nbsp;</td>
-			<td class=empty_field>&nbsp;</td>
-		</tr>
-		<!--<tr><td>&nbsp;</td>
-			<td id=number>{$private_total}</td>
-			<td id=number>{$ph_facture_private_amount}</td>
+		<tr><td>&nbsp;</td>
+			<!--<td id=number>{$private_total}</td>-->
+			<td id=number>&nbsp;</td>
+			<!--<td id=number>{$ph_facture_private_amount}</td>-->
+			<td id=number>&nbsp;</td>
 			<td class=empty_field>&nbsp;</td>
 			<td>&nbsp;</td>
 			<td class=empty_field>&nbsp;</td>
-		</tr>-->
+		</tr>
 		<tr><td>Fiche</td>
 			<td id=number>{$private_total}</td>
 			<td id=number>{$fiche_amount}</td>
@@ -932,23 +744,11 @@ ENDDATA;
 		</tr>
 ENDDATA;
 		?>
-		<tr><td class=empty_field>&nbsp;</td>
-			<td class=empty_field id=number>&nbsp;</td>
-			<td class=empty_field id=number>&nbsp;</td>
-			<td class=empty_field>&nbsp;</td>
-			<td class=empty_field>&nbsp;</td>
-			<td class=empty_field>&nbsp;</td>
-			<td>Sans Mutuelle</td>
-			<td class="totalsPRIVATECPC" id=number>&nbsp;</td>
-			<td class="totalsPRIVATECPN" id=number>&nbsp;</td>
-			<td class="totalsPRIVATEPST" id=number>&nbsp;</td>
-			<td class="totalsPRIVATEMAT" id=number>&nbsp;</td>
-			<td class="totalsPRIVATE" id=number>&nbsp;</td>
-		</tr>
-		<!--
-		<tr><td>PH + Facture</td>
-			<td id=number><?= $private_total ?></td>
-			<td id=number><?= $ph_facture_private_amount ?></td>
+		<tr><td>&nbsp;</td>
+			<td id=number>&nbsp;</td>
+			<!-- <td id=number>&nbsp;<?= $private_total ?></td> -->
+			<td id=number>&nbsp;</td>
+			<!-- <td id=number>&nbsp;<?= $ph_facture_private_amount ?></td> -->
 			<td class=empty_field>&nbsp;</td>
 			<td>&nbsp;</td>
 			<td class=empty_field>&nbsp;</td>
@@ -957,8 +757,10 @@ ENDDATA;
 			<td class="totalsPRIVATECPN" id=number>&nbsp;</td>
 			<td class="totalsPRIVATEPST" id=number>&nbsp;</td>
 			<td class="totalsPRIVATEMAT" id=number>&nbsp;</td>
+			<td class="totalsPRIVATENCDS" id=number>&nbsp;</td>
+			<td class="totalsPRIVATESM" id=number>&nbsp;</td>
 			<td class="totalsPRIVATE" id=number>&nbsp;</td>
-		</tr>-->
+		</tr>
 		<tr><td>Fiche</td>
 			<td id=number><?= $private_total ?></td>
 			<td id=number><?= $fiche_amount ?></td>
@@ -970,11 +772,14 @@ ENDDATA;
 			<td class="totalsCPN" id=number>&nbsp;</td>
 			<td class="totalsPST" id=number>&nbsp;</td>
 			<td class="totalsMAT" id=number>&nbsp;</td>
+			<td class="totalsNCDS" id=number>&nbsp;</td>
+			<td class="totalsSM" id=number>&nbsp;</td>
 			<td class="totalspatientsServices" id=number>&nbsp;</td>
 		</tr>
 		<tr><td>Sous-total Sans mutuelle</td>
 			<td id=number><a href='../report/empty_file_private.php?day=<?= $_GET['day'] ?>&month=<?= $_GET['month'] ?>&year=<?= $_GET['year'] ?>&sp=all' target='_blank'><?= $private_total ?></a></td>
-			<td id=number><?= RoundUp($private_total_amount,5) ?></td>
+			<!-- <td id=number><?= RoundUp($private_total_amount,5) ?></td> -->
+			<td id=number><?= ($private_total_amount) ?></td>
 			<?php
 				$all_amount += $private_total_amount;
 			?>
@@ -999,7 +804,7 @@ ENDDATA;
 			<td rowspan=17 style="border:0px solid #000;">&nbsp;</td>
 			<td>SOUS TOTAL PATIENTS</td>
 			<td id=number><?= $all_patient_number ?></td>
-			<td id=number><?= $all_patient_amount ?></td>
+			<td id=number><?= $all_amount ?></td>
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<td >&nbsp;</td>
@@ -1252,7 +1057,7 @@ ENDDATA;
 		});
 		
 		//delay 2000 milliseconds and send anther request to the number of positive GE
-		/*setTimeout(function(){
+		setTimeout(function(){
 			$(".malaria").css("background-color","yellow");
 			$.ajax({
 				type: "POST",
@@ -1280,7 +1085,7 @@ ENDDATA;
 			});
 			
 			//send the request to get empty files information now
-		}, 4000);*/
+		}, 4000);
 		
 		
 		setTimeout(function(){
@@ -1310,32 +1115,6 @@ ENDDATA;
 						$(".print_all").css("cursor","pointer");
 						$(".print_all").html("Print");
 					}
-
-					$(".malaria").css("background-color","yellow");
-					$.ajax({
-						type: "POST",
-						url: "./ge-counter.php",
-						data: "ExamID=<?= $exam_id ?>&TDRID=<?= $tdr_id ?>&ResultDate=<?= $date ?>&url=ajax",
-						cache: false,
-						success: function(result){
-							$(".test_data").html(result);
-							$(".malaria").css("background-color","green");
-							if($("#process").val() < 2){
-								$("#process").val("2");
-								$(".print_all").css("background-color","yellow");
-								$(".print_all").css("color","green");
-							} else{
-								$("#process").val("3");
-								$(".print_all").css("background-color","green");
-								$(".print_all").css("color","white");
-								$(".print_all").css("cursor","pointer");
-								$(".print_all").html("Print");
-							}
-						},
-						error:function(er){
-							console.log(er.responseText);
-						}
-					});
 			   },
 			   error: function(err){
 				console.log(err.responseText);

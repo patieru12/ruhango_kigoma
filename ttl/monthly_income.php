@@ -68,6 +68,7 @@ if(strlen($_GET['key'])){
 					ROUND(SUM(l.consummableAmount), 1) AS otherConsumablesAmount,
 					ROUND(SUM(f.buyingAmount), 1) AS buyingAmount,
 					ROUND(SUM(f.medicineAmount), 1) AS medicineAmount,
+					ROUND(SUM(f.medicineAmount) - SUM(f.buyingAmount), 1) AS incomesAmount,
 					ROUND(SUM(k.otherServiceAmount), 1) AS otherServiceAmount,
 
 					ROUND(( 	
@@ -240,7 +241,7 @@ if($patients){
 	<span class=styling></span>
 	<div style='max-height:85%; padding-top:5px; border:0px solid #000; overflow:auto;'>
 	<table class=list id=vsbl border="1" style='width:100%; font-size:30px;'>
-		<tr><th>Service</th><th>Cons Cost</th><th>Lab</th><th>Imaging</th><th>Hosp.</th><th>Proc & Mat.</th><th>Ambul.</th><th>Consum.</th><th>Buying.</th><th>Drugs.</th><th>Other Services.</th></tr>
+		<tr><th>Service</th><th>Cons Cost</th><th>Lab</th><th>Imaging</th><th>Hosp.</th><th>Proc & Mat.</th><th>Ambul.</th><th>Consum.</th><th>Buying.</th><th>Selling.</th><th>Income.</th><th>Other Services.</th></tr>
 		<!-- <tr><th>&nbsp;</th><th>100%</th><th>100%</th><th>100%</th><th>100%</th><th>100%</th><th>100%</th><th>100%</th><th>100%</th></tr> -->
 		<?php
 		require_once "../lib2/PHPExcel/IOFactory.php";
@@ -273,41 +274,7 @@ if($patients){
 		$activeSheet->getColumnDimension('B')->setAutoSize(true);
 		$row = 1;
 
-		/*for($i=0;$i<count($cbhiMonthlyBillHeader);$i++){
-			$simple_row = $cbhiMonthlyBillHeader[$i];
-			//var_dump($simple_row); echo "<br />";
-			$first_column = 'B';
-			SpanCells($activeSheet,"B".$row.":D".$row,$align='left');
-			SpanCells($activeSheet,"E".$row.":G".$row,$align='left');
-			//set the value for B1
-			$count = 0;
-			foreach($simple_row as $title_=>$value){
-				if($count++ == 0){
-					$activeSheet->setCellValue($first_column.$row, $title_);
-					$first_column = 'E';
-					if(preg_match("/^CODE/",$title_))
-						$value = $value." ";
-					//var_dump(is_integer($value)); echo $value;
-					$activeSheet->setCellValue($first_column.$row, $value);
-					
-				} else{
-					$first_column = 'K';
-					$activeSheet->setCellValue($first_column.$row, $title_);
-					$first_column = 'L';
-					SpanCells($activeSheet,"L".$row.":N".$row,$align='left');
-					$value = str_replace("GET_MONTH_HERE", $_GET['month'], $value);
-					$value = str_replace("GET_YEAR_HERE", $_GET['year'], $value);
-					$activeSheet->setCellValue($first_column.$row, $value);
-
-
-				}
-			}
-			$row++;
-		}*/
-		
-		//now write the report title
-		//echo count($data[0]);
-		$last_column = "J";
+		$last_column = "L";
 		$first_column = "A";
 
 		SpanCells($activeSheet,$first_column.$row.":".$last_column.$row,$align='center');
@@ -388,6 +355,12 @@ if($patients){
 				$medicinesMainTotal += $r['medicineAmount'];
 				$total[$columsCounter] = (@$total[$columsCounter]?($total[$columsCounter]+$r['medicineAmount']):$r['medicineAmount']);
 				$columsCounter++;
+
+				$incomesMD = $r['medicineAmount'] - $r['buyingAmount'];
+				echo "<td style='text-align: right; padding: 0 10px;'>".number_format($incomesMD)."</td>";
+				//$medicinesMainTotal += $r['medicineAmount'];
+				$total[$columsCounter] = (@$total[$columsCounter]?($total[$columsCounter]+$incomesMD):$incomesMD);
+				$columsCounter++;
 				echo "<td style='text-align: right; padding: 0 10px;'>".number_format($r['otherServiceAmount'])."</td>";
 				$medicinesMainTotal += $r['otherServiceAmount'];
 				$total[$columsCounter] = (@$total[$columsCounter]?($total[$columsCounter]+$r['otherServiceAmount']):$r['otherServiceAmount']);
@@ -435,74 +408,8 @@ if($patients){
 		SpanCells($activeSheet,"B".($row + 3).":F".($row + 3),$align='left');
 		$activeSheet->setCellValue("B".($row + 3), "Prepared By: ".returnSingleField("SELECT Name FROM sy_users WHERE UserID='{$_SESSION['user']['UserID']}'","Name",$data=true, $con));
 		
-		$activeSheet->setTitle(date("Y-m-d",time()));
+		$activeSheet->setTitle("Monthly Income Summary");
 
-		// Create a new worksheet, after the default sheet
-		$objPHPExcel->createSheet();
-
-		$reportSummaryData = array();
-		$reportSummaryData[] = array("HEALTH FACILITY:", "", "", strtoupper($organisation));
-		$reportSummaryData[] = array("CODE H F:", "", "", strtoupper($organisation_code_minisante));
-		$reportSummaryData[] = array("RSSB/CBHI INVOICE NUMBER:", "", "", strtoupper($organisation_code_minisante));
-		$reportSummaryData[] = array("TIN:", "", "", strtoupper($organisation_tin));
-		$reportSummaryData[] = array("");
-		$reportSummaryData[] = array("","", "   T O T A L       B I L L");
-		$reportSummaryData[] = array("");
-		$reportSummaryData[] = array("Rwanda Social Board (RSSB) has to pay ");
-		$reportSummaryData[] = array("To                 ".strtoupper($organisation)."           The sum of") ;
-		$mainTotal = $total[(count($total) - 1)];
-		$mainTotal = round($mainTotal, 0);
-
-		$reportSummaryData[] = array("(In Figure)","", number_format($mainTotal)." Frw" ) ;
-		$reportSummaryData[] = array("In word","", getEnglishNumber($mainTotal)." Rwandan Francs" ) ;
-		$reportSummaryData[] = array("for all medical care given its affiliate" ) ;
-		$reportSummaryData[] = array("This amount includes" ) ;
-		$medicinesMainTotal  = round($medicinesMainTotal, 0);
-
-		$reportSummaryData[] = array("(In Figure)","", number_format($medicinesMainTotal)." Frw" ) ;
-		$reportSummaryData[] = array("In word","", getEnglishNumber($medicinesMainTotal)." Rwandan Francs" ) ;
-		$reportSummaryData[] = array("for all medicines" ) ;
-		$othersMainTotal 	 = round($othersMainTotal, 0);
-		
-		$reportSummaryData[] = array("(In Figure)","", number_format($othersMainTotal)." Frw" ) ;
-		$reportSummaryData[] = array("In word","", getEnglishNumber($othersMainTotal)." Rwandan Francs" ) ;
-		$reportSummaryData[] = array("for all medical procedures, investigation and other services" ) ;
-		$reportSummaryData[] = array( $month[((int)$_GET['month'])].", ".$_GET['year'] ) ;
-		$reportSummaryData[] = array("This amount will put into account number ".strtoupper($organisation_account_number) ) ;
-		$reportSummaryData[] = array("At ".strtoupper($organisation_bank_name) ) ;
-		$reportSummaryData[] = array("");
-		$reportSummaryData[] = array("","", "Done at ".strtoupper($client).", Date ".date("Y F d") );
-		$reportSummaryData[] = array("","", strtoupper($organisation_represantative));
-		$reportSummaryData[] = array("","", 'Titulaire of '.strtoupper($organisation));
-		$reportSummaryData[] = array("");
-		$reportSummaryData[] = array("(Names signature for responsable & stamp of ..)");
-
-		$reportSummaryData[] = array("");
-		$reportSummaryData[] = array("Amount approved after reconciliation");
-		$reportSummaryData[] = array("");
-		$reportSummaryData[] = array("(in figures)", "" , "");
-		$reportSummaryData[] = array("(in words)", "" , "... ... ... ... ... ... ... ... ... ... ...");
-		$reportSummaryData[] = array("", "" , "... ... ... ... ... ... ... ... ... ... ...");
-		$reportSummaryData[] = array("");
-		$reportSummaryData[] = array("Date & Signature");
-		$reportSummaryData[] = array("Names");
-		$reportSummaryData[] = array("Post");
-
-		$sheetIndex = 0;
-		/* Here we add the report summary page */
-		$objPHPExcel->setActiveSheetIndex($sheetIndex);
-		$activeSheet = $objPHPExcel->getActiveSheet();
-		
-		$row = 1;
-		for($k=0;$k<count($reportSummaryData);$k++){
-			//var_dump($data[$k]); echo "<br /><br /><br />";
-			$first_column = "A";
-			$activeSheet->getColumnDimension('A')->setWidth(28);
-			foreach($reportSummaryData[$k] as $v){
-				// $activeSheet->getColumnDimension($first_column)->setAutoSize(true);
-				$activeSheet->setCellValue(($first_column++).$row, $v);			}
-			$row++;
-		}
 
 		//write the file with the desired filename
 		$objWriter->save($file_name);

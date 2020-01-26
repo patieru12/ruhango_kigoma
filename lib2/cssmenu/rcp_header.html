@@ -31,6 +31,7 @@
    <li class="<?php echo @$active=='create'?'active':'' ?>"><a href="../<?= @$_SESSION['mode'] ?>rcp/create_cbhi.php"><span>Create Document</span></a></li>
    <li class="<?php echo @$active=='other_service'?'active':'' ?>"><a href="../<?= @$_SESSION['mode'] ?>rcp/create_other.php"><span>Other Services</span></a></li>
    <li class="<?php echo @$active=='reprint'?'active':'' ?>"><a href='../receipt/'><span>Receipt</span></a></li>
+   <li class="<?php echo @$active=='search_receipt'?'active':'' ?>"><a href='../report/reprint_receipt.php'><span>Search Receipt</span></a></li>
    <li class="<?php echo @$active=='fill'?'active':'' ?>"><a href='../rcp/reprint.php'><span>Search Document</span></a></li>
    <li class="<?php echo @$active=='mdtarif'?'active':'' ?>"><a href='../rcp/medicines.php'><span>Medicines Tarif</span></a></li>
    <li class="<?php echo @$active == 'report'?'active':'' ?> has-sub"><a href='#'><span>Reports</span></a>
@@ -42,6 +43,7 @@
               <li><a href='../report/positive_cases_cpc.php'><span>Consultation Summary</span></a></li>
               <li><a href='../report/mat.php'><span>Maternity Summary</span></a></li>
               <li><a href='../report/pst.php'><span>Pansement Summary</span></a></li>
+              <li><a href='../report/hosp.php'><span>Hospitalization Summary</span></a></li>
               <li><a href='../report/cpc.php'><span>Prescription Summary</span></a></li>
 			        <li><a href='../report/malaria_summary.php'><span>Malaria Summary</span></a></li>
 			        <li><a href='../report/patient_summary.php'><span>Patient Summary</span></a></li>
@@ -79,7 +81,7 @@
           <a href='../report/empty_file_all.php'><span>Empty Documents</span></a>
          </li> -->
          <li>
-          <a href='../report/reprint_receipt.php'><span>Search Receipt</span></a>
+          <a href='../report/refund_retained.php'><span>Refund Retained</span></a>
          </li>
          <li><a href='../report/repeat_file_all.php'><span>Repeated Documents</span></a>
          </li>
@@ -87,6 +89,7 @@
          <li><a href='../report/daily-receipt.php'><span>Daily Receipt Printed</span></a></li>
          <li><a href='../report/daily-receipt-non-printed.php'><span>Daily Receipt Non Printed</span></a></li>
          <li><a href='../report/daily.php'><span>Daily Reception Summary</span></a></li>
+         <li><a href='../report/daily-old.php'><span>Daily Reception Summary(v1)</span></a></li>
       </ul>
    </li>
    <li class="<?php echo @$active=='profile'?"active":"" ?>"><a href='../rcp/profile.php'><span>Profile</span></a></li>

@@ -355,11 +355,11 @@ $patient = formatResultSet($rslt=returnResultSet("SELECT 	a.*,
 						}
 
 						if( (strtolower($patient['InsuranceName']) == "private") && $actsOther > 0){
-							echo "<input type=text name='totalPROC_OTHER' value='{$actsOther}' />";
+							echo "<input type=hidden name='totalPROC_OTHER' value='{$actsOther}' />";
 						}
 
 						if( (strtolower($patient['InsuranceName']) == "private") && $actsAccouhement > 0){
-							echo "<input type=text name='totalPROC_ACC' value='{$actsAccouhement}' />";
+							echo "<input type=hidden name='totalPROC_ACC' value='{$actsAccouhement}' />";
 						}
 
 						$consumablesData = formatResultSet($rslt=returnResultSet("SELECT 	a.MedecinePriceID AS priceID,
@@ -405,7 +405,7 @@ $patient = formatResultSet($rslt=returnResultSet("SELECT 	a.*,
 
 
 						if( (strtolower($patient['InsuranceName']) == "private") && $otherConsumables > 0){
-							echo "<input type=text name='totalCONSU' value='{$otherConsumables}' />";
+							echo "<input type=hidden name='totalCONSU' value='{$otherConsumables}' />";
 						}
 
 						// Check if the Patient has any hospitalization record
@@ -649,6 +649,12 @@ $patient = formatResultSet($rslt=returnResultSet("SELECT 	a.*,
 							<h1 style="text-align: left; font-size:14px;">
 								Paid: <span id="displayPaid"><?= number_format($total_to_be_paid_now) ?></span> RWF 
 								<input type="hidden" name="totalPaid" id="totalPaid" value="<?= $total_to_be_paid_now; ?>">
+							</h1>
+						</td>
+						<td title="Please Make sure to add amount you should give back to client." style="background-color: #ee8888;">
+							<h1 style="text-align: center; font-size: 14px">
+								Retained : 
+								<input type="text" name="totalRetained" id="totalRetained" value="" placeholder="Put in money retained">
 							</h1>
 						</td>
 						<td>

@@ -161,6 +161,9 @@ foreach($_POST AS $key=>$value){
 		} else if($key == "totalPaid"){
 			$totalPaid = $value;
 		} else {
+			if(!is_numeric($value)){
+				continue;
+			}
 			$stringData .= preg_replace("/^total/", "", $key).": <span style='border:0px solid #000; font-weight:bold; padding-left:5px; padding-right:2px; font-size:12px'>".number_format($value)." RWF</span><br />";
 			$printCommand .= preg_replace("/^total/", "", $key).": ".number_format($value)." RWF\n";
 

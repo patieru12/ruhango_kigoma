@@ -25,7 +25,7 @@ if(!returnSingleField("SELECT ConsultationRecordID FROM co_records WHERE Consult
 	<script type="text/javascript">
 		// Here Remove any button on the st
 		$("#mainInput").css("opacity", "0");
-		alert("No register associated to the your profile\nPlease logout and login again to select available one!");
+		alert("No register associated to your profile\nPlease logout and login again to select available one!");
 	</script>
 	<?php
 } else{
@@ -44,7 +44,8 @@ if(!returnSingleField("SELECT ConsultationRecordID FROM co_records WHERE Consult
 																f.CellName AS CellName,
 																g.SectorName AS SectorName,
 																h.DistrictName AS DistrictName,
-																c.FamilyCode AS FamilyCode
+																c.FamilyCode AS FamilyCode,
+																k.ServiceCode AS ServiceCode
 																FROM pa_records AS a
 																INNER JOIN in_name AS b
 																ON a.InsuranceNameID = b.InsuranceNameID
@@ -62,12 +63,17 @@ if(!returnSingleField("SELECT ConsultationRecordID FROM co_records WHERE Consult
 																ON g.DistrictID = h.DistrictID
 																INNER JOIN co_records AS i
 																ON a.PatientRecordID = i.PatientRecordID
+																INNER JOIN se_records AS j
+																ON a.PatientRecordID = j.PatientRecordID
+																INNER JOIN se_name AS k
+																ON j.ServiceNameID = k.ServiceNameID
 																WHERE i.ConsultationRecordID ='{$recordId}'
 																", $con), false, $con);
 	?>
 	<span style="font-size:16px;">
 		Name: <b><?= $patient['patientName'] ?></b><br />
-		Insurance: <b><?= $patient['InsuranceName'] ?></b> Card ID: <b><?= $patient['InsuranceCardID'] ?></b>
+		Insurance: <b><?= $patient['InsuranceName'] ?></b> Card ID: <b><?= $patient['InsuranceCardID'] ?></b><br />
+		Service : <b><?= $patient['ServiceCode'] ?></b><br />
 	</span> <br />
 	<h2>Add Number registered in One of following registers.</h2>
 	<span class=save_adds></span>
@@ -90,9 +96,91 @@ if(!returnSingleField("SELECT ConsultationRecordID FROM co_records WHERE Consult
 		Register Number:
 		<input type="text" class='txtfield1' name='number'><br />&nbsp;
 		<br />&nbsp;
+		<?php
+		if(in_array($patient['ServiceCode'], ["NCDs", "SM"])){
+			// FInd all previosly registered medicines to quickly recover
+			$lastInformation = formatResultSet($rslt=returnResultSet("SELECT 	a.PatientRecordID,
+																				a.DateIn
+																				FROM pa_records AS a
+																				WHERE a.PatientRecordID < '{$patient['PatientRecordID']}'
+																				AND a.InsuranceCardID = '{$patient['InsuranceCardID']}'
+																				AND a.DateIn < '{$patient['DateIn']}'
+																				ORDER BY a.DateIn DESC
+																				LIMIT 0, 1
+																				", $con), false, $con);
+
+			if(count($lastInformation) > 0){
+				$usedMedicines = formatResultSet($rslt=returnResultSet("SELECT 	d.MedecineName AS MedecineName,
+																				b.Quantity AS Quantity,
+																				b.SpecialPrescription,
+																				b.MedecineRecordID
+																				FROM co_records AS a
+																				INNER JOIN md_records AS b
+																				ON a.ConsultationRecordID = b.ConsultationRecordID
+																				INNER JOIN md_price AS c
+																				ON b.MedecinePriceID = c.MedecinePriceID
+																				INNER JOIN md_name AS d
+																				ON c.MedecineNameID = d.MedecineNameID
+																				WHERE a.PatientRecordID = '{$lastInformation['PatientRecordID']}'
+																				", $con), true, $con);
+				if(count($usedMedicines) > 0){
+					?>
+					<hr />
+					<table border="1" style="width: 100%">
+						<tr>
+							<th>Name</th>
+							<th>Prescription</th>
+							<th>Quantity</th>
+						</tr>
+						<?php
+						foreach($usedMedicines AS $md){
+							?>
+							<tr>
+								<td>
+									<label>
+										<input type="checkbox" id="<?= $md['MedecineRecordID'] ?>" class="mdName" checked="" name="mdName[]" value="<?= $md['MedecineName'] ?>">
+										<?= $md['MedecineName']  ?>
+									</label>
+								</td>
+								<td>
+									<label>
+										<input type="checkbox" class="<?= $md['MedecineRecordID'] ?>" checked name="mdPrescription[]" value="<?= $md['SpecialPrescription'] ?>">
+										<?= $md['SpecialPrescription']  ?>
+									</label>
+								</td>
+								<td style="text-align: right; padding-right: 5px;">
+									<label>
+										<input type="checkbox" class="<?= $md['MedecineRecordID'] ?>" checked name="mdQuantity[]" value="<?= $md['Quantity'] ?>">
+										<?= $md['Quantity']  ?>
+									</label>
+								</td>
+							</tr>
+							<?php
+						}
+						?>
+					</table>
+					<hr />
+					<?php
+				}
+			}
+			
+		}
+		?>
 		<input type='submit' id='save' name='addFees' value='Save & Close' class='flatbtn-blu'>
 	</form>
 	<script type="text/javascript">
+		$(".mdName").change(function(){
+			var myClass = $(this).attr("id");
+			//alert(myClass);
+
+			var status = $(this).prop("checked");
+			if(status){
+				//Now recheck all boxes
+				$("." + myClass).prop("checked", true);
+			} else {
+				$("." + myClass).removeProp("checked");
+			}
+		});
 		$('#save').click(function(e){ 
 			e.preventDefault();
 			//$('#save').attr("desabled",":true");

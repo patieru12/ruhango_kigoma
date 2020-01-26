@@ -89,7 +89,7 @@ require_once "../lib2/cssmenu/rcp_header.html";
 	  <td class=day>
 	  <select name=year class=txtfield1 style='width:70px;' id=year>
 		<?php
-		for($y = date("Y",time()); $y>="2015";$y--){
+		for($y = date("Y",time()); $y>=$Start_Year;$y--){
 			echo "<option>{$y}</option>";
 		}
 		?>
@@ -162,7 +162,7 @@ $(document).ready(function(){
 			return e.preventDefault();
 		}
 		$(".patient_found").html("Please Wait...<br /><img src='../images/loading.gif' />");
-		$(".patient_found").load("daily_data.php?key=" + $("#insurance").val() + "&day=" + $("#day").val() + "&month=" + $("#month").val() + "&year=" + $("#year").val() + "&post=" + $("#post").val() + "&filter=" + $("#filter_").val());
+		$(".patient_found").load("daily_data_old.php?key=" + $("#insurance").val() + "&day=" + $("#day").val() + "&month=" + $("#month").val() + "&year=" + $("#year").val() + "&post=" + $("#post").val() + "&filter=" + $("#filter_").val());
 	});
 	
 	//if the search button is clicked search the patient_found

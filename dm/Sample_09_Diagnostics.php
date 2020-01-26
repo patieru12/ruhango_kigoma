@@ -60,10 +60,10 @@ $sectionStyle = array (
 $section = $phpWord->addSection($sectionStyle);
 
 $font_small_8_bold = array('size' => 8, 'bold' => true, 'color'=>'000000');
-
+// 
 $table_width = 170 * 91;
 
-echo $table_width;
+// echo $table_width;
 // die();
 $cellHCentered = array('alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER);
 $styleCellCenter= array('valign' => 'center',"alignment"=> \PhpOffice\PhpWord\SimpleType\Jc::CENTER);

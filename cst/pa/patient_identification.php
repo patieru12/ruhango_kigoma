@@ -68,10 +68,10 @@ if(!$patient['RegisterNumber'] && $patient['ServiceCode'] != 'PST'){
 		}, 500);
 	</script>
 	<?php
-} else if($patient['tbId']){
+} else if(true || $patient['tbId']){
 	?>
 	<br />&nbsp;
-	<a id="askForTBInfo" href="./tb_consultation.php?recordid=<?= $patient['PatientRecordID'] ?>" class="flatbtn-blu" rel="#overlay2">TB Consulation</a>
+	<a id="askForTBInfo" href="./tb_consultation.php?recordid=<?= $patient['PatientRecordID'] ?>" class="flatbtn-blu" rel="#overlay2">TB Consultation</a>
 	<br />&nbsp;
 	<script type="text/javascript">
 		//$("#mainInput").css("opacity", "0");
@@ -99,7 +99,7 @@ if($patient['DateIn'] != date("Y-m-d", time())){
 	<thead>
 		<tr>
 			<th style=" padding: 0px; background-color: #4f94cf; border:1px solid #4f94cf; color:#fff;" id="registerNumber">
-				<a id="askForRegisterID" href="./assign_register.php?recordid=<?= $patient['ConsultationRecordID'] ?>" rel="#overlay2"><?= $patient['RegisterNumber'] ?></a>
+				<a style="color: #fff;" id="askForRegisterID" href="./assign_register.php?recordid=<?= $patient['ConsultationRecordID'] ?>" rel="#overlay2"><?= $patient['RegisterNumber'] ?></a>
 			</th>
 			<th>Date</th>
 			<th>Name</th>

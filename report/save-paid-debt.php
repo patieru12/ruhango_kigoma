@@ -25,11 +25,11 @@ $paidAmount = PDB($_POST['paidAmount'], true, $con);
 saveData("INSERT INTO sy_debt_payment SET debtID='{$debtId}', paidAmount='{$paidAmount}', Date='{$date}'", $con);
 $balance = $_POST['requiredAmount'] - ($_POST['availableAmount'] + $_POST['paidAmount']);
 $availableAmount = $_POST['availableAmount'] + $_POST['paidAmount'];
-if($balance <= 0){
+/*if($balance <= 0){
 	saveData("UPDATE sy_debt_records SET availableAmount='{$availableAmount}', status=1 WHERE id='{$debtId}'", $con);
 } else {
 	saveData("UPDATE sy_debt_records SET availableAmount='{$availableAmount}', status=0 WHERE id='{$debtId}'", $con);
-}
+}*/
 if($balance <0){
 	$balance = 0;
 }
@@ -80,13 +80,13 @@ $printCommand .= "Paid Now".number_format($_POST['paidAmount'])." RWF\n";
 $stringData .= "Remains "." <span style='border:0px solid #000; font-weight:bold; padding-left:5px; padding-right:2px; font-size:12px'>".number_format($balance)." RWF</span><br />";
 $printCommand .= "Remains ".number_format($balance)." RWF\n";
 
-
+$receiptValue = $_POST['paidAmount'];
 $stringData .= "<span style=' font-size:12px'>Received By: ".$_SESSION['user']['Phone']."</span>";
 $printCommand .= "Received By: ".$_SESSION['user']['Phone']."\n\n\n";
 // echo $stringData; die();
 if($printCommand && $_SESSION['user']['printerID']){
 	$cmd = PDB($printCommand, false,$con);
-	saveData("INSERT INTO sy_print_command SET printerID='{$_SESSION['user']['printerID']}', commandInfo='{$cmd}', pdfData=\"{$stringData}\", receitValue='{$balance}', submittedOn='".time()."'",$con);
+	saveData("INSERT INTO sy_print_command SET printerID='{$_SESSION['user']['printerID']}', commandInfo='{$cmd}', pdfData=\"{$stringData}\", receitValue='{$receiptValue}', submittedOn='".time()."'",$con);
 }
 // $stringContent = "<span style='font-family:arial; font-size:10px; border:0px solid green;'>******".(date("Y-m-g H:i:s", time()))."*******<br />Ruberandinda Patience<br />Code: <br />-----------------------------------------------<br />My Data are here<hr />Again test<hr />If success by a bottle<hr />Thanks.....</span>";
 require_once "../lib/mpdf57/mpdf.php";

@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once "../../lib/db_function.php";
-// var_dump($_POST, $_SESSION);
+// var_dump($_POST, $_SESSION); die();
 $registerNumber = PDB($_POST['number'], true, $con);
 $recordId 		= PDB($_POST['recordid'], true, $con);
 $registerUsed	= PDB(@$_POST['registerId'], true, $con);
@@ -55,6 +55,90 @@ if($registerNumber <= 0){
 	</script>
 	<?php
 }*/ else{
+	// Here if Some Medicines are registered Fill them in
+	$PatientRecordID = returnSingleField("SELECT PatientRecordID FROM co_records WHERE ConsultationRecordID='{$recordId}'", "PatientRecordID", true, $con);
+		
+	if(count(@$_POST["mdName"]) > 0){
+		$date = date("Y-m-d", time());
+		$envelopeQuantity = 0;
+		foreach($_POST['mdName'] AS $key=>$value){
+			$mdQuatity = $_POST['mdQuantity'][$key];
+			$mdPresc   = $_POST['mdPrescription'][$key];
+			//Here Have mdName in value
+			$medicineName= PDB($value, true, $con);
+			$price = formatResultSet($rslt=returnResultSet($s = "SELECT 	a.MedecinePriceID AS priceID,
+																			a.Amount AS examPriceAmount,
+																			a.Emballage AS Emballage,
+																			c.id AS commonDataId,
+																			c.methodId AS methodId
+																			FROM md_price AS a
+																			INNER JOIN md_name AS b
+																			ON a.MedecineNameID = b.MedecineNameID
+																			LEFT JOIN pf_common_medicine AS c
+																			ON b.MedecineNameID = c.medicineId
+																			WHERE b.MedecineName = '{$medicineName}' &&
+																				  a.Date <= '{$date}'
+																			ORDER BY Date DESC LIMIT 1
+																			", $con), false, $con);
+			if(is_array($price)){
+				if($price['Emballage']){
+					$envelopeQuantity++;
+				}
+				$md_record_id_id= saveAndReturnID("INSERT INTO md_records SET Quantity='{$mdQuatity}', MedecinePriceID={$price['priceID']}, ConsultationRecordID={$recordId}, ConsulatantID={$_SESSION['user']['UserID']}, Date=NOW(), SpecialPrescription='{$mdPresc}'",$con);
+				// $check_envelope = true;
+				
+				saveData("INSERT INTO md_prescription SET MedecineRecordID='{$md_record_id_id}', Quantiy='', Frequency='', Days='', Comment=''",$con);
+			}
+		}
+			
+		if($envelopeQuantity > 0){
+			// Get the Current Patient Envelope consumption
+			$actualConsumption = formatResultSet($rslt=returnResultSet("SELECT 	a.*,
+																				c.Date AS priceDate
+																				FROM cn_records AS a
+																				INNER JOIN cn_price AS c
+																				ON a.MedecinePriceID = c.MedecinePriceID
+																				INNER JOIN cn_name AS b
+																				ON c.MedecineNameID = b.MedecineNameID
+																				WHERE b.MedecineName = '{$envelopeName}' &&
+																					  a.Date <= '{$date}' &&
+																					  a.PatientRecordID = '{$PatientRecordID}'
+																				ORDER BY priceDate DESC
+																				LIMIT 0, 1
+																				", $con), false, $con);
+			// Here Fild the Price for Sachet
+			if($actualConsumption){
+				saveData("UPDATE cn_records SET Quantity='{$envelopeQuantity}' WHERE ConsumableRecordID='{$actualConsumption['ConsumableRecordID']}'", $con);
+			} else {
+				// Get the Pricingplan for envelope
+				$price = formatResultSet($rslt=returnResultSet("SELECT 	a.MedecinePriceID AS priceID,
+																		a.Amount AS medicinePriceAmount,
+																		a.Date AS priceDate
+																		FROM cn_price AS a
+																		INNER JOIN cn_name AS b
+																		ON a.MedecineNameID = b.MedecineNameID
+																		WHERE b.MedecineName = '{$envelopeName}' &&
+																			  a.Date <= '{$date}'
+																		ORDER BY priceDate DESC
+																		LIMIT 0, 1
+																		", $con), false, $con);
+
+				if($price){
+					$consumablesRecords = formatResultSet($rslt=returnResultSet("SELECT 	a.*
+																							FROM cn_records AS a
+																							WHERE a.MedecinePriceID={$price['priceID']} &&
+																								  a.PatientRecordID={$PatientRecordID}
+																							", $con), false, $con);
+					if($consumablesRecords){
+						saveData("UPDATE cn_records SET MedecinePriceID={$price['priceID']}, Quantity='{$envelopeQuantity}', PatientRecordID={$PatientRecordID}, `Date`='{$date}', Facture=1, NurseID={$_SESSION['user']['UserID']} WHERE ConsumableRecordID='{$consumablesRecords['ConsumableRecordID']}'",$con);
+					} else {
+						saveData("INSERT INTO cn_records SET MedecinePriceID={$price['priceID']}, Quantity='{$envelopeQuantity}', PatientRecordID={$PatientRecordID}, `Date`='{$date}', Facture=1, NurseID={$_SESSION['user']['UserID']}",$con);
+					}
+				}
+			}
+			
+		}
+	}
 	//check if this number has
 	// echo $registerId;
 	saveData("UPDATE co_records SET ConsultantID='{$_SESSION['user']['UserID']}', registerId='{$registerId}', RegisterNumber='{$registerNumber}' WHERE ConsultationRecordID='{$recordId}'",$con);
@@ -89,6 +173,7 @@ if($registerNumber <= 0){
 			$("#registerNumber").html("<?= $registerNumber ?>");
 			$("#mainInput").css("opacity", "1");
 			$(".close").click();
+			LoadProfile("<?= $PatientRecordID ?>");
 		},200);
 	</script>
 	<?php

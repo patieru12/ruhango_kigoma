@@ -186,7 +186,7 @@ function filterData(&$input, &$output, $suffix="srv_"){
 function autoConsulatationPricing($inNameID, $seNameD, &$log){
 	$dayDefaultConsultation = returnSingleField("SELECT ServiceCode FROM se_name WHERE ServiceNameID = '{$seNameD}'","ServiceCode",true, $con);
 		// echo $dayDefaultConsultation; die();
-	if(in_array($dayDefaultConsultation, array("DNT", "MAT") ) ){
+	if(in_array($dayDefaultConsultation, array("DNT", "NCDs", "SM") ) ){
 		$dayDefaultConsultation = "CPC";
 	}
 		// Check if the current day is not week-end

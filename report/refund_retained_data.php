@@ -52,31 +52,55 @@ if(@$_GET['filter']){
 }
 //echo $sys;
 if(strlen($_GET['key'])){
-	//select all possible information on the comming id
-	$patients = formatResultSet($rslt=returnResultSet($sql="SELECT 	a.requiredAmount AS requiredAmount,
-																	(a.availableAmount + COALESCE(SUM(e.paidAmount), 0)) AS availableAmount,
-																	COALESCE(a.houseHolderName, d.Name) AS Name,
-																	a.dueDate AS dueDate,
-																	a.phoneNumber AS phoneNumber,
-																	a.address AS address,
-																	a.status AS status,
-																	b.DateIn AS DateIn,
-																	c.InsuranceName AS InsuranceName,
-																	b.PatientRecordID AS PatientRecordID,
-																	b.DocID AS DocID,
-																	a.Date AS Date
-																	FROM sy_debt_records AS a
-																	INNER JOIN pa_records AS b
-																	ON a.PatientRecordID = b.PatientRecordID
-																	INNER JOIN in_name AS c
-																	ON b.InsuranceNameID = c.InsuranceNameID
-																	INNER JOIN pa_info AS d
-																	ON b.PatientID = d.PatientID
-																	LEFT JOIN sy_debt_payment AS e
-																	ON a.id = e.debtID
-																	WHERE a.Date LIKE ('{$date}%')
-																	GROUP BY a.id
-																	ORDER BY Date ASC
+	$patients = formatResultSet($rslt=returnResultSet($sql="SELECT 	a.DocID AS DocID,
+																	b.Name AS Name,
+																	a.DateIn AS Date,
+																	a.PatientRecordID,
+																	c.Amount,
+																	c.id,
+																	c.tbName
+																	FROM pa_records AS a
+																	INNER JOIN pa_info AS b
+																	ON a.PatientID = b.PatientID
+																	INNER JOIN (
+																		SELECT 	a.PatientRecordID,
+																				a.Amount AS Amount,
+																				a.id,
+																				'rpt_cbhi' AS tbName
+																				FROM rpt_cbhi AS a
+																				WHERE a.Date LIKE ('{$date}%')
+																				AND a.itemName='Retained'
+																				GROUP BY a.PatientRecordID
+																		UNION
+																			SELECT 	a.PatientRecordID,
+																					a.Amount AS Amount,
+																					a.id,
+																					'rpt_mmi' AS tbName
+																					FROM rpt_mmi AS a
+																					WHERE a.Date LIKE ('{$date}%')
+																					AND a.itemName='Retained'
+																					GROUP BY a.PatientRecordID
+																		UNION
+																			SELECT 	a.PatientRecordID,
+																					a.Amount AS Amount,
+																					a.id,
+																					'rpt_rssb_rama' AS tbName
+																					FROM rpt_rssb_rama AS a
+																					WHERE a.Date LIKE ('{$date}%')
+																					AND a.itemName='Retained'
+																					GROUP BY a.PatientRecordID
+																		UNION
+																			SELECT 	a.PatientRecordID,
+																					a.Amount AS Amount,
+																					a.id,
+																					'rpt_private' AS tbName
+																					FROM rpt_private AS a
+																					WHERE a.Date LIKE ('{$date}%')
+																					AND a.itemName='Retained'
+																					GROUP BY a.PatientRecordID
+																	) AS c
+																	ON a.PatientRecordID = c.PatientRecordID
+																	WHERE a.DateIn LIKE ('{$date}%')
 																	", $con),true, $con);
 //echo $sql;
 if($patients){
@@ -107,10 +131,10 @@ if($patients){
 	</script>
 	<b class=visibl>
 	<span class=success style='font-weight:bold; font-size:20px;'>
-	Monthly Debt Summary<br />
+	Monthly Retained Summary<br />
 	Post: <?= $post ?><br />
 	Date: <?= $_GET['year']."/".$_GET['month'] ?><br />
-	Number: <?= count($patients) ?> People hold the for <?= $organisation; ?> 
+	Number: <?= count($patients) ?> Records 
 	</span>
 	<style>
 		table#vsbl td, table#vsbl th{font-size:11px; font-family:arial; font-weight:bold; border:1px solid #000;}
@@ -125,7 +149,7 @@ if($patients){
 		}
 	</style>
 	<table class=list id=vsbl border="1" style='width:100%; font-size:30px;'>
-		<tr><th>ID</th><th>Date</th><th>Reference</th><th>Name</th><th>Phone Number</th><th>Address</th><th>Total Amount<th>Paid Amount</th><th>Balance</th><th>Due Date</th><th>Status</th></tr>
+		<tr><th>ID</th><th>Date</th><th>Reference</th><th>Name</th><th>Amount</th><th>Status</th></tr>
 		<tbody>
 		<?php
 		$t = array();
@@ -135,23 +159,16 @@ if($patients){
 		$row_count = 0;
 		for($i=0;$i<count($patients);$i++){
 			$r = $patients[$i];
-			$tm_p = returnSingleField("SELECT TicketPaid FROM mu_tm WHERE PatientRecordID='{$patients[$i]['PatientRecordID']}'","TicketPaid",true,$con);
 			
 			$row_count++;
-			$className = !$r["status"] && $r["dueDate"] <= date("Y-m-d", time())?"overdue":"not_paid";
-			$alertString = "The debt of {$r["Name"]} is paid\nBalance was ".(number_format($r["requiredAmount"] - $r["availableAmount"]))."\nSave and Print the receipt.";
+			$className = "not_paid";
 			$kk_ .=  "<tr onclick='$(\".styling\").html(\"<style>#id{$i}{background-color:#e5e5e3;}</style>\");' id='id{$i}' class='{$className}'>
 				<td>".($i+1)."</td>
-				<td>".($r['DateIn'])."</td>
+				<td>".($r['Date'])."</td>
 				<td>{$r["DocID"]}</td>
 				<td>{$r["Name"]}</td>
-				<td>{$r["phoneNumber"]}</td>
-				<td>{$r["address"]}</td>
-				<td style='text-align:right;'>".number_format($r["requiredAmount"])."</td>
-				<td style='text-align:right;'>".number_format($r["availableAmount"])."</td>
-				<td style='text-align:right;'>".(number_format($r["requiredAmount"] - $r["availableAmount"]))."</td>
-				<td>{$r["dueDate"]}</td>
-				<td>".($r["availableAmount"] < $r['requiredAmount']?"<a style='color:blue;' href='./pay_debt.php?record_id={$r['PatientRecordID']}' rel='#overlay'>Not Paid</a>":"Paid")."</td>
+				<td>{$r["Amount"]}</td>
+				<td><a style='color:blue;' href='./pay_retained.php?record_id={$r['PatientRecordID']}&refund={$r['id']}&tbName={$r['tbName']}' rel='#overlay'>Refund</a></td>
 				";
 		}
 		echo $kk_;

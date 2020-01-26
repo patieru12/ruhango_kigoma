@@ -10,7 +10,7 @@ if("rcp" !== returnSingleField($sql="SELECT PostCode from sy_post WHERE PostID='
 $error = "";
 
 //die;
-$insurance = formatResultSet($rslt=returnResultSet($sql="SELECT DISTINCT in_name.* from in_name, in_category WHERE in_name.CategoryID=in_category.InsuranceCategoryID && in_name.InsuranceName='CBHI' ORDER BY InsuranceCode ASC, InsuranceName DESC",$con),$multirows=true,$con);
+$insurance = formatResultSet($rslt=returnResultSet($sql="SELECT DISTINCT in_name.* from in_name, in_category WHERE in_name.CategoryID=in_category.InsuranceCategoryID && in_name.InsuranceName='Private' ORDER BY InsuranceCode ASC, InsuranceName DESC",$con),$multirows=true,$con);
 $centers = formatResultSet($rslt=returnResultSet($sql="SELECT DISTINCT sy_center.* from sy_center ORDER BY Level ASC, CenterName ASC",$con),$multirows=true,$con);
 
 $active = "report";
@@ -48,7 +48,7 @@ require_once "../lib2/cssmenu/rcp_header.html";
   </style>
   <div id="w">
     <div id="content">
-      <h1 style='margin-top:-55px'>Daily Reception Report Summary</h1>
+      <h1 style='' class="title_bar">Generate Monthly Retained Report</h1>
       <b>
 	  		<input type=hidden value=0 id=edit_mode />
 <table class="ds_box" cellpadding="0" cellspacing="0" id="ds_conclass"
@@ -58,7 +58,7 @@ require_once "../lib2/cssmenu/rcp_header.html";
 	</tr></table>
 	  <input type=hidden name=insurance value='<?= $insurance[0]['InsuranceNameID'] ?>' id=insurance />
 	  <input type=hidden name=post_ value='_<?= $_SESSION['user']['CenterID']; ?>' id=post />
-	  <table class=list-1><tr><td>Post</td><td>Year</td><td>Month</td><td>Day</td></tr>
+	  <table class=list-1><tr><td>Post</td><td>Year</td><td>Month</td></tr>
 	  <tr>
 	  <td>
 	  <?php
@@ -71,7 +71,7 @@ require_once "../lib2/cssmenu/rcp_header.html";
 	  <td>
 	  <select name=year class=txtfield1 style='width:70px;' id=year>
 		<?php
-		for($y = date("Y",time()); $y>=$Start_Year;$y--){
+		for($y = date("Y",time()); $y>= $Start_Year;$y--){
 			echo "<option>{$y}</option>";
 		}
 		?>
@@ -79,21 +79,13 @@ require_once "../lib2/cssmenu/rcp_header.html";
 	  </td><td>
 	  <select name=month class=txtfield1 style='width:140px;' id=month>
 		<?php
-		//$month = array(1=>"January","Febuary","March","April","May","June","July","August","September","October","November","December");
+		///$month = array(1=>"January","Febuary","March","April","May","June","July","August","September","October","November","December");
 		for($m = 1; $m <= 12;$m++){
-			echo "<option value='".($m < 10?"0".$m:$m)."' ".(date("m",time()) == $m?"selected":"").">{$month[$m]}</option>";
+			echo "<option value='".($m<10?"0".$m:$m)."' ".(date("m",time()) == $m?"selected":"").">{$month[$m]}</option>";
 		}
 		?>
 	  </select>
 	  </td>
-	  <td class=day>
-	  <select name=year class=txtfield1 style='width:70px;' id=year>
-		<?php
-		for($y = date("Y",time()); $y>="2015";$y--){
-			echo "<option>{$y}</option>";
-		}
-		?>
-	  </select>
 	  </td><!--<td>
 	  <input type=text class=txtfield1 style='width:250px;' id=medecines value='ALL' />
 	  
@@ -106,8 +98,8 @@ require_once "../lib2/cssmenu/rcp_header.html";
 	  <?php echo $error; ?>
 	  <span class=update_result></span>
 	  <input type=hidden id=filter_ />
-	  <div class="patient_found" style='height:92%; border:0px solid #000;'>
-		<span class=error-text>Select Post to view Daily Records</span>
+	  <div class="patient_found" style='height:90%; overflow:auto;'>
+		<span class=error-text>Select Post to view Private Patient History</span>
 	  </div>
 	  <div class="doc_selected">
 	  
@@ -116,10 +108,10 @@ require_once "../lib2/cssmenu/rcp_header.html";
     </div>
 	
   </div>
+  
   <?php
   include_once "../footer.html";
   ?>
-  
 	<div class="apple_overlay" id="overlay">
 	  <!-- the external content is loaded inside this tag -->
 	  <div class="contentWrap"></div>
@@ -137,21 +129,15 @@ function findByInsurance(ins){
 	
 }
 $(document).ready(function(){
-	$(".day").load("load_day.php?year=" + $("#year").val() + "&month=" + $("#month").val());
+	/* $(".day").load("load_day.php?year=" + $("#year").val() + "&month=" + $("#month").val());
 	$("#year").change(function(e){
 		$(".day").load("load_day.php?year=" + $("#year").val() + "&month=" + $("#month").val());
-		//then load the data automatically after 800 milliseconds
-		/* setTimeout(function(){
-			$("#generate").click();
-		},800); */
+	
 	});
 	$("#month").change(function(e){
 		$(".day").load("load_day.php?year=" + $("#year").val() + "&month=" + $("#month").val());
-		//then load the data automatically after 800 milliseconds
-		/* setTimeout(function(){
-			$("#generate").click();
-		},800); */
-	});
+	
+	}); */
 	
 	$("#generate").click(function(e){
 		$("#ds").html("");
@@ -161,8 +147,7 @@ $(document).ready(function(){
 			$("#ds").html("Select Insurance");
 			return e.preventDefault();
 		}
-		$(".patient_found").html("Please Wait...<br /><img src='../images/loading.gif' />");
-		$(".patient_found").load("daily_data.php?key=" + $("#insurance").val() + "&day=" + $("#day").val() + "&month=" + $("#month").val() + "&year=" + $("#year").val() + "&post=" + $("#post").val() + "&filter=" + $("#filter_").val());
+		$(".patient_found").load("refund_retained_data.php?key=" + $("#insurance").val() + "&month=" + $("#month").val() + "&year=" + $("#year").val() + "&post=" + $("#post").val() + "&filter=" + $("#filter_").val());
 	});
 	
 	//if the search button is clicked search the patient_found
