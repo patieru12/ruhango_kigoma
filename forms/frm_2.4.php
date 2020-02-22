@@ -1036,7 +1036,7 @@ $info = <<<INFO
 INFO;
 
 // Before Generating PDF Loack the File
-saveData("UPDATE pa_records SET DocStatus='locked' WHERE PatientRecordID='{$_GET['records']}'", $con);
+//saveData("UPDATE pa_records SET DocStatus='locked' WHERE PatientRecordID='{$_GET['records']}'", $con);
 
 // echo $info; die;
 
