@@ -1117,6 +1117,6 @@ if(file_exists(__DIR__ . "/../vendor/autoload.php")){
 // die();
 
 //connect db by default
-connectDB($con, $usedDatabase);
+connectDB($con, $usedDatabase, $usedDatabaseserver,$usedDatabaseusername,$usedDatabasePassword);
 require_once @$path."mode_switching.php";
 ?>
