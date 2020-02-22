@@ -1,7 +1,8 @@
 <?php
 // Connect tot the database for searchingnew results
 $q=$_GET['q'];
-$mysqli=mysql_connect('localhost','root','') or die("Database Error");
+require_once "../../cst/auto/ds_con.php";
+//$mysqli=mysql_connect('localhost','root','') or die("Database Error");
 //echo $database_name;
 require_once "../../lib/main_file.php";
 mysql_select_db($database_name)or die(mysql_error());
