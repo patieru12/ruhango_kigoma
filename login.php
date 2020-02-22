@@ -3,6 +3,7 @@ session_start();
 //connect to the database now;
 require_once"./lib/configure.php";
 require_once"./lib/config.php";
+// echo $usedDatabasePassword;
 $db = new DBConnector($usedDatabase, $usedDatabaseserver,$usedDatabaseusername,$usedDatabasePassword);
 $url = ""; //echo sha1("123");
 #var_dump($_POST);

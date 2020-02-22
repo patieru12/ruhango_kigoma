@@ -3,10 +3,10 @@ class DBConnector{
 	public $dbname;
 	public $payroll_user;
 	function __construct($db='care_full_v1',$server="127.0.0.1",$user="root",$password=''){
-		$password = '';
+		//$password = '';
 		$this->dbname = $db;
 		$this->payroll_user = array("hr"=>"Human Resource","nrm"=>"Call Center","fnc"=>"Finance");
-		$con = mysql_connect($server,$user,$password)
+		$con = mysql_connect($server,$user,$password);
 		return mysql_select_db($db,$con)or die("COULD NOT CONNECT!".mysql_error());;//or ("DATABASE NOT FOUND!");
 	}
 	public function select1cell($tbl,$field,$condition=null,$return_data=true){
