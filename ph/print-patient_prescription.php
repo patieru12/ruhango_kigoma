@@ -142,9 +142,9 @@ $tableData = '
 	</tr>
 </table>';
 //require the MPDF Library
-require_once "../lib/mpdf57/mpdf.php";
+// require_once "../lib/mpdf57/mpdf.php";
 
-$pdf = new MPDF();
+$pdf = new mPDF();
 
 $pdf->Open();
 
