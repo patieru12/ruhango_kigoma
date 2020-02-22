@@ -6,8 +6,8 @@ class DBConnector{
 		$password = '';
 		$this->dbname = $db;
 		$this->payroll_user = array("hr"=>"Human Resource","nrm"=>"Call Center","fnc"=>"Finance");
-		$con = mysql_connect($server,$user,$password)or die("COULD NOT CONNECT!");
-		return mysql_select_db($db,$con);//or ("DATABASE NOT FOUND!");
+		$con = mysql_connect($server,$user,$password)
+		return mysql_select_db($db,$con)or die("COULD NOT CONNECT!".mysql_error());;//or ("DATABASE NOT FOUND!");
 	}
 	public function select1cell($tbl,$field,$condition=null,$return_data=true){
 		$sql = "SELECT `".$field."` FROM `".$tbl."`";
